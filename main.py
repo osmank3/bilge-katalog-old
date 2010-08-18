@@ -5,6 +5,7 @@ import os
 import sys
 import gettext
 import database
+import libilge
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -21,15 +22,18 @@ print _("Welcome to bilge-katalog!\
 
 while QUIT == False:
     command = raw_input(">>> ")
+    command = command.decode('utf-8')
+    opts = command.split(" ")
     
-    if command == "help":
+    if "help" in opts:
         print _("helping information")
     
-    if command == "quit":
+    if "quit" in opts:
         QUIT = True
         
-    if command == "addCatalog":
-        pass#katalog ekleme fonksiyonu buraya
+    if "addCatalog" in opts:
+        directory = opts[1]
+        libilge.dirAdd2Db(directory)
 
 
 print _("Thanks for using bilge-katalog")
