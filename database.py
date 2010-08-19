@@ -241,3 +241,18 @@ class DB:
     def searchDir(self, up_id):
         self.cur.execute("SELECT id FROM dirs WHERE up_id=%s"% up_id)
         return self.cur.fetchall()
+        
+    # Showing directories
+    
+    def showDir(self, id):
+        dirs = {}
+        self.cur.execute("SELECT id, name FROM dirs WHERE up_id=%s"% id)
+        for i in self.cur.fetchall():
+            dirs[i[0]]=i[1]
+        
+        files = {}
+        self.cur.execute("SELECT id, name FROM files WHERE up_id=%s"% id)
+        for i in self.cur.fetchall():
+            files[i[0]]=i[1]
+        
+        return [dirs, files]

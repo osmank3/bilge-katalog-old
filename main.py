@@ -34,6 +34,20 @@ while QUIT == False:
     if "addCatalog" in opts:
         directory = opts[1]
         libilge.dirAdd2Db(directory)
-
+        
+    if "showCatalogs" in opts:
+        list = libilge.showDir(0)
+        for i in list:
+            print "  " + i
+            
+    if "showDir" in opts:
+        list = libilge.showDir(opts[1])
+        for i in list:
+            print "  " + i
+        
+    if "delDir" in opts:
+        #gerekli dizinin adından id'sine geçme falan yazılabilir
+        dir_id = opts[1]
+        libilge.dirDelFromDb(dir_id)
 
 print _("Thanks for using bilge-katalog")
