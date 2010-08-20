@@ -5,6 +5,9 @@ import os
 import sys
 import gettext
 import database
+import datetime
+
+now = datetime.datetime.now
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -14,17 +17,24 @@ gettext.install("bilge-katalog", unicode=1)
 
 DB = database.DB()
 
-def dirAdd2Db(directory, up_id=0, name='', date='', desc=''):
-    up_id = DB.addDir(up_id, name, date, desc)
+def dirAdd2Db(directory, up_id, name, datei, desc, datec, datem, datea):
+    up_id = DB.addDir(up_id, name, datec, datem, datea, datei, desc)
     inDir = os.listdir(directory)
     if len(inDir)>0:
         for i in inDir:
             dirI = directory + os.sep + i
+            
+            stat = os.stat(dirI)
+            size = stat.st_size
+            datec = datetime.datetime.fromtimestamp(stat.st_ctime)
+            datem = datetime.datetime.fromtimestamp(stat.st_mtime)
+            datea = datetime.datetime.fromtimestamp(stat.st_atime)
+            
             if os.path.isdir(dirI):
-                dirAdd2Db(dirI, up_id, i, date, desc)
+                dirAdd2Db(dirI, up_id, i, datei, "", datec, datem, datea)
             else:
-                size=0;type="text"#buraya doğru halleri girilmeli
-                DB.addFile(up_id, i, size, date, type)
+                type="text"#buraya doğru hali girilmeli
+                DB.addFile(up_id, i, size, datec, datem, datea, datei, type)
     
 def dirDelFromDb(dir_id):
     DB.delDir(dir_id)
@@ -37,19 +47,35 @@ def dirDelFromDb(dir_id):
         dirDelFromDb(i)
         
 def showDir(id, hide=True):
-    dirs, files = DB.showDir(id) #dir->{id:name}
+    dirs, files = DB.listDir(id) #dir->{name:id}
     list = []
-    for i in dirs.values():
-        if i[0] != '.':
-            list.append(clr_blue(i))
+    for i in dirs.keys():
+        if type(i) == type(0) or i[0] != '.':
+            list.append(i)
         elif hide == False:
-            list.append(clr_blue(i))
-    for i in files.values():
-        if i[0] != '.':
-            list.append(clr_yellow(i))
+            list.append(i)
+    for i in files.keys():
+        if type(i) == type(0) or i[0] != '.':
+            list.append(i)
         elif hide == False:
-            list.append(clr_yellow(i))
+            list.append(i)
+    list.sort()
     return list
+    rows, columns = os.popen("stty size", "r").read().split()
+    maxleight=0
+    for i in list:
+        if maxleight<len(i):
+            maxleight = len(i)
+    for i in list:
+        if len(i)<maxleight:
+            number = list.index(i)
+            while len(i) == maxleight:
+                i += " "
+            list[number] = i
+    
+    
+    
+    
     
 # Colored printing
 

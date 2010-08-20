@@ -12,14 +12,14 @@ reload(sys).setdefaultencoding("utf-8")
 #For multilanguage support
 gettext.install("bilge-katalog", unicode=1)
 
-DBFile = "database.db"# yerine kullanalım.":memory:"#hız için şimdilik 
+DBFile = "database.db"# yerine kullanalım.":memory:"#hız için şimdilik        
 
 class DB:
     def __init__(self):
         creating = False
         if not os.path.isfile(DBFile):
             creating = True
-        self.db = sqlite3.connect(DBFile)
+        self.db = sqlite3.connect(DBFile, detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.db.cursor()
         if creating:
             self.createTables()
@@ -29,7 +29,10 @@ class DB:
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "up_id INTEGER, "
                "name TEXT, "
-               "date TEXT, "
+               "datecreate TIMESTAMP, "
+               "datemodify TIMESTAMP, "
+               "dateaccess TIMESTAMP, "
+               "dateaddcat TIMESTAMP, "
                "description TEXT)")
                
         self.cur.execute("CREATE TABLE files ("
@@ -37,7 +40,10 @@ class DB:
                "up_id INTEGER, "
                "name TEXT, "
                "size INTEGER, "
-               "date TEXT, "
+               "datecreate TIMESTAMP, "
+               "datemodify TIMESTAMP, "
+               "dateaccess TIMESTAMP, "
+               "dateaddcat TIMESTAMP, "
                "type TEXT)")
                
         self.cur.execute("CREATE TABLE minfo ("
@@ -70,8 +76,7 @@ class DB:
 
         self.cur.execute("CREATE TABLE iinfo ("
                "f_id INTEGER PRIMARY KEY, "
-               "dimensions TEXT,"
-               "createdate DATE)")
+               "dimensions TEXT)")
 
         self.cur.execute("CREATE TABLE vinfo ("
                "f_id INTEGER PRIMARY KEY, "
@@ -100,20 +105,20 @@ class DB:
     
     #Adding functions
         
-    def addDir(self, up_id, name, date, desc=''):
+    def addDir(self, up_id, name, datec, datem, datea, datei, desc=''):
         self.cur.execute("INSERT INTO dirs "
-                "(up_id, name, date, description) "
-                "VALUES (?, ?, ?, ?)",
-                (up_id, name, date, desc))
+                "(up_id, name, datecreate, datemodify, dateaccess, dateaddcat, description) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (up_id, name, datec, datem, datea, datei, desc))
         self.db.commit()
         id = self.cur.execute("SELECT max(id) FROM dirs").fetchall()
         return id[0][0]
         
-    def addFile(self, up_id, name, size, date, type):
+    def addFile(self, up_id, name, size, datec, datem, datea, datei, type):
         self.cur.execute("INSERT INTO files "
-                "(up_id, name, size, date, type) "
-                "VALUES (?, ?, ?, ?, ?)",
-                (up_id, name, size, date, type))
+                "(up_id, name, size, datecreate, datemodify, dateaccess, dateaddcat, type) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (up_id, name, size, datec, datem, datea, datei, type))
         self.db.commit()
         
     def addBook(self, f_id, author, imprintinfo, callnumber, year, page):
@@ -130,11 +135,11 @@ class DB:
                 (f_id, title, author, year, page))
         self.db.commit()
         
-    def addImage(self, f_id, dimensions, createdate):
+    def addImage(self, f_id, dimensions):
         self.cur.execute("INSERT INTO iinfo "
-                "(f_id, dimensions, createdate) "
-                "VALUES (?, ?, ?)",
-                (f_id, dimensions, createdate))
+                "(f_id, dimensions) "
+                "VALUES (?, ?)",
+                (f_id, dimensions))
         self.db.commit()
         
     def addMusic(self, f_id, title, artist, album, year, track, genre, comment, bitrate, frequence, duration):
@@ -157,18 +162,18 @@ class DB:
         
     #Updating functions
     
-    def updateDir(self, id, up_id, name, date, desc):
+    def updateDir(self, id, up_id, name, datec, datem, datea, datei, desc):
         self.cur.execute("UPDATE dirs SET "
-                "up_id=?, name=?, date=?, description=? "
+                "up_id=?, name=?, datecreate=?, datemodify=?, dateaccess=?, dateaddcat=?, description=? "
                 "WHERE id=?",
-                (up_id, name, date, desc, id))
+                (up_id, name, datec, datem, datea, datei, desc, id))
         self.db.commit()
         
-    def updateFile(self, id, up_id, name, size, date, type):
+    def updateFile(self, id, up_id, name, size, datec, datem, datea, datei, type):
         self.cur.execute("UPDATE files SET "
-                "up_id=?, name=?, size=?, date=?, type=? "
+                "up_id=?, name=?, size=?, datecreate=?, datemodify=?, dateaccess=?, dateaddcat=?, type=? "
                 "WHERE id=?",
-                (up_id, name, size, date, type, id))
+                (up_id, name, size, datec, datem, datea, datei, type, id))
         self.db.commit()
         
     def updateBook(self, f_id,author, imprintinfo, callnumber, year, page):
@@ -185,11 +190,11 @@ class DB:
                 (title, author, year, page, f_id))
         self.db.commit()
         
-    def updateImage(self, f_id, dimensions, createdate):
+    def updateImage(self, f_id, dimensions):
         self.cur.execute("UPDATE iinfo SET "
-                "dimensions=?, createdate=? "
+                "dimensions=? "
                 "WHERE f_id=?",
-                (dimensions, createdate, f_id))
+                (dimensions, f_id))
         self.db.commit()
         
     def updateMusic(self, f_id, title, artist, album, year, track, genre, comment, bitrate, frequence, duration):
@@ -244,15 +249,15 @@ class DB:
         
     # Showing directories
     
-    def showDir(self, id):
+    def listDir(self, id):
         dirs = {}
         self.cur.execute("SELECT id, name FROM dirs WHERE up_id=%s"% id)
         for i in self.cur.fetchall():
-            dirs[i[0]]=i[1]
+            dirs[i[1]]=i[0]
         
         files = {}
         self.cur.execute("SELECT id, name FROM files WHERE up_id=%s"% id)
         for i in self.cur.fetchall():
-            files[i[0]]=i[1]
+            files[i[1]]=i[0]
         
         return [dirs, files]

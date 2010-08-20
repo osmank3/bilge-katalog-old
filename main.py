@@ -6,6 +6,7 @@ import sys
 import gettext
 import database
 import libilge
+import datetime
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -33,17 +34,18 @@ while QUIT == False:
         
     if "addCatalog" in opts:
         directory = opts[1]
-        libilge.dirAdd2Db(directory)
+        now = datetime.datetime.now()
+        libilge.dirAdd2Db(directory, 0, 'katalog', now, "", now, now, now)
         
     if "showCatalogs" in opts:
         list = libilge.showDir(0)
         for i in list:
-            print "  " + i
+            print "  " + str(i)
             
     if "showDir" in opts:
         list = libilge.showDir(opts[1])
         for i in list:
-            print "  " + i
+            print "  " + str(i)
         
     if "delDir" in opts:
         #gerekli dizinin adından id'sine geçme falan yazılabilir
