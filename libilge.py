@@ -19,6 +19,8 @@ DB = database.DB()
 
 def dirAdd2Db(directory, up_id, name, datei, desc, datec, datem, datea):
     up_id = DB.addDir(up_id, name, datec, datem, datea, datei, desc)
+    if directory == None:
+        return
     inDir = os.listdir(directory)
     if len(inDir)>0:
         for i in inDir:
@@ -61,6 +63,8 @@ def showDir(id, hide=True):
             list.append(i)
     list.sort()
     return list
+
+    #şimdilik buradan sonrası deneme amaçlı kalsın...
     rows, columns = os.popen("stty size", "r").read().split()
     maxleight=0
     for i in list:
