@@ -247,9 +247,13 @@ class DB:
         self.cur.execute("SELECT id FROM dirs WHERE up_id=%s"% up_id)
         return self.cur.fetchall()
         
+    def takeDirUpId(self, id):
+        self.cur.execute("SELECT up_id FROM dirs WHERE id=%s"% id)
+        return self.cur.fetchone()[0]
+        
     # Showing directories
     
-    def listDir(self, id):
+    def listDirById(self, id):
         dirs = {}
         self.cur.execute("SELECT id, name FROM dirs WHERE up_id=%s"% id)
         for i in self.cur.fetchall():

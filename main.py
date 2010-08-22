@@ -33,7 +33,9 @@ def parser(entry):
         value = value.replace("\"","")
         parameters[key]=value
         entry = entry.replace(i,"")
-    additions += parse3.findall(entry)
+    for i in parse3.findall(entry):
+        value = i.replace("\"","")
+        additions.append(value)
     for i in additions:
         entry = entry.replace(i,"")
     additions += entry.split()
@@ -41,6 +43,7 @@ def parser(entry):
     
 
 DB = database.DB()
+EXP = libilge.explore()
 
 QUIT = False
 
@@ -55,10 +58,10 @@ while QUIT == False:
     if command == "help":
         print _("helping information")
     
-    if command == "quit":
+    elif command == "quit":
         QUIT = True
         
-    if command == "addcat":
+    elif command == "addcat":
         name = parameters["name"]
         try:
             desc = parameters["desc"]
@@ -71,19 +74,37 @@ while QUIT == False:
         now = datetime.datetime.now()
         libilge.dirAdd2Db(directory, 0, name, now, desc, now, now, now)
         
-#    if "showCatalogs" in opts:
- #       list = libilge.showDir(0)
-  #      for i in list:
-   #         print "  " + str(i)
-            
-    if command == "ls":
-        list = libilge.showDir(additions[0])
-        for i in list:
-            print "  " + str(i)
+    elif command == "ls":
+        try:
+            id = parameters["id"]
+            EXP.dirList(id)
+        except KeyError:
+            try:
+                name = additions[0]
+                EXP.dirListByName(name)
+            except IndexError:
+                EXP.dirList()
+    
+    elif command == "cd":
+        try:
+            id = parameters["id"]
+            EXP.chDirById(id)
+        except KeyError:
+            try:
+                name = additions[0]
+                EXP.chDirByName(name)
+            except IndexError:
+                print "hiçbir şey"
         
-#    if "delDir" in opts:
-        #gerekli dizinin adından id'sine geçme falan yazılabilir
- #       dir_id = opts[1]
-  #      libilge.dirDelFromDb(dir_id)
+    elif command == "rmdir":
+        try:
+            id = parameters["id"]
+            libilge.dirDelFromDb(dir_id)
+        except KeyError:
+            try:
+                name = additions[0]
+                EXP.delDirByName(name)
+            except IndexError:
+                print "hiçbir şey"
 
 print _("Thanks for using bilge-katalog")
