@@ -121,11 +121,52 @@ class explore:
             dirDelFromDb(dirs[dirname])
         except KeyError:
             print _("%s is not a directory"% dirname)
+
+    def delFileByName(self, filename):
+        dirs, files = DB.listDirById(self.dirNow)
+        try:
+            DB.delFile(files[filename])
+        except KeyError:
+            print _("%s is not a file"% filename)
         
     def show(self):
         self.listDir.sort()
         for i in self.listDir:
             print i
+            
+    def infoById(self, id, type):
+        if id != 0:
+            infos = DB.info(id, type)
+            text = ""
+            if type == "dirs":
+                text += _("Name")       +   "\t: %s\n"% infos["name"]
+                text += _("Address")    +   "\t: %s\n"% infos["up_id"]
+                text += _("Descrition") +   "\t: %s\n"% infos["description"]
+                text += _("Create Date")+   "\t: %s\n"% infos["datecreate"]
+                text += _("Modify Date")+   "\t: %s\n"% infos["datemodify"]
+                text += _("Access Date")+   "\t: %s\n"% infos["dateaccess"]
+                text += _("Cataloging Date")+"\t: %s"% infos["dateaddcat"]
+                
+            elif type == "files":
+                text += _("Name")       +   "\t: %s\n"% infos["name"]
+                text += _("Address")    +   "\t: %s\n"% infos["up_id"]
+                text += _("Size")       +   "\t: %s\n"% infos["size"]
+                text += _("Type")       +   "\t: %s\n"% infos["type"]
+                text += _("Create Date")+   "\t: %s\n"% infos["datecreate"]
+                text += _("Modify Date")+   "\t: %s\n"% infos["datemodify"]
+                text += _("Access Date")+   "\t: %s\n"% infos["dateaccess"]
+                text += _("Cataloging Date")+ "\t: %s"% infos["dateaddcat"]
+                
+            return text
+            
+    def infoByName(self, name):
+        dirs, files = DB.listDirById(self.dirNow)
+        info = ""
+        if name in dirs.keys():
+            info = self.infoById(dirs[name], "dirs")
+        elif name in files.keys():
+            info = self.infoById(files[name], "files")
+        return info
 
 
 

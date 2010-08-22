@@ -25,6 +25,7 @@ def parser(entry):
     entry = entry[len(command):]
     parameters = {}
     additions = []
+    address = []
     entry = entry.replace("'","\"")
     parsed = parse1.findall(entry)
     parsed += parse2.findall(entry)
@@ -39,7 +40,19 @@ def parser(entry):
     for i in additions:
         entry = entry.replace(i,"")
     additions += entry.split()
-    return command, parameters, additions
+    for i in additions:
+        if "/" in i:
+            if i[0] == "/":
+                address.append("/")
+            address += i.split("/")
+            n = address.count("")
+            while n != 0:
+                address.remove("")
+                n -= 1
+            additions.remove(i)
+    if '""' in additions:
+        additions.remove('""')
+    return command, parameters, additions, address
     
 
 DB = database.DB()
@@ -53,7 +66,9 @@ print _("Welcome to bilge-katalog!\
 while QUIT == False:
     entry = raw_input(">>> ")
     entry = entry.decode('utf-8')
-    command, parameters, additions = parser(entry)
+    command, parameters, additions, address = parser(entry)
+    
+    #print command , parameters , additions, address
     
     if command == "help":
         print _("helping information")
@@ -83,7 +98,14 @@ while QUIT == False:
                 name = additions[0]
                 EXP.dirListByName(name)
             except IndexError:
-                EXP.dirList()
+                if len(address)>0:
+                    oldId = EXP.dirNow
+                    for i in address:
+                        EXP.chDirByName(i)
+                    EXP.dirList()
+                    EXP.chDirById(oldId)
+                else:
+                    EXP.dirList()
     
     elif command == "cd":
         try:
@@ -94,7 +116,9 @@ while QUIT == False:
                 name = additions[0]
                 EXP.chDirByName(name)
             except IndexError:
-                print "hiçbir şey"
+                if len(address)>0:
+                    for i in address:
+                        EXP.chDirByName(i)
         
     elif command == "rmdir":
         try:
@@ -105,6 +129,41 @@ while QUIT == False:
                 name = additions[0]
                 EXP.delDirByName(name)
             except IndexError:
-                print "hiçbir şey"
+                if len(address)>0:
+                    oldId = EXP.dirNow
+                    for i in address[:-1]:
+                        EXP.chDirByName(i)
+                    EXP.delDirByName(address[-1])
+                    EXP.chDirById(oldId)
+                    
+    elif command == "rm":
+        try:
+            id = parameters["id"]
+            DB.delFile(id)
+        except KeyError:
+            try:
+                name = additions[0]
+                EXP.delFileByName(name)
+            except IndexError:
+                if len(address)>0:
+                    oldId = EXP.dirNow
+                    for i in address[:-1]:
+                        EXP.chDirByName(i)
+                    EXP.delFileByName(address[-1])
+                    EXP.chDirById(oldId)
+                
+    elif command == "info":
+        try:
+            name = additions[0]
+            info = EXP.infoByName(name)
+            print info
+        except IndexError:
+            if len(address)>0:
+                oldId = EXP.dirNow
+                for i in address[:-1]:
+                    EXP.chDirByName(i)
+                info = EXP.infoByName(address[-1])
+                print info
+                EXP.chDirById(oldId)
 
 print _("Thanks for using bilge-katalog")

@@ -265,3 +265,49 @@ class DB:
             files[i[1]]=i[0]
         
         return [dirs, files]
+        
+    # Taking info
+    
+    def info(self, id, type):
+        infos = {}
+        self.cur.execute("SELECT * FROM %s WHERE id=%s"% (type, id))
+        data = self.cur.fetchone()
+        keys = []
+        colnames = self.cur.execute("PRAGMA TABLE_INFO(%s)"% type)
+        for i in colnames.fetchall():
+            keys.append(i[1])
+        i=0
+        while i<len(keys):
+            infos[keys[i]] = data[i]
+            i += 1
+        infos["up_id"] = self.genAddress(infos["up_id"])            
+        return infos
+        
+    def detailInfo(self, id, type):
+        infos = {}
+        types={"book":"binfo", "ebook":"einfo", "image":"iinfo",
+                "music":"minfo", "video":"vinfo"}
+        self.cur.execute("SELECT * FROM %s WHERE f_id=%s"% (types[type], id))
+        data = self.cur.fetchone()
+        keys = []
+        colnames = self.cur.execute("PRAGMA TABLE_INFO(%s)"% types[type])
+        for i in colnames.fetchall():
+            keys.append(i[1])
+        i=0
+        while i<len(keys):
+            infos[keys[i]] = data[i]
+            i += 1
+        
+    # Generating address
+    
+    def genAddress(self, up_id):
+        upDirs = []
+        address = "/"
+        while up_id != 0:
+            self.cur.execute("SELECT up_id, name FROM dirs WHERE id=%s"% up_id)
+            up_id, name = self.cur.fetchone()
+            upDirs.append(name)
+        upDirs.reverse()
+        for i in upDirs:
+            address += i + "/"
+        return address        
