@@ -51,13 +51,12 @@ class DB:
                "title TEXT, "
                "artist TEXT, "
                "album TEXT, "
-               "year INTEGER, "
-               "track INTEGER, "
+               "date INTEGER, "
+               "tracknumber INTEGER, "
                "genre TEXT, "
-               "comment TEXT, "
                "bitrate INTEGER, "
                "frequence INTEGER, "
-               "duration TEXT)")
+               "length INTEGER)")
 
         self.cur.execute("CREATE TABLE binfo ("
                "f_id INTEGER PRIMARY KEY, "
@@ -81,7 +80,7 @@ class DB:
         self.cur.execute("CREATE TABLE vinfo ("
                "f_id INTEGER PRIMARY KEY, "
                "title TEXT, "
-               "duration TEXT, "
+               "length INTEGER, "
                "dimensions TEXT)")
 
         self.cur.execute("CREATE TABLE tags ("
@@ -111,8 +110,8 @@ class DB:
                 "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (up_id, name, datec, datem, datea, datei, desc))
         self.db.commit()
-        id = self.cur.execute("SELECT max(id) FROM dirs").fetchall()
-        return id[0][0]
+        id = self.cur.execute("SELECT max(id) FROM dirs").fetchone()
+        return id[0]
         
     def addFile(self, up_id, name, size, datec, datem, datea, datei, type):
         self.cur.execute("INSERT INTO files "
@@ -120,6 +119,8 @@ class DB:
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 (up_id, name, size, datec, datem, datea, datei, type))
         self.db.commit()
+        id = self.cur.execute("SELECT max(id) FROM files").fetchone()
+        return id[0]
         
     def addBook(self, f_id, author, imprintinfo, callnumber, year, page):
         self.cur.execute("INSERT INTO binfo "
@@ -142,18 +143,18 @@ class DB:
                 (f_id, dimensions))
         self.db.commit()
         
-    def addMusic(self, f_id, title, artist, album, year, track, genre, comment, bitrate, frequence, duration):
+    def addMusic(self, f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length):
         self.cur.execute("INSERT INTO minfo "
-                "(f_id, title, artist, album, year, track, genre, comment, bitrate, frequence, duration) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (f_id, title, artist, album, year, track, genre, comment, bitrate, frequence, duration))
+                "(f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length))
         self.db.commit()
         
-    def addVideo(self, f_id, title, duration, dimensions):
+    def addVideo(self, f_id, title, length, dimensions):
         self.cur.execute("INSERT INTO vinfo "
-                "(f_id, title, duration, dimensions) "
+                "(f_id, title, length, dimensions) "
                 "VALUES (?, ?, ?, ?)",
-                (f_id, title, duration, dimensions))
+                (f_id, title, length, dimensions))
         self.db.commit()
         
     def addTags(self, name):
@@ -297,6 +298,7 @@ class DB:
         while i<len(keys):
             infos[keys[i]] = data[i]
             i += 1
+        return infos
         
     # Generating address
     

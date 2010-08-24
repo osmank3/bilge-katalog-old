@@ -78,92 +78,81 @@ while QUIT == False:
         
     elif command == "addcat":
         name = parameters["name"]
-        try:
+        desc = ""
+        directory = None
+        if parameters.has_key("desc"):
             desc = parameters["desc"]
-        except:
-            desc = ""
-        try:
+        if parameters.has_key("dir"):
             directory = parameters["dir"]
-        except:
-            directory = None
         now = datetime.datetime.now()
         libilge.dirAdd2Db(directory, 0, name, now, desc, now, now, now)
         
     elif command == "ls":
-        try:
+        if parameters.has_key("id"):
             id = parameters["id"]
             EXP.dirList(id)
-        except KeyError:
-            try:
-                name = additions[0]
-                EXP.dirListByName(name)
-            except IndexError:
-                if len(address)>0:
-                    oldId = EXP.dirNow
-                    for i in address:
-                        EXP.chDirByName(i)
-                    EXP.dirList()
-                    EXP.chDirById(oldId)
-                else:
-                    EXP.dirList()
+        elif len(additions)>0:
+            name = additions[0]
+            EXP.dirListByName(name)
+        elif len(address)>0:
+            oldId = EXP.dirNow
+            for i in address:
+                EXP.chDirByName(i)
+            EXP.dirList()
+            EXP.chDirById(oldId)
+        else:
+            EXP.dirList()
     
     elif command == "cd":
-        try:
+        if parameters.has_key("id"):
             id = parameters["id"]
             EXP.chDirById(id)
-        except KeyError:
-            try:
-                name = additions[0]
-                EXP.chDirByName(name)
-            except IndexError:
-                if len(address)>0:
-                    for i in address:
-                        EXP.chDirByName(i)
+        elif len(additions)>0:
+            name = additions[0]
+            EXP.chDirByName(name)
+        elif len(address)>0:
+            for i in address:
+                EXP.chDirByName(i)
         
     elif command == "rmdir":
-        try:
+        if parameters.has_key("id"):
             id = parameters["id"]
             libilge.dirDelFromDb(dir_id)
-        except KeyError:
-            try:
-                name = additions[0]
-                EXP.delDirByName(name)
-            except IndexError:
-                if len(address)>0:
-                    oldId = EXP.dirNow
-                    for i in address[:-1]:
-                        EXP.chDirByName(i)
-                    EXP.delDirByName(address[-1])
-                    EXP.chDirById(oldId)
+        elif len(additions)>0:
+            name = additions[0]
+            EXP.delDirByName(name)
+        elif len(address)>0:
+            oldId = EXP.dirNow
+            for i in address[:-1]:
+                EXP.chDirByName(i)
+            EXP.delDirByName(address[-1])
+            EXP.chDirById(oldId)
                     
     elif command == "rm":
-        try:
+        if parameters.has_key("id"):
             id = parameters["id"]
             DB.delFile(id)
-        except KeyError:
-            try:
-                name = additions[0]
-                EXP.delFileByName(name)
-            except IndexError:
-                if len(address)>0:
-                    oldId = EXP.dirNow
-                    for i in address[:-1]:
-                        EXP.chDirByName(i)
-                    EXP.delFileByName(address[-1])
-                    EXP.chDirById(oldId)
+        elif len(additions)>0:
+            name = additions[0]
+            EXP.delFileByName(name)
+        elif len(address)>0:
+            oldId = EXP.dirNow
+            for i in address[:-1]:
+                EXP.chDirByName(i)
+            EXP.delFileByName(address[-1])
+            EXP.chDirById(oldId)
                 
     elif command == "info":
-        try:
+        if len(additions)>0:
             name = additions[0]
             info = EXP.infoByName(name)
             print info
-        except IndexError:
-            if len(address)>0:
-                oldId = EXP.dirNow
-                for i in address[:-1]:
-                    EXP.chDirByName(i)
-                info = EXP.infoByName(address[-1])
-                print info
-                EXP.chDirById(oldId)
+        elif len(address)>0:
+            oldId = EXP.dirNow
+            for i in address[:-1]:
+                EXP.chDirByName(i)
+            info = EXP.infoByName(address[-1])
+            print info
+            EXP.chDirById(oldId)
 
 print _("Thanks for using bilge-katalog")

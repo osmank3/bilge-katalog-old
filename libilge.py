@@ -6,6 +6,7 @@ import sys
 import gettext
 import database
 import datetime
+import detailer
 
 now = datetime.datetime.now
 
@@ -40,11 +41,31 @@ def dirAdd2Db(directory, up_id, name, datei, desc, datec, datem, datea):
             if os.path.isdir(dirI):
                 dirAdd2Db(dirI, up_id, i, datei, "", datec, datem, datea)
             else:
-                try:
-                    type=types[i[-4:]]
-                except:
+                infos = {}
+                if types.has_key(i[-4:].lower()):
+                    type=types[i[-4:].lower()]
+                    infos = tagging(dirI, i[-4:].lower())
+                else:
                     type="other"
-                DB.addFile(up_id, i, size, datec, datem, datea, datei, type)
+                f_id = DB.addFile(up_id, i, size, datec, datem, datea, datei, type)
+                if len(infos.keys())>0:
+                    if type == "music":
+                        title = infos["title"]
+                        artist = infos["artist"]
+                        album = infos["album"]
+                        date = infos["date"]
+                        tracknumber = infos["tracknumber"]
+                        genre = infos["genre"]
+                        bitrate = infos["bitrate"]
+                        frequence = infos["frequence"]
+                        length = infos["length"]
+                        DB.addMusic(f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length)
+                        
+        
+def tagging(address, type):
+    if type == ".mp3":
+        infos = detailer.mp3Tags(address)
+        return infos
     
 def dirDelFromDb(dir_id):
     DB.delDir(dir_id)
