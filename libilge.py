@@ -8,7 +8,7 @@ import database
 import datetime
 import detailer
 
-now = datetime.datetime.now
+#now = datetime.datetime.now
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -49,33 +49,40 @@ def dirAdd2Db(directory, up_id, name, datei, desc, datec, datem, datea):
                     type="other"
                 f_id = DB.addFile(up_id, i, size, datec, datem, datea, datei, type)
                 if len(infos.keys())>0:
-                    if type == "music":
-                        title = infos["title"]
-                        artist = infos["artist"]
-                        album = infos["album"]
-                        date = infos["date"]
-                        tracknumber = infos["tracknumber"]
-                        genre = infos["genre"]
-                        bitrate = infos["bitrate"]
-                        frequence = infos["frequence"]
-                        length = infos["length"]
-                        DB.addMusic(f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length)
+                    infos2Db(f_id, infos, type)
+
+                    
+def infos2Db(f_id, infos, type):
+    if type == "music":
+        title = infos["title"]
+        artist = infos["artist"]
+        album = infos["album"]
+        date = infos["date"]
+        tracknumber = infos["tracknumber"]
+        genre = infos["genre"]
+        bitrate = infos["bitrate"]
+        frequence = infos["frequence"]
+        length = infos["length"]
+        DB.addMusic(f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length)
                         
         
 def tagging(address, type):
     if type == ".mp3":
         infos = detailer.mp3Tags(address)
         return infos
+    elif type == ".ogg":
+        infos = detailer.oggTags(address)
+        return infos
     
 def dirDelFromDb(dir_id):
     DB.delDir(dir_id)
-    fileList = DB.searchFile(dir_id)
-    for i in fileList:
-        DB.delFile(i)
-        #DB.delInfo(i)
-    dirList = DB.searchDir(dir_id)
-    for i in dirList:
+    dirs, files = DB.listDirById(dir_id)
+    for i in files.values():
+        type = DB.delFile(i)
+        DB.delInfo(i, type)
+    for i in dirs.values():
         dirDelFromDb(i)
+        
         
 class explore:
     def __init__(self):
@@ -90,9 +97,9 @@ class explore:
             dirs, files = DB.listDirById(self.dirNow)
         self.listDir = []
         for i in dirs.keys() + files.keys():
-            if type(i) == type(0) or i[0] != '.':
+            if type(i) == type(0) or i.find(".") != 0:
                 self.listDir.append(i)
-            elif hide == False:
+            elif self.hide == False:
                 self.listDir.append(i)
         self.show()
         
@@ -105,9 +112,9 @@ class explore:
             dirs, files = DB.listDirById(dirs[dirname])
             self.listDir = []
             for i in dirs.keys() + files.keys():
-                if type(i) == type(0) or i[0] != '.':
+                if type(i) == type(0) or i.find(".") != 0:
                     self.listDir.append(i)
-                elif hide == False:
+                elif self.hide == False:
                     self.listDir.append(i)
             self.show()
         except KeyError:
@@ -146,7 +153,8 @@ class explore:
     def delFileByName(self, filename):
         dirs, files = DB.listDirById(self.dirNow)
         try:
-            DB.delFile(files[filename])
+            type = DB.delFile(files[filename])
+            DB.delInfo(files[filename], type)
         except KeyError:
             print _("%s is not a file"% filename)
         
@@ -188,7 +196,37 @@ class explore:
         elif name in files.keys():
             info = self.infoById(files[name], "files")
         return info
+        
+    def mkdir(self, directory, name, desc, date):
+        if directory != None:
+            name = os.path.split(directory)[-1]
+            if name == "":
+                name = os.path.split(os.path.split(directory)[0])[-1]
+        dirAdd2Db(directory, self.dirNow, name, date, desc, date, date, date)
 
+    def mkfile(self, address, name, datei):
+        size = 0
+        datec = datei
+        datem = datei
+        datea = datei
+        infos = {}
+        if address != None:
+            name = os.path.split(address)[-1]
+            if name == "":
+                name = os.path.split(os.path.split(address)[0])[-1]
+            stat = os.stat(address)
+            size = stat.st_size
+            datec = datetime.datetime.fromtimestamp(stat.st_ctime)
+            datem = datetime.datetime.fromtimestamp(stat.st_mtime)
+            datea = datetime.datetime.fromtimestamp(stat.st_atime)
+        if types.has_key(name[-4:].lower()):
+            type=types[name[-4:].lower()]
+            infos = tagging(address, name[-4:].lower())
+        else:
+            type="other"
+        f_id = DB.addFile(self.dirNow, name, size, datec, datem, datea, datei, type)
+        if len(infos.keys())>0:
+            infos2Db(f_id, infos, type)
 
 
 # Colored printing

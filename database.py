@@ -221,16 +221,19 @@ class DB:
         self.db.commit()
         
     def delFile(self, id):
+        type = self.cur.execute("SELECT type FROM files WHERE id=%s"% id).fetchone()[0]
         self.cur.execute("DELETE FROM files WHERE id=%s"% id)
         self.cur.execute("DELETE FROM tagfiles WHERE f_id=%s"% id)
         self.db.commit()
+        return type
         
     def delInfo(self, f_id, type):
         types={"book":"binfo", "ebook":"einfo", "image":"iinfo",
-                "music":"minfo", "video":"vinfo"}
-        self.cur.execute("DELETE FROM %s WHERE f_id=%s"%
-                (types[type], f_id))
-        self.db.commit()
+                "music":"minfo", "video":"vinfo", "other":None}
+        table = types[type]
+        if table != None:
+            self.cur.execute("DELETE FROM %s WHERE f_id=%s"% (table, f_id))
+            self.db.commit()
         
     def delTag(self, id):
         self.cur.execute("DELETE FROM tags WHERE id=%s"% id)

@@ -76,7 +76,7 @@ while QUIT == False:
     elif command == "quit":
         QUIT = True
         
-    elif command == "addcat":
+    elif command == "mkcat":
         name = parameters["name"]
         desc = ""
         directory = None
@@ -86,6 +86,31 @@ while QUIT == False:
             directory = parameters["dir"]
         now = datetime.datetime.now()
         libilge.dirAdd2Db(directory, 0, name, now, desc, now, now, now)
+            
+    elif command == "mkdir":
+        now = datetime.datetime.now()
+        desc = ""
+        name = ""
+        directory = None
+        if parameters.has_key("desc"):
+            desc = parameters["desc"]
+        if parameters.has_key("dir"):
+            directory = parameters["dir"]
+            EXP.mkdir(directory, name, desc, now)
+        elif len(additions)>0:
+            name = additions[0]
+            EXP.mkdir(directory, name, desc, now)
+        
+    elif command == "mkfile":
+        now = datetime.datetime.now()
+        name = ""
+        address = None
+        if parameters.has_key("address"):
+            address = parameters["address"]
+            EXP.mkfile(address, name, now)
+        elif len(additions)>0:
+            name = additions[0]
+            EXP.mkfile(address, name, now)
         
     elif command == "ls":
         if parameters.has_key("id"):
@@ -117,7 +142,7 @@ while QUIT == False:
     elif command == "rmdir":
         if parameters.has_key("id"):
             id = parameters["id"]
-            libilge.dirDelFromDb(dir_id)
+            libilge.dirDelFromDb(id)
         elif len(additions)>0:
             name = additions[0]
             EXP.delDirByName(name)
