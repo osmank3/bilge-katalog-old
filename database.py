@@ -14,7 +14,7 @@ gettext.install("bilge-katalog", unicode=1)
 
 DBFile = "database.db"# yerine kullanalım.":memory:"#hız için şimdilik        
 
-class DB:
+class dataBase:
     def __init__(self):
         creating = False
         if not os.path.isfile(DBFile):
@@ -23,7 +23,7 @@ class DB:
         self.cur = self.db.cursor()
         if creating:
             self.createTables()
-        
+            
     def createTables(self):
         self.cur.execute("CREATE TABLE dirs ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -101,6 +101,113 @@ class DB:
                "icon DATA)")
         
         self.db.commit()
+        
+        
+    def execute(self, query):
+        self.cur.execute(query)
+        if query.find("SELECT") == 0 or query.find("PRAGMA") == 0:
+            return self.cur.fetchall()
+        else:
+            self.db.commit()
+            return True
+        
+class EditQuery:
+    def __init__(self):        
+        self.status = { "update" : False,
+                        "delete" : False,
+                        "insert" : False,
+                        "select" : False,
+                        "pragma" : False    }
+        
+        
+    def setStatTrue(self, status): # "x"
+        for i in self.status.keys():
+            if i == status:
+                self.status[i] = True
+            else:
+                self.status[i] = False
+            self.query = ""
+            self.table = ""
+            self.where = ""
+            self.set = ""
+            self.select = ""
+            self.list = ""
+            
+    def setTables(self, tables): # [x1, x2, ...]
+        self.table = ""
+        for i in tables:
+            self.table += i + ", "
+        self.table = self.table[:-2]
+        
+    def setList(self, lists): # [x1, x2, ...]
+        self.list = ""
+        for i in lists:
+            self.list += i + ", "
+        self.list = self.list[:-2]
+        
+    def setSet(self, setkeys): # {x1:y1, x2:y2, ...}
+        self.set = ""
+        for i in setkeys.keys():
+            self.set += i + "=" + setkeys[i] + ", "
+        self.set = self.set[:-2]
+        
+    def setSelect(self, selections): # [x1, x2, ...]
+        self.select = ""
+        for i in selections:
+            self.select += i + ", "
+        self.select = self.select[:-2]
+        
+    def setWhere(self, where): # [{x1:y1}, op12, {x2:y2}, op23, ...]
+        self.where = ""
+        for i in where:
+            if type(i) == dict:
+                self.where += str(i.items()[0][0]) + "=" + str(i.items()[0][1])
+            else:
+                self.where += " " + i + " "
+                
+    def setQuery(self):
+        self.query = ""
+        if self.status["select"]:
+            if self.select != "" or self.table != "":
+                self.query += "SELECT " + self.select
+                self.query += " FROM " + self.table
+                if self.where != "":
+                    self.query += " WHERE " + self.where
+                
+        elif self.status["update"]:
+            if self.table != "" or self.set != "" or self.where != "":
+                self.query += "UPDATE " + self.table
+                self.query += " SET " + self.set
+                self.query += " WHERE " + self.where
+            
+        elif self.status["delete"]:
+            if self.table != "" or self.where != "":
+                self.query += "DELETE FROM " + self.table
+                self.query += " WHERE " + self.where
+            
+        elif self.status["insert"]:
+            if self.table != "" or self.list != "":
+                self.query += "INSERT INTO " + self.table
+                self.query += " VALUES (" + self.list + ")"
+            
+        elif self.status["pragma"]:
+            if self.table != "":
+                self.query += "PRAGMA TABLE_INFO(" + self.table + ")"
+            
+    def returnQuery(self):
+        self.setQuery()
+        if self.query != "":
+            return self.query
+        else:
+            return False
+            
+                    
+        
+        
+        
+# şimdilik atıl kısım        
+        
+class other:        
     
     #Adding functions
         
@@ -315,4 +422,4 @@ class DB:
         upDirs.reverse()
         for i in upDirs:
             address += i + "/"
-        return address        
+        return address

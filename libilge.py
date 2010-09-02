@@ -21,7 +21,7 @@ types={ ".aac":"music", ".acc":"music", ".mp3":"music", ".ogg":"music",
         ".avi":"video", "mpeg":"video", ".mp4":"video", ".flv":"video",
         ".pdf":"ebook", "book":"book"}
 
-DB = database.DB()
+DB = database.dataBase()
 
 def dirAdd2Db(directory, up_id, name, datei, desc, datec, datem, datea):
     up_id = DB.addDir(up_id, name, datec, datem, datea, datei, desc)
@@ -89,27 +89,33 @@ class explore:
         self.dirNow = 0
         self.listDir = []
         self.hide = True
+        self.query = database.EditQuery()
         
-    def dirList(self, id=None):
-        if id:
-            dirs, files = DB.listDirById(id)
-        else:
-            dirs, files = DB.listDirById(self.dirNow)
-        self.listDir = []
-        for i in dirs.keys() + files.keys():
-            if type(i) == type(0) or i.find(".") != 0:
-                self.listDir.append(i)
-            elif self.hide == False:
-                self.listDir.append(i)
-        self.show()
+    def dirList(self, id=None, dirname=None):
+        if id == None:
+            id = self.dirNow
+        if dirname and "/" in dirname:
+            id = 0
+        dirs, files = {}, {}
+        self.query.setStatTrue("select")
+        self.query.setSelect(["id", "name"])
+        self.query.setTables(["dirs"])
+        self.query.setWhere([{"up_id":id}])
+        Dirs = DB.execute(self.query.returnQuery())
+        for i in Dirs:
+            dirs[i[1]]=i[0]
+        self.query.setTables(["files"])
+        Files = DB.execute(self.query.returnQuery())
+        for i in Files:
+            files[i[1]]=i[0]
+            
+        if dirname and "/" not in dirname:
+            try:
+                self.dirList(id=dirs[dirname])
+            except KeyError:
+                print _("%s is not a directory"% dirname)
         
-    def dirListByName(self, dirname):
-        if dirname == "/":
-            dirs = {"/":0}
         else:
-            dirs, files = DB.listDirById(self.dirNow)
-        try:
-            dirs, files = DB.listDirById(dirs[dirname])
             self.listDir = []
             for i in dirs.keys() + files.keys():
                 if type(i) == type(0) or i.find(".") != 0:
@@ -117,28 +123,35 @@ class explore:
                 elif self.hide == False:
                     self.listDir.append(i)
             self.show()
-        except KeyError:
-            print _("%s is not a directory"% dirname)
         
-    def chDirByName(self, dirname):
-        if dirname == "/":
-            dirs = {"/":0}
-        elif dirname == "..":
-            if self.dirNow != 0:
-                id = DB.takeDirUpId(self.dirNow)
-                dirs = {"..":id}
+    def chDir(self, id=None, dirname=None):
+        if id:
+            self.dirNow = id
+        elif dirname:
+            if dirname == "/":
+                self.dirNow = 0
+            elif dirname == "..":
+                if self.dirNow != 0:
+                    self.query.setStatTrue("select")
+                    self.query.setSelect(["up_id"])
+                    self.query.setTables(["dirs"])
+                    self.query.setWhere([{"id":self.dirNow}])
+                    up_id = DB.execute(self.query.returnQuery())[0][0]
+                    self.dirNow = up_id
             else:
-                dirs = {"..":0}
-        else:
-            dirs, files = DB.listDirById(self.dirNow)
-        try:
-            self.dirNow = dirs[dirname]
-        except KeyError:
-            print _("%s is not a directory"% dirname)
+                dirs = {}
+                self.query.setStatTrue("select")
+                self.query.setSelect(["id", "name"])
+                self.query.setTables(["dirs"])
+                self.query.setWhere([{"up_id":self.dirNow}])
+                Dirs = DB.execute(self.query.returnQuery())
+                for i in Dirs:
+                    dirs[i[1]]=i[0]                    
+                try:
+                    self.dirNow = dirs[dirname]
+                except KeyError:
+                    print _("%s is not a directory"% dirname)
             
-    def chDirById(self, id):
-        self.dirNow = id
-        
     def delDirByName(self, dirname):
         if dirname == "/":
             dirs = {"/":0}

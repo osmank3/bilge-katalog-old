@@ -5,6 +5,7 @@ import os
 import sys
 import gettext
 import database
+import kaa.metadata as Meta
 import mutagen
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3
@@ -15,7 +16,7 @@ reload(sys).setdefaultencoding("utf-8")
 #For multilanguage support
 gettext.install("bilge-katalog", unicode=1)
 
-DB = database.DB()
+DB = database.dataBase()
 
 mkeys = ["title", "artist", "album", "date", "tracknumber",
             "genre", "bitrate", "frequence", "length"]
@@ -56,6 +57,14 @@ def oggTags(file):
                 infos[i] = 0
             else:
                 infos[i] = ""
+    return infos
+    
+def infoFile(file):
+    infos = {}
+    info = Meta.parse(file)
+    for i in info.keys():
+        if info[i]:
+            infos[i] = info[i]
     return infos
     
 def mp4Tags(file):

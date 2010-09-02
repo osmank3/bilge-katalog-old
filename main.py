@@ -41,21 +41,24 @@ def parser(entry):
         entry = entry.replace(i,"")
     additions += entry.split()
     for i in additions:
-        if "/" in i:
-            if i[0] == "/":
-                address.append("/")
-            address += i.split("/")
-            n = address.count("")
-            while n != 0:
-                address.remove("")
-                n -= 1
-            additions.remove(i)
+        address += addressParser(i)
+        #additions.remove(i)
     if '""' in additions:
         additions.remove('""')
     return command, parameters, additions, address
     
+def addressParser(address):
+    addressList = []
+    if "/" in address:
+        if address.find("/") == 0:
+            addressList.append("/")
+        parts = address.split("/")
+        for i in parts:
+            if i != "":
+                addressList.append(i)
+    return addressList
 
-DB = database.DB()
+DB = database.dataBase()
 EXP = libilge.explore()
 
 QUIT = False
@@ -115,29 +118,29 @@ while QUIT == False:
     elif command == "ls":
         if parameters.has_key("id"):
             id = parameters["id"]
-            EXP.dirList(id)
+            EXP.dirList(id=id)
         elif len(additions)>0:
             name = additions[0]
-            EXP.dirListByName(name)
+            EXP.dirList(dirname=name)
         elif len(address)>0:
             oldId = EXP.dirNow
             for i in address:
                 EXP.chDirByName(i)
             EXP.dirList()
-            EXP.chDirById(oldId)
+            EXP.chDir(id=oldId)
         else:
             EXP.dirList()
     
     elif command == "cd":
         if parameters.has_key("id"):
             id = parameters["id"]
-            EXP.chDirById(id)
+            EXP.chDir(id=id)
         elif len(additions)>0:
             name = additions[0]
-            EXP.chDirByName(name)
+            EXP.chDir(dirname=name)
         elif len(address)>0:
             for i in address:
-                EXP.chDirByName(i)
+                EXP.chDir(dirname=i)
         
     elif command == "rmdir":
         if parameters.has_key("id"):
@@ -151,7 +154,7 @@ while QUIT == False:
             for i in address[:-1]:
                 EXP.chDirByName(i)
             EXP.delDirByName(address[-1])
-            EXP.chDirById(oldId)
+            EXP.chDir(id=oldId)
                     
     elif command == "rm":
         if parameters.has_key("id"):
@@ -165,7 +168,7 @@ while QUIT == False:
             for i in address[:-1]:
                 EXP.chDirByName(i)
             EXP.delFileByName(address[-1])
-            EXP.chDirById(oldId)
+            EXP.chDir(id=oldId)
                 
     elif command == "info":
         if len(additions)>0:
@@ -178,6 +181,6 @@ while QUIT == False:
                 EXP.chDirByName(i)
             info = EXP.infoByName(address[-1])
             print info
-            EXP.chDirById(oldId)
+            EXP.chDir(id=oldId)
 
 print _("Thanks for using bilge-katalog")
