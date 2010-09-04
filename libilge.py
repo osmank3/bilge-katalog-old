@@ -16,56 +16,15 @@ reload(sys).setdefaultencoding("utf-8")
 #For multilanguage support
 gettext.install("bilge-katalog", unicode=1)
 
-types={ ".aac":"music", ".acc":"music", ".mp3":"music", ".ogg":"music",
-        ".jpg":"image", ".png":"image", ".bmp":"image", "jpeg":"image",
-        ".avi":"video", "mpeg":"video", ".mp4":"video", ".flv":"video",
-        ".pdf":"ebook", "book":"book"}
+types = {   ".aac":"music", ".acc":"music", ".mp3":"music", ".ogg":"music",
+            ".jpg":"image", ".png":"image", ".bmp":"image", "jpeg":"image",
+            ".avi":"video", "mpeg":"video", ".mp4":"video", ".flv":"video",
+            ".pdf":"ebook", "book":"book"}
+typeDb = {  "book":"binfo", "ebook":"einfo", "image":"iinfo",
+            "music":"minfo", "video":"vinfo"}
 
 DB = database.dataBase()
 
-def dirAdd2Db(directory, up_id, name, datei, desc, datec, datem, datea):
-    up_id = DB.addDir(up_id, name, datec, datem, datea, datei, desc)
-    if directory == None:
-        return
-    inDir = os.listdir(directory)
-    if len(inDir)>0:
-        for i in inDir:
-            dirI = directory + os.sep + i
-            
-            stat = os.stat(dirI)
-            size = stat.st_size
-            datec = datetime.datetime.fromtimestamp(stat.st_ctime)
-            datem = datetime.datetime.fromtimestamp(stat.st_mtime)
-            datea = datetime.datetime.fromtimestamp(stat.st_atime)
-            
-            if os.path.isdir(dirI):
-                dirAdd2Db(dirI, up_id, i, datei, "", datec, datem, datea)
-            else:
-                infos = {}
-                if types.has_key(i[-4:].lower()):
-                    type=types[i[-4:].lower()]
-                    infos = tagging(dirI, i[-4:].lower())
-                else:
-                    type="other"
-                f_id = DB.addFile(up_id, i, size, datec, datem, datea, datei, type)
-                if len(infos.keys())>0:
-                    infos2Db(f_id, infos, type)
-
-                    
-def infos2Db(f_id, infos, type):
-    if type == "music":
-        title = infos["title"]
-        artist = infos["artist"]
-        album = infos["album"]
-        date = infos["date"]
-        tracknumber = infos["tracknumber"]
-        genre = infos["genre"]
-        bitrate = infos["bitrate"]
-        frequence = infos["frequence"]
-        length = infos["length"]
-        DB.addMusic(f_id, title, artist, album, date, tracknumber, genre, bitrate, frequence, length)
-                        
-        
 def tagging(address, type):
     if type == ".mp3":
         infos = detailer.mp3Tags(address)
@@ -74,15 +33,6 @@ def tagging(address, type):
         infos = detailer.oggTags(address)
         return infos
     
-def dirDelFromDb(dir_id):
-    DB.delDir(dir_id)
-    dirs, files = DB.listDirById(dir_id)
-    for i in files.values():
-        type = DB.delFile(i)
-        DB.delInfo(i, type)
-    for i in dirs.values():
-        dirDelFromDb(i)
-        
         
 class explore:
     def __init__(self):
@@ -90,6 +40,131 @@ class explore:
         self.listDir = []
         self.hide = True
         self.query = database.EditQuery()
+        
+    def mkDir(self, address=None, infos={}):
+        values = []
+        keys = []
+        if not infos.has_key("up_id"):
+            infos["up_id"] = self.dirNow
+        datei = infos["dateinsert"]
+        if infos["up_id"] == 0:
+            infos["datecreate"] = datei
+            infos["datemodify"] = datei
+            infos["dateaccess"] = datei
+        self.query.setStatTrue("pragma")
+        self.query.setTables(["dirs"])
+        request = DB.execute(self.query.returnQuery())
+        for i in request:
+            if i[1] != "id":
+                keys.append(i[1])
+                try:
+                    values.append( infos[i[1]] )
+                except KeyError:
+                    values.append("")
+        
+        self.query.setStatTrue("insert")
+        self.query.setTables(["dirs"])
+        self.query.setKeys(keys)
+        self.query.setValues(values)
+        DB.execute(self.query.returnQuery())
+        
+        self.query.setStatTrue("select")
+        self.query.setSelect(["max(id)"])
+        self.query.setTables(["dirs"])
+        upId = DB.execute(self.query.returnQuery())[0][0]
+        
+        if address:
+            ListDir = os.listdir(address)
+            if len(ListDir)>0:
+                for i in ListDir:
+                    addrI = address + os.sep + i
+                    
+                    infos = {}
+                    infos["name"] = i
+                    infos["up_id"] = upId
+                    
+                    stat = os.stat(addrI)
+                    infos["size"] = int(stat.st_size)
+                    infos["datecreate"] = datetime.datetime.fromtimestamp(stat.st_ctime)
+                    infos["datemodify"] = datetime.datetime.fromtimestamp(stat.st_mtime)
+                    infos["dateaccess"] = datetime.datetime.fromtimestamp(stat.st_atime)
+                    infos["dateinsert"] = datei
+                    
+                    if os.path.isdir(addrI):
+                        self.mkDir(addrI, infos)
+                    else:
+                        self.mkFile(addrI, infos)
+                    
+    def mkFile(self, address=None, infos={}):
+        if address != None:
+            infos["name"] = os.path.split(address)[-1]
+            if infos["name"] == "":
+                infos["name"] = os.path.split(os.path.split(address)[0])[-1]
+            stat = os.stat(address)
+            infos["size"] = int(stat.st_size)
+            infos["datecreate"] = datetime.datetime.fromtimestamp(stat.st_ctime)
+            infos["datemodify"] = datetime.datetime.fromtimestamp(stat.st_mtime)
+            infos["dateaccess"] = datetime.datetime.fromtimestamp(stat.st_atime)
+            infos["dateinsert"] = datetime.datetime.now()
+        
+        elif not infos.has_key("up_id"):
+            infos["up_id"] = self.dirNow
+            
+        name = infos["name"]
+        if types.has_key(name[-4:].lower()):
+            infos["type"] = types[name[-4:].lower()]
+            if address:
+                details = tagging(address, name[-4:].lower())
+            else:
+                details = None
+        else:
+            details = None
+            infos["type"]="other"
+        
+        values = []
+        keys = []
+        self.query.setStatTrue("pragma")
+        self.query.setTables(["files"])
+        request = DB.execute(self.query.returnQuery())
+        for i in request:
+            if i[1] != "id":
+                keys.append(i[1])
+                try:
+                    values.append( infos[i[1]] )
+                except KeyError:
+                    values.append("")
+        
+        self.query.setStatTrue("insert")
+        self.query.setKeys(keys)
+        self.query.setValues(values)
+        self.query.setTables(["files"])
+        DB.execute(self.query.returnQuery())
+        
+        if details:
+            self.query.setStatTrue("select")
+            self.query.setSelect(["max(id)"])
+            self.query.setTables(["files"])
+            fId = DB.execute(self.query.returnQuery())[0][0]
+            details["f_id"] = fId
+            
+            detValues = []
+            detKeys = []
+            self.query.setStatTrue("pragma")
+            self.query.setTables([typeDb[infos["type"]]])
+            request = DB.execute(self.query.returnQuery())
+            for i in request:
+                detKeys.append(i[1])
+                try:
+                    detValues.append( details[i[1]] )
+                except KeyError:
+                    detValues.append("")
+            
+            self.query.setStatTrue("insert")
+            self.query.setKeys(detKeys)
+            self.query.setValues(detValues)
+            self.query.setTables([typeDb[infos["type"]]])
+            DB.execute(self.query.returnQuery())
+        
         
     def dirList(self, id=None, dirname=None):
         if id == None:
@@ -152,24 +227,79 @@ class explore:
                 except KeyError:
                     print _("%s is not a directory"% dirname)
             
-    def delDirByName(self, dirname):
-        if dirname == "/":
-            dirs = {"/":0}
-            self.dirNow = 0
+    def delDir(self, id=None, dirname=None):
+        dirs = {}
+        if dirname and dirname != "/":
+            self.query.setStatTrue("select")
+            self.query.setSelect(["id", "name"])
+            self.query.setTables(["dirs"])
+            self.query.setWhere([{"up_id":self.dirNow}])
+            Dirs = DB.execute(self.query.returnQuery())
+            for i in Dirs:
+                dirs[i[1]]=i[0]
+            try:
+                id = dirs[dirname]
+            except KeyError:
+                print _("%s is not a directory"% dirname)
+        elif dirname and dirname == "/":
+            id = 0
+        elif id:
+            id = id  # Is this joke? :D Yes
         else:
-            dirs, files = DB.listDirById(self.dirNow)
-        try:
-            dirDelFromDb(dirs[dirname])
-        except KeyError:
-            print _("%s is not a directory"% dirname)
+            return False
+        self.query.setStatTrue("delete")
+        self.query.setTables(["dirs"])
+        self.query.setWhere([{"id":id}])
+        DB.execute(self.query.returnQuery()) #delete directory
+        
+        self.query.setStatTrue("select")
+        self.query.setSelect(["id"])
+        self.query.setTables(["files"])
+        self.query.setWhere([{"up_id":id}])
+        request = DB.execute(self.query.returnQuery())
+        for i in request:
+            self.delFile(id=i[0]) #delete files in deleted directory
+        
+        self.query.setStatTrue("select")
+        self.query.setSelect(["id"])
+        self.query.setTables(["dirs"])
+        self.query.setWhere([{"up_id":id}])
+        Dirs = DB.execute(self.query.returnQuery())
+        for i in Dirs:
+            self.delDir(id=i[0])
 
-    def delFileByName(self, filename):
-        dirs, files = DB.listDirById(self.dirNow)
-        try:
-            type = DB.delFile(files[filename])
-            DB.delInfo(files[filename], type)
-        except KeyError:
-            print _("%s is not a file"% filename)
+    def delFile(self, id=None, filename=None):
+        if filename:
+            files = {}
+            self.query.setStatTrue("select")
+            self.query.setSelect(["id", "name", "type"])
+            self.query.setTables(["files"])
+            self.query.setWhere([{"up_id":self.dirNow}])
+            Files = DB.execute(self.query.returnQuery())
+            for i in Files:
+                files[i[1]]=[i[0], i[2]]
+            try:
+                id, type = files(filename)
+            except KeyError:
+                print _("%s is not a file"% filename)
+        elif id:
+            self.query.setStatTrue("select")
+            self.query.setSelect(["type"])
+            self.query.setTables(["files"])
+            self.query.setWhere([{"id":id}])
+            request = DB.execute(self.query.returnQuery())
+            type = request[0][0]
+        
+        if id:
+            self.query.setStatTrue("delete")
+            self.query.setTables(["files"])
+            self.query.setWhere([{"id":id}])
+            DB.execute(self.query.returnQuery()) # delete file
+            
+            if type != "other":
+                self.query.setTables([typeDb[type]])
+                self.query.setWhere([{"f_id":id}])
+                DB.execute(self.query.returnQuery()) # delete file detail info
         
     def show(self):
         self.listDir.sort()
@@ -187,7 +317,7 @@ class explore:
                 text += _("Create Date")+   "\t: %s\n"% infos["datecreate"]
                 text += _("Modify Date")+   "\t: %s\n"% infos["datemodify"]
                 text += _("Access Date")+   "\t: %s\n"% infos["dateaccess"]
-                text += _("Cataloging Date")+"\t: %s"% infos["dateaddcat"]
+                text += _("Cataloging Date")+"\t: %s"% infos["dateinsert"]
                 
             elif type == "files":
                 text += _("Name")       +   "\t: %s\n"% infos["name"]
@@ -197,7 +327,7 @@ class explore:
                 text += _("Create Date")+   "\t: %s\n"% infos["datecreate"]
                 text += _("Modify Date")+   "\t: %s\n"% infos["datemodify"]
                 text += _("Access Date")+   "\t: %s\n"% infos["dateaccess"]
-                text += _("Cataloging Date")+ "\t: %s"% infos["dateaddcat"]
+                text += _("Cataloging Date")+ "\t: %s"% infos["dateinsert"]
                 
             return text
             
@@ -210,36 +340,7 @@ class explore:
             info = self.infoById(files[name], "files")
         return info
         
-    def mkdir(self, directory, name, desc, date):
-        if directory != None:
-            name = os.path.split(directory)[-1]
-            if name == "":
-                name = os.path.split(os.path.split(directory)[0])[-1]
-        dirAdd2Db(directory, self.dirNow, name, date, desc, date, date, date)
 
-    def mkfile(self, address, name, datei):
-        size = 0
-        datec = datei
-        datem = datei
-        datea = datei
-        infos = {}
-        if address != None:
-            name = os.path.split(address)[-1]
-            if name == "":
-                name = os.path.split(os.path.split(address)[0])[-1]
-            stat = os.stat(address)
-            size = stat.st_size
-            datec = datetime.datetime.fromtimestamp(stat.st_ctime)
-            datem = datetime.datetime.fromtimestamp(stat.st_mtime)
-            datea = datetime.datetime.fromtimestamp(stat.st_atime)
-        if types.has_key(name[-4:].lower()):
-            type=types[name[-4:].lower()]
-            infos = tagging(address, name[-4:].lower())
-        else:
-            type="other"
-        f_id = DB.addFile(self.dirNow, name, size, datec, datem, datea, datei, type)
-        if len(infos.keys())>0:
-            infos2Db(f_id, infos, type)
 
 
 # Colored printing

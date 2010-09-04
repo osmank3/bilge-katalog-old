@@ -40,12 +40,9 @@ def parser(entry):
     for i in additions:
         entry = entry.replace(i,"")
     additions += entry.split()
-    for i in additions:
-        address += addressParser(i)
-        #additions.remove(i)
     if '""' in additions:
         additions.remove('""')
-    return command, parameters, additions, address
+    return command, parameters, additions
     
 def addressParser(address):
     addressList = []
@@ -69,9 +66,9 @@ print _("Welcome to bilge-katalog!\
 while QUIT == False:
     entry = raw_input(">>> ")
     entry = entry.decode('utf-8')
-    command, parameters, additions, address = parser(entry)
+    command, parameters, additions = parser(entry)
     
-    #print command , parameters , additions, address
+    #print command , parameters , additions
     
     if command == "help":
         print _("helping information")
@@ -88,7 +85,10 @@ while QUIT == False:
         if parameters.has_key("dir"):
             directory = parameters["dir"]
         now = datetime.datetime.now()
-        libilge.dirAdd2Db(directory, 0, name, now, desc, now, now, now)
+        infos = {"name":str(name), "description":str(desc),
+                 "dateinsert":now, "up_id":0 }
+        EXP.mkDir(address=directory, infos=infos)
+        #libilge.dirAdd2Db(directory, 0, name, now, desc, now, now, now)
             
     elif command == "mkdir":
         now = datetime.datetime.now()
@@ -99,10 +99,12 @@ while QUIT == False:
             desc = parameters["desc"]
         if parameters.has_key("dir"):
             directory = parameters["dir"]
-            EXP.mkdir(directory, name, desc, now)
+            infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+            EXP.mkDir(address=directory, infos=infos)
         elif len(additions)>0:
             name = additions[0]
-            EXP.mkdir(directory, name, desc, now)
+            infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+            EXP.mkDir(infos=infos)
         
     elif command == "mkfile":
         now = datetime.datetime.now()
@@ -110,10 +112,12 @@ while QUIT == False:
         address = None
         if parameters.has_key("address"):
             address = parameters["address"]
-            EXP.mkfile(address, name, now)
+            infos = {"name":str(name), "dateinsert":now}
+            EXP.mkFile(infos=infos)
         elif len(additions)>0:
             name = additions[0]
-            EXP.mkfile(address, name, now)
+            infos = {"name":str(name), "dateinsert":now}
+            EXP.mkFile(infos=infos)
         
     elif command == "ls":
         if parameters.has_key("id"):
@@ -122,12 +126,12 @@ while QUIT == False:
         elif len(additions)>0:
             name = additions[0]
             EXP.dirList(dirname=name)
-        elif len(address)>0:
-            oldId = EXP.dirNow
-            for i in address:
-                EXP.chDirByName(i)
-            EXP.dirList()
-            EXP.chDir(id=oldId)
+        #elif len(address)>0:
+         #   oldId = EXP.dirNow
+          #  for i in address:
+           #     EXP.chDir(dirname=i)
+            #EXP.dirList()
+            #EXP.chDir(id=oldId)
         else:
             EXP.dirList()
     
@@ -138,49 +142,49 @@ while QUIT == False:
         elif len(additions)>0:
             name = additions[0]
             EXP.chDir(dirname=name)
-        elif len(address)>0:
-            for i in address:
-                EXP.chDir(dirname=i)
+        #elif len(address)>0:
+         #   for i in address:
+          #      EXP.chDir(dirname=i)
         
     elif command == "rmdir":
         if parameters.has_key("id"):
             id = parameters["id"]
-            libilge.dirDelFromDb(id)
+            EXP.delDir(id=id)
         elif len(additions)>0:
             name = additions[0]
-            EXP.delDirByName(name)
-        elif len(address)>0:
-            oldId = EXP.dirNow
-            for i in address[:-1]:
-                EXP.chDirByName(i)
-            EXP.delDirByName(address[-1])
-            EXP.chDir(id=oldId)
+            EXP.delDir(dirname = name)
+        #elif len(address)>0:
+         #   oldId = EXP.dirNow
+          #  for i in address[:-1]:
+           #     EXP.chDir(dirname=i)
+            #EXP.delDirByName(address[-1])
+            #EXP.chDir(id=oldId)
                     
     elif command == "rm":
         if parameters.has_key("id"):
             id = parameters["id"]
-            DB.delFile(id)
+            DB.delFile(id=id)
         elif len(additions)>0:
             name = additions[0]
-            EXP.delFileByName(name)
-        elif len(address)>0:
-            oldId = EXP.dirNow
-            for i in address[:-1]:
-                EXP.chDirByName(i)
-            EXP.delFileByName(address[-1])
-            EXP.chDir(id=oldId)
+            EXP.delFile(filename=name)
+        #elif len(address)>0:
+         #   oldId = EXP.dirNow
+          #  for i in address[:-1]:
+           #     EXP.chDir(dirname=i)
+            #EXP.delFileByName(address[-1])
+            #EXP.chDir(id=oldId)
                 
     elif command == "info":
         if len(additions)>0:
             name = additions[0]
             info = EXP.infoByName(name)
             print info
-        elif len(address)>0:
-            oldId = EXP.dirNow
-            for i in address[:-1]:
-                EXP.chDirByName(i)
-            info = EXP.infoByName(address[-1])
-            print info
-            EXP.chDir(id=oldId)
+        #elif len(address)>0:
+         #   oldId = EXP.dirNow
+          #  for i in address[:-1]:
+           #     EXP.chDir(dirname=i)
+            #info = EXP.infoByName(address[-1])
+            #print info
+            #EXP.chDir(id=oldId)
 
 print _("Thanks for using bilge-katalog")

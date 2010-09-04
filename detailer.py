@@ -18,47 +18,32 @@ gettext.install("bilge-katalog", unicode=1)
 
 DB = database.dataBase()
 
-mkeys = ["title", "artist", "album", "date", "tracknumber",
-            "genre", "bitrate", "frequence", "length"]
+def getKeys(type):
+    infos = {}
+    Query = database.EditQuery()
+    Query.setStatTrue("pragma")
+    Query.setTables([type])
+    Request = DB.execute(Query.returnQuery())
+    for i in Request:
+        if i[1] != "f_id":
+            if i[2] == "INTEGER":
+                infos[i[1]] = 0
+            else:
+                infos[i[1]] = ""
+    return infos
+    
+def loop4infos(info, infos): # info from file, infos to database
+    for i in infos.keys():
+        try:
+            if info.has_key(i):
+                if type(infos[i]) == int:
+                    infos[i] = int(info[i][0])
+                else:
+                    infos[i] = info[i][0]
+        except ValueError:
+            pass
+    return infos
 
-def mp3Tags(file):
-    infos = {}
-    info = MP3(file, EasyID3)
-    infos["bitrate"] = info.info.bitrate
-    infos["frequence"] = info.info.sample_rate
-    infos["length"] = int(float(info.info.length))
-    for i in info.keys():
-        if i == "date" or i == "tracknumber":
-            infos[i] = int(info[i][0])
-        else:
-            infos[i] = info[i][0]
-    for i in mkeys:
-        if infos.has_key(i) == 0:
-            if i == "date" or i == "tracknumber":
-                infos[i] = 0
-            else:
-                infos[i] = ""
-    return infos
-    
-def oggTags(file):
-    infos = {}
-    info = mutagen.File(file)
-    infos["bitrate"] = info.info.bitrate
-    infos["frequence"] = info.info.sample_rate
-    infos["length"] = int(float(info.info.length))
-    for i in info.keys():
-        if i == "date" or i == "tracknumber":
-            infos[i] = int(info[i][0])
-        else:
-            infos[i] = info[i][0]
-    for i in mkeys:
-        if infos.has_key(i) == 0:
-            if i == "date" or i == "tracknumber":
-                infos[i] = 0
-            else:
-                infos[i] = ""
-    return infos
-    
 def infoFile(file):
     infos = {}
     info = Meta.parse(file)
@@ -66,6 +51,27 @@ def infoFile(file):
         if info[i]:
             infos[i] = info[i]
     return infos
+
+def mp3Tags(file):
+    infos = getKeys("minfo")
+    info = MP3(file, EasyID3)
+    infos["bitrate"] = info.info.bitrate
+    infos["frequence"] = info.info.sample_rate
+    infos["length"] = int(float(info.info.length))
+    infos = loop4infos(info, infos)
+    return infos
+    
+def oggTags(file):
+    infos = getKeys("minfo")
+    info = mutagen.File(file)
+    infos["bitrate"] = info.info.bitrate
+    infos["frequence"] = info.info.sample_rate
+    infos["length"] = int(float(info.info.length))
+    infos = loop4infos(info, infos)
+    return infos
     
 def mp4Tags(file):
-    infos = {}
+    infos = getKeys("vinfo")
+    info = infoFile(file)
+    infos = loop4infos(info, infos)
+    return infos
