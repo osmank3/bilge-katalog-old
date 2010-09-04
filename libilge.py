@@ -23,17 +23,54 @@ types = {   ".aac":"music", ".acc":"music", ".mp3":"music", ".ogg":"music",
 typeDb = {  "book":"binfo", "ebook":"einfo", "image":"iinfo",
             "music":"minfo", "video":"vinfo"}
 
+TransKeys = {   "name"          :   _("Name"),
+                "address"       :   _("Address"),
+                "datecreate"    :   _("Create Date"),
+                "datemodify"    :   _("Modify Date"),
+                "dateaccess"    :   _("Access Date"),
+                "dateinsert"    :   _("Cataloging Date"),
+                "description"   :   _("Description"),
+                "size"          :   _("Size"),
+                "type"          :   _("Type"),
+                "title"         :   _("Title"),
+                "artist"        :   _("Artist"),
+                "album"         :   _("Album"),
+                "date"          :   _("Year"),
+                "tracknumber"   :   _("Track"),
+                "genre"         :   _("Genre"),
+                "bitrate"       :   _("Bitrate"),
+                "samplerate"    :   _("Sample Rate"),
+                "length"        :   _("Length"),
+                "author"        :   _("Author"),
+                "imprintinfo"   :   _("Imprint Info"),
+                "callnumber"    :   _("Call Number"),
+                "year"          :   _("Year"),
+                "page"          :   _("Page"),
+                "width"         :   _("Width"),
+                "height"        :   _("Height")    }
+
+KeysQuene = [   "name", "address", "size", "type", "description", "title",
+                "artist", "album", "date", "tracknumber", "genre", "bitrate",
+                "samplerate", "length", "author", "page", "year",
+                "callnumber", "imprintinfo", "width", "height", "datecreate",
+                "datemodify", "dateaccess", "dateinsert"]
+
 DB = database.dataBase()
 
 def tagging(address, type):
-    if type == ".mp3":
+    if types[type] == "image":
+        infos = detailer.imageInfo(address)
+        return infos
+    elif types[type] == "video":
+        infos = detailer.videoInfo(address)
+        return infos
+    elif type == ".mp3":
         infos = detailer.mp3Tags(address)
         return infos
     elif type == ".ogg":
         infos = detailer.oggTags(address)
         return infos
     
-        
 class explore:
     def __init__(self):
         self.dirNow = 0
@@ -305,40 +342,88 @@ class explore:
         self.listDir.sort()
         for i in self.listDir:
             print i
+
+    def genAddress(self, up_id):
+        upDirs = []
+        address = "/"
+        while up_id != 0:
+            self.query.setStatTrue("select")
+            self.query.setSelect(["up_id","name"])
+            self.query.setTables(["dirs"])
+            self.query.setWhere([{"id":up_id}])
+            request = DB.execute(self.query.returnQuery())
+            up_id, name = request[0]
+            upDirs.append(name)
+        upDirs.reverse()
+        for i in upDirs:
+            address += i + "/"
+        return address
             
-    def infoById(self, id, type):
-        if id != 0:
-            infos = DB.info(id, type)
+    def info(self, id=None, name=None, type=None):
+        if name:
+            self.query.setStatTrue("select")
+            self.query.setSelect(["name, id"])
+            self.query.setTables(["dirs"])
+            self.query.setWhere([{"up_id":self.dirNow}])
+            Dirs = DB.execute(self.query.returnQuery())
+            for i in Dirs:
+                if i[0] == name:
+                    id = i[1]
+                    type = "dirs"
+            self.query.setTables(["files"])
+            Files = DB.execute(self.query.returnQuery())
+            for i in Files:
+                if i[0] == name:
+                    id = i[1]
+                    type = "files"
+        if id and type:
+            self.query.setStatTrue("pragma")
+            self.query.setTables([type])
+            keys = DB.execute(self.query.returnQuery())
+            
+            self.query.setStatTrue("select")
+            self.query.setSelect(["*"])
+            self.query.setTables([type])
+            self.query.setWhere([{"id":id}])
+            values = DB.execute(self.query.returnQuery())
+            
+            infos = {}
+            n = 0
+            while n<len(keys):
+                if keys[n][1] != "id" and keys[n][1] != "up_id":
+                    infos[keys[n][1]] = values[0][n]
+                if keys[n][1] == "up_id":
+                    address = self.genAddress(values[0][n])
+                    infos["address"] = address
+                n += 1
+            
+            if type == "files":
+                if infos["type"] != "other":
+                    self.query.setStatTrue("pragma")
+                    self.query.setTables([typeDb[infos["type"]]])
+                    keys = DB.execute(self.query.returnQuery())
+                    
+                    self.query.setStatTrue("select")
+                    self.query.setSelect(["*"])
+                    self.query.setTables([typeDb[infos["type"]]])
+                    self.query.setWhere([{"f_id":id}])
+                    values = DB.execute(self.query.returnQuery())
+                    
+                    n = 0
+                    while n<len(keys):
+                        if keys[n][1] != "f_id":
+                            infos[keys[n][1]] = values[0][n]
+                        n += 1
+                        
             text = ""
-            if type == "dirs":
-                text += _("Name")       +   "\t: %s\n"% infos["name"]
-                text += _("Address")    +   "\t: %s\n"% infos["up_id"]
-                text += _("Descrition") +   "\t: %s\n"% infos["description"]
-                text += _("Create Date")+   "\t: %s\n"% infos["datecreate"]
-                text += _("Modify Date")+   "\t: %s\n"% infos["datemodify"]
-                text += _("Access Date")+   "\t: %s\n"% infos["dateaccess"]
-                text += _("Cataloging Date")+"\t: %s"% infos["dateinsert"]
-                
-            elif type == "files":
-                text += _("Name")       +   "\t: %s\n"% infos["name"]
-                text += _("Address")    +   "\t: %s\n"% infos["up_id"]
-                text += _("Size")       +   "\t: %s\n"% infos["size"]
-                text += _("Type")       +   "\t: %s\n"% infos["type"]
-                text += _("Create Date")+   "\t: %s\n"% infos["datecreate"]
-                text += _("Modify Date")+   "\t: %s\n"% infos["datemodify"]
-                text += _("Access Date")+   "\t: %s\n"% infos["dateaccess"]
-                text += _("Cataloging Date")+ "\t: %s"% infos["dateinsert"]
-                
+            if len(infos.keys())>0:
+                for i in KeysQuene:
+                    if infos.has_key(i):
+                        if infos[i] == "" or infos[i] == 0:
+                            pass
+                        else:
+                            text += "%20s : %s\n"% (TransKeys[i], infos[i])
             return text
-            
-    def infoByName(self, name):
-        dirs, files = DB.listDirById(self.dirNow)
-        info = ""
-        if name in dirs.keys():
-            info = self.infoById(dirs[name], "dirs")
-        elif name in files.keys():
-            info = self.infoById(files[name], "files")
-        return info
         
 
 

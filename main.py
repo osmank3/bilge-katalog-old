@@ -8,6 +8,7 @@ import database
 import libilge
 import datetime
 import re
+import copy
 import readline #this is for history and editing line
 
 #For using unicode utf-8
@@ -88,7 +89,6 @@ while QUIT == False:
         infos = {"name":str(name), "description":str(desc),
                  "dateinsert":now, "up_id":0 }
         EXP.mkDir(address=directory, infos=infos)
-        #libilge.dirAdd2Db(directory, 0, name, now, desc, now, now, now)
             
     elif command == "mkdir":
         now = datetime.datetime.now()
@@ -124,14 +124,16 @@ while QUIT == False:
             id = parameters["id"]
             EXP.dirList(id=id)
         elif len(additions)>0:
-            name = additions[0]
-            EXP.dirList(dirname=name)
-        #elif len(address)>0:
-         #   oldId = EXP.dirNow
-          #  for i in address:
-           #     EXP.chDir(dirname=i)
-            #EXP.dirList()
-            #EXP.chDir(id=oldId)
+            name = " ".join(additions)
+            if name.find("/") != -1:
+                oldId = EXP.dirNow
+                address = addressParser(name)
+                for i in address[:-1]:
+                    EXP.chDir(dirname=i)
+                EXP.dirList(dirname=address[-1])
+                EXP.dirNow = oldId
+            else:
+                EXP.dirList(dirname=name)
         else:
             EXP.dirList()
     
@@ -140,51 +142,61 @@ while QUIT == False:
             id = parameters["id"]
             EXP.chDir(id=id)
         elif len(additions)>0:
-            name = additions[0]
-            EXP.chDir(dirname=name)
-        #elif len(address)>0:
-         #   for i in address:
-          #      EXP.chDir(dirname=i)
+            name = " ".join(additions)
+            if name.find("/") != -1:
+                oldId = EXP.dirNow
+                address = addressParser(name)
+                for i in address:
+                    EXP.chDir(dirname=i)
+            else:
+                EXP.chDir(dirname=name)
         
     elif command == "rmdir":
         if parameters.has_key("id"):
             id = parameters["id"]
             EXP.delDir(id=id)
         elif len(additions)>0:
-            name = additions[0]
-            EXP.delDir(dirname = name)
-        #elif len(address)>0:
-         #   oldId = EXP.dirNow
-          #  for i in address[:-1]:
-           #     EXP.chDir(dirname=i)
-            #EXP.delDirByName(address[-1])
-            #EXP.chDir(id=oldId)
+            name = " ".join(additions)
+            if name.find("/") != -1:
+                oldId = EXP.dirNow
+                address = addressParser(name)
+                for i in address[:-1]:
+                    EXP.chDir(dirname=i)
+                EXP.dirDir(dirname=address[-1])
+                EXP.dirNow = oldId
+            else:
+                EXP.delDir(dirname = name)
                     
     elif command == "rm":
         if parameters.has_key("id"):
             id = parameters["id"]
             DB.delFile(id=id)
         elif len(additions)>0:
-            name = additions[0]
-            EXP.delFile(filename=name)
-        #elif len(address)>0:
-         #   oldId = EXP.dirNow
-          #  for i in address[:-1]:
-           #     EXP.chDir(dirname=i)
-            #EXP.delFileByName(address[-1])
-            #EXP.chDir(id=oldId)
+            name = " ".join(additions)
+            if name.find("/") != -1:
+                oldId = EXP.dirNow
+                address = addressParser(name)
+                for i in address[:-1]:
+                    EXP.chDir(dirname=i)
+                EXP.dirFile(filename=address[-1])
+                EXP.dirNow = oldId
+            else:
+                EXP.delFile(filename=name)
                 
     elif command == "info":
         if len(additions)>0:
-            name = additions[0]
-            info = EXP.infoByName(name)
+            name = " ".join(additions)
+            if name.find("/") != -1:
+                oldId = EXP.dirNow
+                if name.find("/") == 0:
+                    EXP.dirNow = 0
+                address = addressParser(name)
+                for i in address[:-1]:
+                    EXP.chDir(dirname=i)
+                info = EXP.info(name=address[-1])
+                EXP.dirNow = oldId
+            else:
+                info = EXP.info(name=name)
             print info
-        #elif len(address)>0:
-         #   oldId = EXP.dirNow
-          #  for i in address[:-1]:
-           #     EXP.chDir(dirname=i)
-            #info = EXP.infoByName(address[-1])
-            #print info
-            #EXP.chDir(id=oldId)
 
 print _("Thanks for using bilge-katalog")

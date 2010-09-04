@@ -5,6 +5,10 @@ import os
 import sys
 import gettext
 import database
+
+from warnings import simplefilter # for ignoriny DeprecationWarning.
+simplefilter("ignore", DeprecationWarning)
+
 import kaa.metadata as Meta
 import mutagen
 from mutagen.mp3 import MP3
@@ -56,7 +60,7 @@ def mp3Tags(file):
     infos = getKeys("minfo")
     info = MP3(file, EasyID3)
     infos["bitrate"] = info.info.bitrate
-    infos["frequence"] = info.info.sample_rate
+    infos["samplerate"] = info.info.sample_rate
     infos["length"] = int(float(info.info.length))
     infos = loop4infos(info, infos)
     return infos
@@ -65,13 +69,19 @@ def oggTags(file):
     infos = getKeys("minfo")
     info = mutagen.File(file)
     infos["bitrate"] = info.info.bitrate
-    infos["frequence"] = info.info.sample_rate
+    infos["samplerate"] = info.info.sample_rate
     infos["length"] = int(float(info.info.length))
     infos = loop4infos(info, infos)
     return infos
     
-def mp4Tags(file):
+def videoInfo(file):
     infos = getKeys("vinfo")
+    info = infoFile(file)
+    infos = loop4infos(info, infos)
+    return infos
+    
+def imageInfo(file):
+    infos = getKeys("iinfo")
     info = infoFile(file)
     infos = loop4infos(info, infos)
     return infos
