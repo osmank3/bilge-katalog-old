@@ -1,0 +1,12 @@
+bilge-katalog is cataloging file's infos for founding where is file(s).
+
+Requirements:
+-Python >= 2.6
+-Mutagen
+-kaa.metadata
+
+Installation:
+-Installation script does not yet
+
+Translations:
+-Not ready to translate
