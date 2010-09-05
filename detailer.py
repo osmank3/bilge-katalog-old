@@ -41,9 +41,15 @@ def loop4infos(info, infos): # info from file, infos to database
         try:
             if info.has_key(i):
                 if type(infos[i]) == int:
-                    infos[i] = int(info[i][0])
+                    if type(info[i]) == list:
+                        infos[i] = int(info[i][0])
+                    else:
+                        infos[i] = int(info[i])
                 else:
-                    infos[i] = info[i][0]
+                    if type(info[i]) == list:
+                        infos[i] = info[i][0]
+                    else:
+                        infos[i] = info[i]
         except ValueError:
             pass
     return infos
@@ -54,6 +60,13 @@ def infoFile(file):
     for i in info.keys():
         if info[i]:
             infos[i] = info[i]
+    try:
+        video = info.video[0]
+        for i in video.keys():
+            if video[i]:
+                infos[i] = video[i]
+    except:
+        pass
     return infos
 
 def mp3Tags(file):
@@ -71,6 +84,12 @@ def oggTags(file):
     infos["bitrate"] = info.info.bitrate
     infos["samplerate"] = info.info.sample_rate
     infos["length"] = int(float(info.info.length))
+    infos = loop4infos(info, infos)
+    return infos
+    
+def musicInfo(file):
+    infos = getKeys("minfo")
+    info = infoFile(file)
     infos = loop4infos(info, infos)
     return infos
     

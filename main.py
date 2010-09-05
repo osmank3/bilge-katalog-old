@@ -95,6 +95,8 @@ while QUIT == False:
         desc = ""
         name = ""
         directory = None
+        if parameters.has_key("name"):
+            name = parameters["name"]
         if parameters.has_key("desc"):
             desc = parameters["desc"]
         if parameters.has_key("dir"):

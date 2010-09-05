@@ -88,6 +88,19 @@ class explore:
             infos["datecreate"] = datei
             infos["datemodify"] = datei
             infos["dateaccess"] = datei
+        
+        if address and infos["up_id"] != 0:
+            if not infos.has_key("name"):
+                infos["name"] = os.path.split(address)[-1]
+                if infos["name"] == "":
+                    infos["name"]=os.path.split(os.path.split(address)[0])[-1]
+            
+            stat = os.stat(address)
+            infos["datecreate"] = datetime.datetime.fromtimestamp(stat.st_ctime)
+            infos["datemodify"] = datetime.datetime.fromtimestamp(stat.st_mtime)
+            infos["dateaccess"] = datetime.datetime.fromtimestamp(stat.st_atime)
+            infos["dateinsert"] = datei
+        
         self.query.setStatTrue("pragma")
         self.query.setTables(["dirs"])
         request = DB.execute(self.query.returnQuery())
