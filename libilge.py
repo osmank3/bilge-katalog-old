@@ -438,6 +438,39 @@ class explore:
                             text += "%20s : %s\n"% (TransKeys[i], infos[i])
             return text
         
+    def search(self, wanted="", detail=False):
+        print "%s:"% wanted
+        if wanted:
+            dirs, files = [], []
+            self.query.setStatTrue("select")
+            self.query.setSelect(["id","name","up_id"])
+            self.query.setTables(["files"])
+            self.query.setWhere(["name LIKE '%?%'".replace("?", wanted)])
+            FilesReq = DB.execute(self.query.returnQuery())
+            for i in FilesReq:
+                address = self.genAddress(i[2])
+                files += [(i[0], i[1], address, "files")]
+                
+            self.query.setSelect(["id","name","up_id"])
+            self.query.setTables(["dirs"])
+            self.query.setWhere(["name LIKE '%?%' OR description LIKE '%?%'".replace("?", wanted)])
+            DirsReq = DB.execute(self.query.returnQuery())
+            for i in DirsReq:
+                address = self.genAddress(i[2])
+                dirs += [(i[0], i[1], address, "dirs")]
+                
+            wantedList = dirs + files
+            
+            if detail:
+                pass
+            else:
+                addresses = []
+                for i in wantedList:
+                    addresses.append(" " + i[2] + i[1])
+                return addresses
+
+
+
 
 
 

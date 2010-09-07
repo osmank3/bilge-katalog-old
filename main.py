@@ -200,5 +200,12 @@ while QUIT == False:
             else:
                 info = EXP.info(name=name)
             print info
+            
+    elif command == "whereis":
+        if len(additions)>0:
+            wanted = " ".join(additions)
+            printList = EXP.search(wanted)
+            for i in printList:
+                print i
 
 print _("Thanks for using bilge-katalog")
