@@ -207,5 +207,12 @@ while QUIT == False:
             printList = EXP.search(wanted)
             for i in printList:
                 print i
+                
+    elif command == "search":
+        if len(additions)>0:
+            wanted = " ".join(additions)
+            printList = EXP.search(wanted, True)
+            for i in printList:
+                print i
 
 print _("Thanks for using bilge-katalog")

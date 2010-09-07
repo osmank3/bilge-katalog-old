@@ -439,7 +439,6 @@ class explore:
             return text
         
     def search(self, wanted="", detail=False):
-        print "%s:"% wanted
         if wanted:
             dirs, files = [], []
             self.query.setStatTrue("select")
@@ -462,9 +461,13 @@ class explore:
             wantedList = dirs + files
             
             if detail:
-                pass
+                textList = [wanted + ":"]
+                for i in wantedList:
+                    text = self.info(id=i[0], type=i[3])
+                    textList.append(i[1] + "\n" + text)
+                return textList
             else:
-                addresses = []
+                addresses = [wanted + ":"]
                 for i in wantedList:
                     addresses.append(" " + i[2] + i[1])
                 return addresses
