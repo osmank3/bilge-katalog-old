@@ -157,11 +157,11 @@ class explore:
             infos["dateaccess"] = datetime.datetime.fromtimestamp(stat.st_atime)
             infos["dateinsert"] = datetime.datetime.now()
         
-        elif not infos.has_key("up_id"):
+        if not infos.has_key("up_id"):
             infos["up_id"] = self.dirNow
             
         name = infos["name"]
-        if types.has_key(name[-4:].lower()):
+        if types.has_key(name[-4:].lower()) and infos.has_key("type") == False:
             infos["type"] = types[name[-4:].lower()]
             if address:
                 details = tagging(address, name[-4:].lower())
@@ -169,8 +169,12 @@ class explore:
                 details = None
         else:
             details = None
-            if not infos.has_key("type"):
-                infos["type"]="other"
+            
+        if not infos.has_key("datecreate"):
+            infos["datecreate"] = datetime.datetime.now()
+            infos["datemodify"] = datetime.datetime.now()
+            infos["dateaccess"] = datetime.datetime.now()
+            infos["dateinsert"] = datetime.datetime.now()
         
         values = []
         keys = []
@@ -264,7 +268,7 @@ class explore:
                     self.query.setWhere([{"id":self.dirNow}])
                     up_id = DB.execute(self.query.returnQuery())[0][0]
                     self.dirNow = up_id
-            else:
+            elif dirname != "":
                 dirs = {}
                 self.query.setStatTrue("select")
                 self.query.setSelect(["id", "name"])
@@ -423,11 +427,12 @@ class explore:
                     self.query.setWhere([{"f_id":id}])
                     values = DB.execute(self.query.returnQuery())
                     
-                    n = 0
-                    while n<len(keys):
-                        if keys[n][1] != "f_id":
-                            infos[keys[n][1]] = values[0][n]
-                        n += 1
+                    if values != []:
+                        n = 0
+                        while n<len(keys):
+                            if keys[n][1] != "f_id":
+                                infos[keys[n][1]] = values[0][n]
+                            n += 1
                         
             text = ""
             if len(infos.keys())>0:
@@ -521,7 +526,6 @@ class explore:
             if parameters.has_key(i):
                 usingParams[i] = parameters[i]
         
-        self.query.setStatTrue("update")
         if table == "files":
             try:
                 numb = keys.index("f_id")
@@ -542,19 +546,44 @@ class explore:
                 if i in det:
                     detail[i] = usingParams[i]
                     
-            if info.keys()>0:
+            if len(info.keys())>0:
+                self.query.setStatTrue("update")
                 self.query.setTables(["files"])
                 self.query.setSet(info)
                 self.query.setWhere([{"id":ids}])
                 DB.execute(self.query.returnQuery())
-            if detail.keys()>0 and type != "other":
+                
+            update = False
+            self.query.setStatTrue("select")
+            self.query.setTables([typeDb[type]])
+            self.query.setSelect(["*"])
+            self.query.setWhere([{"f_id":ids}])
+            if DB.execute(self.query.returnQuery()) != []:
+                update = True
+            if len(detail.keys())>0 and type != "other" and update:
+                self.query.setStatTrue("update")
                 self.query.setTables([typeDb[type]])
                 self.query.setSet(detail)
                 self.query.setWhere([{"f_id":ids}])
                 DB.execute(self.query.returnQuery())
+            elif len(detail.keys())>0 and type != "other" and update == False:
+                infoDet = detailer.getKeys(typeDb[type])
+                infoDet["f_id"]=ids
+                for i in detail.keys():
+                    infoDet[i] = detail[i]
+                
+                keys, values = [], []
+                for i in infoDet.keys():
+                    keys.append(i)
+                    values.append(infoDet[i])
+                self.query.setStatTrue("insert")
+                self.query.setTables([typeDb[type]])
+                self.query.setKeys(keys)
+                self.query.setValues(values)
+                DB.execute(self.query.returnQuery())
                 
         elif table == "dirs":
-            if usingParams.keys()>0:
+            if len(usingParams.keys())>0:
                 self.query.setTables(["dirs"])
                 self.query.setSet(usingParams)
                 self.query.setWhere([{"id":ids}])

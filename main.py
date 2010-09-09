@@ -22,7 +22,10 @@ parse2 = re.compile("(\w+=\w+)", re.IGNORECASE|re.UNICODE)
 parse3 = re.compile("(\"[^\"]*\")", re.IGNORECASE|re.UNICODE)
     
 def parser(entry):
-    command = entry.split()[0]
+    try:
+        command = entry.split()[0]
+    except IndexError:
+        return "", None, None
     entry = entry[len(command):]
     parameters = {}
     additions = []
@@ -112,13 +115,18 @@ while QUIT == False:
         now = datetime.datetime.now()
         name = ""
         address = None
+        infos = {}
+        if parameters.has_key("type"):
+            infos["type"] = str(parameters["type"])
         if parameters.has_key("address"):
             address = parameters["address"]
-            infos = {"name":str(name), "dateinsert":now}
+            infos["name"] = str(name)
+            infos["dateinsert"]=now
             EXP.mkFile(infos=infos)
         elif len(additions)>0:
             name = additions[0]
-            infos = {"name":str(name), "dateinsert":now}
+            infos["name"]=str(name)
+            infos["dateinsert"]=now
             EXP.mkFile(infos=infos)
         
     elif command == "ls":
@@ -146,8 +154,7 @@ while QUIT == False:
         elif len(additions)>0:
             name = " ".join(additions)
             if name.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(name)
+                address = addressParser(name)                    
                 for i in address:
                     EXP.chDir(dirname=i)
             else:
@@ -190,8 +197,6 @@ while QUIT == False:
             name = " ".join(additions)
             if name.find("/") != -1:
                 oldId = EXP.dirNow
-                if name.find("/") == 0:
-                    EXP.dirNow = 0
                 address = addressParser(name)
                 for i in address[:-1]:
                     EXP.chDir(dirname=i)
@@ -218,17 +223,15 @@ while QUIT == False:
     elif command == "update":
         if len(additions)>0:
             updated = " ".join(additions)
-            if name.find("/") != -1:
+            if updated.find("/") != -1:
                 oldId = EXP.dirNow
-                if name.find("/") == 0:
-                    EXP.dirNow = 0
-                address = addressParser(name)
+                address = addressParser(updated)
                 for i in address[:-1]:
                     EXP.chDir(dirname=i)
-                if len(parameters.keys()):
+                if len(parameters.keys())>0:
                     EXP.update(updated=address[-1], parameters=parameters)
                 EXP.dirNow = oldId
-            elif len(parameters.keys()):
+            elif len(parameters.keys())>0:
                 EXP.update(updated=updated, parameters=parameters)
 
 print _("Thanks for using bilge-katalog")
