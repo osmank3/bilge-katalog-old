@@ -74,7 +74,7 @@ while QUIT == False:
     if command == "help":
         print _("helping information")
     
-    elif command == "quit":
+    elif command == "quit" or command == "exit":
         QUIT = True
         
     elif command == "mkcat":
@@ -183,7 +183,7 @@ while QUIT == False:
                 EXP.dirFile(filename=address[-1])
                 EXP.dirNow = oldId
             else:
-                EXP.delFile(filename=name)
+                EXP.delFile(filename=str(name))
                 
     elif command == "info":
         if len(additions)>0:
@@ -214,5 +214,21 @@ while QUIT == False:
             printList = EXP.search(wanted, True)
             for i in printList:
                 print i
+                
+    elif command == "update":
+        if len(additions)>0:
+            updated = " ".join(additions)
+            if name.find("/") != -1:
+                oldId = EXP.dirNow
+                if name.find("/") == 0:
+                    EXP.dirNow = 0
+                address = addressParser(name)
+                for i in address[:-1]:
+                    EXP.chDir(dirname=i)
+                if len(parameters.keys()):
+                    EXP.update(updated=address[-1], parameters=parameters)
+                EXP.dirNow = oldId
+            elif len(parameters.keys()):
+                EXP.update(updated=updated, parameters=parameters)
 
 print _("Thanks for using bilge-katalog")

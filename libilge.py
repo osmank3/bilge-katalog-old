@@ -169,7 +169,8 @@ class explore:
                 details = None
         else:
             details = None
-            infos["type"]="other"
+            if not infos.has_key("type"):
+                infos["type"]="other"
         
         values = []
         keys = []
@@ -329,7 +330,7 @@ class explore:
             for i in Files:
                 files[i[1]]=[i[0], i[2]]
             try:
-                id, type = files(filename)
+                id, type = files[filename]
             except KeyError:
                 print _("%s is not a file"% filename)
         elif id:
@@ -444,7 +445,7 @@ class explore:
             self.query.setStatTrue("select")
             self.query.setSelect(["id","name","up_id"])
             self.query.setTables(["files"])
-            self.query.setWhere(["name LIKE '%?%'".replace("?", wanted)])
+            self.query.setWhereLike([{"name":wanted}])
             FilesReq = DB.execute(self.query.returnQuery())
             for i in FilesReq:
                 address = self.genAddress(i[2])
@@ -452,7 +453,8 @@ class explore:
                 
             self.query.setSelect(["id","name","up_id"])
             self.query.setTables(["dirs"])
-            self.query.setWhere(["name LIKE '%?%' OR description LIKE '%?%'".replace("?", wanted)])
+            self.query.setWhereLike([{"name":wanted}, "OR",
+                                     {"description":wanted}])
             DirsReq = DB.execute(self.query.returnQuery())
             for i in DirsReq:
                 address = self.genAddress(i[2])
@@ -471,6 +473,92 @@ class explore:
                 for i in wantedList:
                     addresses.append(" " + i[2] + i[1])
                 return addresses
+
+    def update(self, updated, parameters):
+        dirs, files = {}, {}
+        self.query.setStatTrue("select")
+        self.query.setSelect(["id", "name"])
+        self.query.setTables(["dirs"])
+        self.query.setWhere([{"up_id":self.dirNow}])
+        Dirs = DB.execute(self.query.returnQuery())
+        for i in Dirs:
+            dirs[i[1]]=str(i[0])
+        self.query.setSelect(["id", "name", "type"])
+        self.query.setTables(["files"])
+        Files = DB.execute(self.query.returnQuery())
+        for i in Files:
+            files[i[1]]=str(i[0])
+            type = i[2]
+        if files.has_key(updated):
+            table = "files"
+            ids = files[updated]
+        elif dirs.has_key(updated):
+            table = "dirs"
+            ids = dirs[updated]
+        else:
+            return False
+        
+        usingParams = {}
+        keys = []
+        self.query.setStatTrue("pragma")
+        if table == "files":
+            self.query.setTables(["files"])
+            Keys = DB.execute(self.query.returnQuery())
+            for i in Keys:
+                keys.append(i[1])
+            if type != "other":
+                self.query.setTables([typeDb[type]])
+                Keys = DB.execute(self.query.returnQuery())
+                for i in Keys:
+                    keys.append(i[1])
+        elif table == "dirs":
+            self.query.setTables(["dirs"])
+            Keys = DB.execute(self.query.returnQuery())
+            for i in Keys:
+                keys.append(i[1])
+                
+        for i in keys:
+            if parameters.has_key(i):
+                usingParams[i] = parameters[i]
+        
+        self.query.setStatTrue("update")
+        if table == "files":
+            try:
+                numb = keys.index("f_id")
+                inf = keys[:numb]
+                det = keys[numb:]
+            except ValueError:
+                inf = []
+                for i in keys:
+                    inf.append(i)
+                det = []
+            
+            info = {}
+            detail = {}
+            
+            for i in usingParams.keys():
+                if i in inf:
+                    info[i] = usingParams[i]
+                if i in det:
+                    detail[i] = usingParams[i]
+                    
+            if info.keys()>0:
+                self.query.setTables(["files"])
+                self.query.setSet(info)
+                self.query.setWhere([{"id":ids}])
+                DB.execute(self.query.returnQuery())
+            if detail.keys()>0 and type != "other":
+                self.query.setTables([typeDb[type]])
+                self.query.setSet(detail)
+                self.query.setWhere([{"f_id":ids}])
+                DB.execute(self.query.returnQuery())
+                
+        elif table == "dirs":
+            if usingParams.keys()>0:
+                self.query.setTables(["dirs"])
+                self.query.setSet(usingParams)
+                self.query.setWhere([{"id":ids}])
+                DB.execute(self.query.returnQuery())
 
 
 

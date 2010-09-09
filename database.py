@@ -170,7 +170,7 @@ class EditQuery:
     def setSet(self, setkeys): # {x1:y1, x2:y2, ...}
         self.set = ""
         for i in setkeys.keys():
-            self.set += str(i) + "=" + str(setkeys[i]) + ", "
+            self.set += str(i) + "='" + str(setkeys[i]) + "', "
         self.set = self.set[:-2]
         
     def setSelect(self, selections): # [x1, x2, ...]
@@ -186,7 +186,16 @@ class EditQuery:
                 self.where += str(i.items()[0][0]) + "=" + str(i.items()[0][1])
             else:
                 self.where += " " + str(i) + " "
-                
+         
+    def setWhereLike(self, where): # [{x1:y1}, op12, {x2:y2}, op23, ...]
+        self.where = ""
+        for i in where:
+            if type(i) == dict:
+                self.where += str(i.items()[0][0]) + " LIKE '%?%'".replace("?",
+                              str(i.items()[0][1]))
+            else:
+                self.where += " " + str(i) + " "
+               
     def setQuery(self):
         self.query = ""
         if self.status["select"]:
