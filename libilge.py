@@ -167,7 +167,8 @@ class explore:
                 details = tagging(address, name[-4:].lower())
             else:
                 details = None
-        else:
+        elif infos.has_key("type") == False:
+            infos["type"] = "other"
             details = None
             
         if not infos.has_key("datecreate"):
@@ -553,41 +554,52 @@ class explore:
                 self.query.setWhere([{"id":ids}])
                 DB.execute(self.query.returnQuery())
                 
-            update = False
-            self.query.setStatTrue("select")
-            self.query.setTables([typeDb[type]])
-            self.query.setSelect(["*"])
-            self.query.setWhere([{"f_id":ids}])
-            if DB.execute(self.query.returnQuery()) != []:
-                update = True
-            if len(detail.keys())>0 and type != "other" and update:
-                self.query.setStatTrue("update")
+            if type != "other":
+                update = False
+                self.query.setStatTrue("select")
                 self.query.setTables([typeDb[type]])
-                self.query.setSet(detail)
+                self.query.setSelect(["*"])
                 self.query.setWhere([{"f_id":ids}])
-                DB.execute(self.query.returnQuery())
-            elif len(detail.keys())>0 and type != "other" and update == False:
-                infoDet = detailer.getKeys(typeDb[type])
-                infoDet["f_id"]=ids
-                for i in detail.keys():
-                    infoDet[i] = detail[i]
-                
-                keys, values = [], []
-                for i in infoDet.keys():
-                    keys.append(i)
-                    values.append(infoDet[i])
-                self.query.setStatTrue("insert")
-                self.query.setTables([typeDb[type]])
-                self.query.setKeys(keys)
-                self.query.setValues(values)
-                DB.execute(self.query.returnQuery())
-                
+                if DB.execute(self.query.returnQuery()) != []:
+                    update = True
+                if len(detail.keys())>0 and type != "other" and update:
+                    self.query.setStatTrue("update")
+                    self.query.setTables([typeDb[type]])
+                    self.query.setSet(detail)
+                    self.query.setWhere([{"f_id":ids}])
+                    DB.execute(self.query.returnQuery())
+                elif len(detail.keys())>0 and type != "other" and update == False:
+                    infoDet = detailer.getKeys(typeDb[type])
+                    infoDet["f_id"]=ids
+                    for i in detail.keys():
+                        infoDet[i] = detail[i]
+                    
+                    keys, values = [], []
+                    for i in infoDet.keys():
+                        keys.append(i)
+                        values.append(infoDet[i])
+                    self.query.setStatTrue("insert")
+                    self.query.setTables([typeDb[type]])
+                    self.query.setKeys(keys)
+                    self.query.setValues(values)
+                    DB.execute(self.query.returnQuery())
+                    
         elif table == "dirs":
             if len(usingParams.keys())>0:
+                self.query.setStatTrue("update")
                 self.query.setTables(["dirs"])
                 self.query.setSet(usingParams)
                 self.query.setWhere([{"id":ids}])
                 DB.execute(self.query.returnQuery())
+                
+    def move(self, moved, to):
+        oldId = self.dirNow
+        for i in to:
+            self.chDir(dirname=i)
+        up_id = self.dirNow
+        self.dirNow = oldId
+        params = {"up_id":up_id}
+        self.update(updated=moved, parameters=params)
 
 
 

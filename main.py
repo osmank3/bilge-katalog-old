@@ -17,8 +17,8 @@ reload(sys).setdefaultencoding("utf-8")
 #For multilanguage support
 gettext.install("bilge-katalog", unicode=1)
 
-parse1 = re.compile("(\w+=\"[^\"]*\")", re.IGNORECASE|re.UNICODE)
-parse2 = re.compile("(\w+=\w+)", re.IGNORECASE|re.UNICODE)
+parse1 = re.compile("([^\s]+=\"[^\"]*\")", re.IGNORECASE|re.UNICODE)
+parse2 = re.compile("([^\s]+=[^\s]+)", re.IGNORECASE|re.UNICODE)
 parse3 = re.compile("(\"[^\"]*\")", re.IGNORECASE|re.UNICODE)
     
 def parser(entry):
@@ -57,6 +57,8 @@ def addressParser(address):
         for i in parts:
             if i != "":
                 addressList.append(i)
+    else:
+        addressList.append(address)
     return addressList
 
 DB = database.dataBase()
@@ -233,5 +235,19 @@ while QUIT == False:
                 EXP.dirNow = oldId
             elif len(parameters.keys())>0:
                 EXP.update(updated=updated, parameters=parameters)
+                
+    elif command == "mv":
+        if parameters.has_key("to") and len(additions)>0:
+            moved = " ".join(additions)
+            to = addressParser(parameters["to"])
+            if moved.find("/") != -1:
+                oldId = EXP.dirNow
+                address = addressParser(moved)
+                for i in address[:-1]:
+                    EXP.chDir(dirname=i)
+                EXP.move(moved=address[-1], to=to)
+                EXP.dirNow = oldId
+            else:
+                EXP.move(moved=moved, to=to)
 
 print _("Thanks for using bilge-katalog")
