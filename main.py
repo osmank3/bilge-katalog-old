@@ -64,190 +64,209 @@ def addressParser(address):
 DB = database.dataBase()
 EXP = libilge.explore()
 
-QUIT = False
-
-print _("Welcome to bilge-katalog!\
+def mainloop():
+    print _("Welcome to bilge-katalog!\
 \nFor helping only write 'help' an press Enter")
-
-while QUIT == False:
-    entry = raw_input(">>> ")
-    entry = entry.decode('utf-8')
-    command, parameters, additions = parser(entry)
-    
-    #print command , parameters , additions
-    
-    if command == "help":
-        print _("helping information")
-    
-    elif command == "quit" or command == "exit":
-        QUIT = True
+    QUIT = False
+    while QUIT == False:
+        entry = raw_input(">>> ")
+        entry = entry.decode('utf-8')
+        command, parameters, additions = parser(entry)
         
-    elif command == "mkcat":
-        name = parameters["name"]
-        desc = ""
-        directory = None
-        if parameters.has_key("desc"):
-            desc = parameters["desc"]
-        if parameters.has_key("dir"):
-            directory = parameters["dir"]
-        now = datetime.datetime.now()
-        infos = {"name":str(name), "description":str(desc),
-                 "dateinsert":now, "up_id":0 }
-        EXP.mkDir(address=directory, infos=infos)
+        #print command , parameters , additions
+        
+        if command == "help":
+            print _("helping information")
+        
+        elif command == "quit" or command == "exit":
+            QUIT = True
             
-    elif command == "mkdir":
-        now = datetime.datetime.now()
-        desc = ""
-        name = ""
-        directory = None
-        if parameters.has_key("name"):
+        elif command == "mkcat":
             name = parameters["name"]
-        if parameters.has_key("desc"):
-            desc = parameters["desc"]
-        if parameters.has_key("dir"):
-            directory = parameters["dir"]
-            infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+            desc = ""
+            directory = None
+            if parameters.has_key("desc"):
+                desc = parameters["desc"]
+            if parameters.has_key("dir"):
+                directory = parameters["dir"]
+            now = datetime.datetime.now()
+            infos = {"name":str(name), "description":str(desc),
+                     "dateinsert":now, "up_id":0 }
             EXP.mkDir(address=directory, infos=infos)
-        elif len(additions)>0:
-            name = additions[0]
-            infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
-            EXP.mkDir(infos=infos)
-        
-    elif command == "mkfile":
-        now = datetime.datetime.now()
-        name = ""
-        address = None
-        infos = {}
-        if parameters.has_key("type"):
-            infos["type"] = str(parameters["type"])
-        if parameters.has_key("address"):
-            address = parameters["address"]
-            infos["name"] = str(name)
-            infos["dateinsert"]=now
-            EXP.mkFile(infos=infos)
-        elif len(additions)>0:
-            name = additions[0]
-            infos["name"]=str(name)
-            infos["dateinsert"]=now
-            EXP.mkFile(infos=infos)
-        
-    elif command == "ls":
-        if parameters.has_key("id"):
-            id = parameters["id"]
-            EXP.dirList(id=id)
-        elif len(additions)>0:
-            name = " ".join(additions)
-            if name.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(name)
-                for i in address[:-1]:
-                    EXP.chDir(dirname=i)
-                EXP.dirList(dirname=address[-1])
-                EXP.dirNow = oldId
-            else:
-                EXP.dirList(dirname=name)
-        else:
-            EXP.dirList()
-    
-    elif command == "cd":
-        if parameters.has_key("id"):
-            id = parameters["id"]
-            EXP.chDir(id=id)
-        elif len(additions)>0:
-            name = " ".join(additions)
-            if name.find("/") != -1:
-                address = addressParser(name)                    
-                for i in address:
-                    EXP.chDir(dirname=i)
-            else:
-                EXP.chDir(dirname=name)
-        
-    elif command == "rmdir":
-        if parameters.has_key("id"):
-            id = parameters["id"]
-            EXP.delDir(id=id)
-        elif len(additions)>0:
-            name = " ".join(additions)
-            if name.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(name)
-                for i in address[:-1]:
-                    EXP.chDir(dirname=i)
-                EXP.dirDir(dirname=address[-1])
-                EXP.dirNow = oldId
-            else:
-                EXP.delDir(dirname = name)
-                    
-    elif command == "rm":
-        if parameters.has_key("id"):
-            id = parameters["id"]
-            DB.delFile(id=id)
-        elif len(additions)>0:
-            name = " ".join(additions)
-            if name.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(name)
-                for i in address[:-1]:
-                    EXP.chDir(dirname=i)
-                EXP.dirFile(filename=address[-1])
-                EXP.dirNow = oldId
-            else:
-                EXP.delFile(filename=str(name))
                 
-    elif command == "info":
-        if len(additions)>0:
-            name = " ".join(additions)
-            if name.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(name)
-                for i in address[:-1]:
-                    EXP.chDir(dirname=i)
-                info = EXP.info(name=address[-1])
-                EXP.dirNow = oldId
-            else:
-                info = EXP.info(name=name)
-            print info
+        elif command == "mkdir":
+            now = datetime.datetime.now()
+            desc = ""
+            name = ""
+            directory = None
+            if parameters.has_key("name"):
+                name = parameters["name"]
+            if parameters.has_key("desc"):
+                desc = parameters["desc"]
+            if parameters.has_key("dir"):
+                directory = parameters["dir"]
+                infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+                EXP.mkDir(address=directory, infos=infos)
+            elif len(additions)>0:
+                name = additions[0]
+                infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+                EXP.mkDir(infos=infos)
             
-    elif command == "whereis":
-        if len(additions)>0:
-            wanted = " ".join(additions)
-            printList = EXP.search(wanted)
-            for i in printList:
-                print i
-                
-    elif command == "search":
-        if len(additions)>0:
-            wanted = " ".join(additions)
-            printList = EXP.search(wanted, True)
-            for i in printList:
-                print i
-                
-    elif command == "update":
-        if len(additions)>0:
-            updated = " ".join(additions)
-            if updated.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(updated)
-                for i in address[:-1]:
-                    EXP.chDir(dirname=i)
-                if len(parameters.keys())>0:
-                    EXP.update(updated=address[-1], parameters=parameters)
-                EXP.dirNow = oldId
-            elif len(parameters.keys())>0:
-                EXP.update(updated=updated, parameters=parameters)
-                
-    elif command == "mv":
-        if parameters.has_key("to") and len(additions)>0:
-            moved = " ".join(additions)
-            to = addressParser(parameters["to"])
-            if moved.find("/") != -1:
-                oldId = EXP.dirNow
-                address = addressParser(moved)
-                for i in address[:-1]:
-                    EXP.chDir(dirname=i)
-                EXP.move(moved=address[-1], to=to)
-                EXP.dirNow = oldId
+        elif command == "mkfile":
+            now = datetime.datetime.now()
+            name = ""
+            address = None
+            infos = {}
+            if parameters.has_key("type"):
+                infos["type"] = str(parameters["type"])
+            if parameters.has_key("address"):
+                address = parameters["address"]
+                infos["name"] = str(name)
+                infos["dateinsert"]=now
+                EXP.mkFile(infos=infos)
+            elif len(additions)>0:
+                name = additions[0]
+                infos["name"]=str(name)
+                infos["dateinsert"]=now
+                EXP.mkFile(infos=infos)
+            
+        elif command == "ls":
+            if parameters.has_key("id"):
+                id = parameters["id"]
+                EXP.dirList(id=id)
+            elif len(additions)>0:
+                name = " ".join(additions)
+                if name.find("/") != -1:
+                    oldId = EXP.dirNow
+                    address = addressParser(name)
+                    for i in address[:-1]:
+                        EXP.chDir(dirname=i)
+                    EXP.dirList(dirname=address[-1])
+                    EXP.dirNow = oldId
+                else:
+                    EXP.dirList(dirname=name)
             else:
-                EXP.move(moved=moved, to=to)
+                EXP.dirList()
+        
+        elif command == "cd":
+            if parameters.has_key("id"):
+                id = parameters["id"]
+                EXP.chDir(id=id)
+            elif len(additions)>0:
+                name = " ".join(additions)
+                if name.find("/") != -1:
+                    address = addressParser(name)                    
+                    for i in address:
+                        status = EXP.chDir(dirname=i)
+                        if status != True:
+                            print _("%s is not a directory"% i)
+                else:
+                    status = EXP.chDir(dirname=name)
+                    if status != True:
+                        print _("%s is not a directory"% name)
+            
+        elif command == "rmdir":
+            if parameters.has_key("id"):
+                id = parameters["id"]
+                EXP.delDir(id=id)
+            elif len(additions)>0:
+                name = " ".join(additions)
+                if name.find("/") != -1:
+                    oldId = EXP.dirNow
+                    address = addressParser(name)
+                    for i in address[:-1]:
+                        EXP.chDir(dirname=i)
+                    EXP.dirDir(dirname=address[-1])
+                    EXP.dirNow = oldId
+                else:
+                    EXP.delDir(dirname = name)
+                        
+        elif command == "rm":
+            if parameters.has_key("id"):
+                id = parameters["id"]
+                DB.delFile(id=id)
+            elif len(additions)>0:
+                name = " ".join(additions)
+                if name.find("/") != -1:
+                    oldId = EXP.dirNow
+                    address = addressParser(name)
+                    for i in address[:-1]:
+                        EXP.chDir(dirname=i)
+                    EXP.dirFile(filename=address[-1])
+                    EXP.dirNow = oldId
+                else:
+                    EXP.delFile(filename=str(name))
+                    
+        elif command == "info":
+            if len(additions)>0:
+                name = " ".join(additions)
+                if name.find("/") != -1:
+                    oldId = EXP.dirNow
+                    address = addressParser(name)
+                    for i in address[:-1]:
+                        EXP.chDir(dirname=i)
+                    info = EXP.info(name=address[-1])
+                    EXP.dirNow = oldId
+                else:
+                    info = EXP.info(name=name)
+                print info
+                
+        elif command == "whereis":
+            if len(additions)>0:
+                wanted = " ".join(additions)
+                printList = EXP.search(wanted)
+                for i in printList:
+                    print i
+                    
+        elif command == "search":
+            if len(additions)>0:
+                wanted = " ".join(additions)
+                printList = EXP.search(wanted, True)
+                for i in printList:
+                    print i
+                    
+        elif command == "update":
+            if len(additions)>0:
+                updated = " ".join(additions)
+                if updated.find("/") != -1:
+                    oldId = EXP.dirNow
+                    address = addressParser(updated)
+                    for i in address[:-1]:
+                        EXP.chDir(dirname=i)
+                    if len(parameters.keys())>0:
+                        EXP.update(updated=address[-1], parameters=parameters)
+                    EXP.dirNow = oldId
+                elif len(parameters.keys())>0:
+                    EXP.update(updated=updated, parameters=parameters)
+                    
+        elif command == "mv":
+            if parameters.has_key("to") and len(additions)>0:
+                moved = " ".join(additions)
+                to = addressParser(parameters["to"])
+                params = {}
+                
+                oldId = EXP.dirNow
+                for i in to[:-1]:
+                    if i:
+                        stat = EXP.chDir(dirname=i)
+                        if stat != True:
+                            print _("%s is not a directory"% i)
+                stat = EXP.chDir(dirname=to[-1])
+                if stat != True:
+                    params["name"] = to[-1]
+                params["up_id"] = EXP.dirNow
+                EXP.dirNow = oldId
+                
+                if moved.find("/") != -1:
+                    oldId = EXP.dirNow
+                    address = addressParser(moved)
+                    for i in address[:-1]:
+                        EXP.chDir(dirname=i)
+                    EXP.update(updated=address[-1], parameters=params)
+                    EXP.dirNow = oldId
+                else:
+                    EXP.update(updated=moved, parameters=params)
+                    
+mainloop()
 
 print _("Thanks for using bilge-katalog")

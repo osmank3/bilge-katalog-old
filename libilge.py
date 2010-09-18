@@ -222,7 +222,7 @@ class explore:
             DB.execute(self.query.returnQuery())
         
         
-    def dirList(self, id=None, dirname=None):
+    def dirList(self, id=None, dirname=None, partite=False):
         if id == None:
             id = self.dirNow
         if dirname and "/" in dirname:
@@ -242,10 +242,13 @@ class explore:
             
         if dirname and "/" not in dirname:
             try:
-                self.dirList(id=dirs[dirname])
+                self.dirList(id=dirs[dirname], partite=partite)
             except KeyError:
                 print _("%s is not a directory"% dirname)
         
+        elif partite:
+            return dirs, files
+            
         else:
             self.listDir = []
             for i in dirs.keys() + files.keys():
@@ -278,11 +281,12 @@ class explore:
                 Dirs = DB.execute(self.query.returnQuery())
                 for i in Dirs:
                     dirs[i[1]]=i[0]                    
-                try:
+                if dirs.has_key(dirname):
                     self.dirNow = dirs[dirname]
-                except KeyError:
-                    print _("%s is not a directory"% dirname)
-            
+                else:
+                    return False
+            return True
+                        
     def delDir(self, id=None, dirname=None):
         dirs = {}
         if dirname and dirname != "/":
@@ -592,14 +596,7 @@ class explore:
                 self.query.setWhere([{"id":ids}])
                 DB.execute(self.query.returnQuery())
                 
-    def move(self, moved, to):
-        oldId = self.dirNow
-        for i in to:
-            self.chDir(dirname=i)
-        up_id = self.dirNow
-        self.dirNow = oldId
-        params = {"up_id":up_id}
-        self.update(updated=moved, parameters=params)
+
 
 
 
