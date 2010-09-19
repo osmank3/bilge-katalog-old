@@ -26,10 +26,29 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.fillCatList()
         
         #signals
-        self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.fillFilesList)
-        self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.fillFilesList)
+        self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
+        self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
         #signals of actions
         self.actExit.triggered.connect(self.Exit)
+        self.actBack.triggered.connect(self.Back)
+        self.actNext.triggered.connect(self.Next)
+        self.actUp.triggered.connect(self.Up)
+        
+        #toolbars
+        self.addressToolBar.addAction(self.actBack)
+        self.addressToolBar.addAction(self.actNext)
+        self.addressToolBar.addAction(self.actUp)
+        self.editToolBar.addAction(self.actCopy)
+        self.editToolBar.addAction(self.actMove)
+        self.editToolBar.addAction(self.actPaste)
+        self.editToolBar.addAction(self.actDel)
+        
+        self.searchLine = QtGui.QLineEdit()
+        self.searchButton = QtGui.QPushButton()
+        self.searchButton.setObjectName("searchButton")
+        self.searchButton.setText("Search")
+        self.searchToolBar.addWidget(self.searchLine)
+        self.searchToolBar.addWidget(self.searchButton)
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
@@ -47,7 +66,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def Exit(self):
         sys.exit()
         
-    def fillFilesList(self, itemSelected):
+    def doubleClickAciton(self, itemSelected):
         type, id = str(itemSelected.whatsThis()).split()
         if type == "directory":
             dirs, files = EXP.dirList(id=id, partite=True)
@@ -62,6 +81,17 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                 item.setText(i)
                 item.setWhatsThis("file %s"% files[i])
                 self.listFiles.addItem(item)
+        if type == "file":
+            pass # uygun fonksiyon yazılacak
+            
+    def Back(self):
+        print "geri bass" # yazacağım bunu da
+        
+    def Next(self):
+        print "ileri bass" # yazacağım bunu da
+        
+    def Up(self):
+        print "yukarı bass" # yazacağım bunu da
                 
       
 app = QtGui.QApplication(sys.argv)

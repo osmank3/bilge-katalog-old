@@ -162,9 +162,9 @@
     </widget>
     <addaction name="menuNew"/>
     <addaction name="actDel"/>
-    <addaction name="action_Copy"/>
-    <addaction name="action_Move"/>
-    <addaction name="action_Paste"/>
+    <addaction name="actCopy"/>
+    <addaction name="actMove"/>
+    <addaction name="actPaste"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -180,19 +180,19 @@
      <property name="title">
       <string>&amp;Catalog view</string>
      </property>
-     <addaction name="actCatTreeView"/>
      <addaction name="actCatListView"/>
+     <addaction name="actCatTreeView"/>
     </widget>
     <widget class="QMenu" name="menuFilesView">
      <property name="title">
       <string>Files v&amp;iew</string>
      </property>
-     <addaction name="actFileTableView"/>
      <addaction name="actFileListView"/>
+     <addaction name="actFileTableView"/>
      <addaction name="actFileIconView"/>
     </widget>
     <addaction name="actShowStat"/>
-    <addaction name="actShowMainTB"/>
+    <addaction name="actShowEditTB"/>
     <addaction name="actShowSearchingTB"/>
     <addaction name="actShowAddressTB"/>
     <addaction name="separator"/>
@@ -205,7 +205,11 @@
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="addressToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -213,8 +217,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="addressToolBar">
+  <widget class="QToolBar" name="editToolBar">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -267,7 +270,7 @@
     <string>Show &amp;status bar</string>
    </property>
   </action>
-  <action name="actShowMainTB">
+  <action name="actShowEditTB">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -275,10 +278,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show &amp;main toolbar</string>
-   </property>
-   <property name="toolTip">
-    <string>Show main tool bar</string>
+    <string>Show edi&amp;t toolbar</string>
    </property>
   </action>
   <action name="actCatTreeView">
@@ -291,6 +291,9 @@
   </action>
   <action name="actCatListView">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -307,6 +310,9 @@
   </action>
   <action name="actFileListView">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -378,17 +384,17 @@
     <string>Up</string>
    </property>
   </action>
-  <action name="action_Copy">
+  <action name="actCopy">
    <property name="text">
     <string>&amp;Copy</string>
    </property>
   </action>
-  <action name="action_Move">
+  <action name="actMove">
    <property name="text">
     <string>&amp;Move</string>
    </property>
   </action>
-  <action name="action_Paste">
+  <action name="actPaste">
    <property name="text">
     <string>&amp;Paste</string>
    </property>
@@ -414,9 +420,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>actShowMainTB</sender>
+   <sender>actShowEditTB</sender>
    <signal>triggered(bool)</signal>
-   <receiver>mainToolBar</receiver>
+   <receiver>editToolBar</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -424,23 +430,7 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>6</x>
-     <y>29</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actShowSearchingTB</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>searchToolBar</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>322</x>
+     <x>103</x>
      <y>29</y>
     </hint>
    </hints>
