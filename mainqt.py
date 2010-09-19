@@ -25,6 +25,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.viewFiles.setCurrentIndex(0)
         self.fillCatList()
         
+        self.history = [0]
+        self.indexNow = 0
+        
         #signals
         self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
         self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
@@ -38,8 +41,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.addressToolBar.addAction(self.actBack)
         self.addressToolBar.addAction(self.actNext)
         self.addressToolBar.addAction(self.actUp)
+        self.editToolBar.addAction(self.actCut)
         self.editToolBar.addAction(self.actCopy)
-        self.editToolBar.addAction(self.actMove)
         self.editToolBar.addAction(self.actPaste)
         self.editToolBar.addAction(self.actDel)
         
@@ -62,6 +65,20 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item.setText(i)
             item.setWhatsThis("file %s"% files[i])
             self.listCat.addItem(item)
+    
+    def fillFilesList(self, id):
+        dirs, files = EXP.dirList(id=id, partite=True)
+        self.listFiles.clear()
+        for i in dirs.keys():
+            item = QtGui.QListWidgetItem()
+            item.setText(i)
+            item.setWhatsThis("directory %s"% dirs[i])
+            self.listFiles.addItem(item)
+        for i in files.keys():
+            item = QtGui.QListWidgetItem()
+            item.setText(i)
+            item.setWhatsThis("file %s"% files[i])
+            self.listFiles.addItem(item) 
             
     def Exit(self):
         sys.exit()
@@ -69,29 +86,34 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def doubleClickAciton(self, itemSelected):
         type, id = str(itemSelected.whatsThis()).split()
         if type == "directory":
-            dirs, files = EXP.dirList(id=id, partite=True)
-            self.listFiles.clear()
-            for i in dirs.keys():
-                item = QtGui.QListWidgetItem()
-                item.setText(i)
-                item.setWhatsThis("directory %s"% dirs[i])
-                self.listFiles.addItem(item)
-            for i in files.keys():
-                item = QtGui.QListWidgetItem()
-                item.setText(i)
-                item.setWhatsThis("file %s"% files[i])
-                self.listFiles.addItem(item)
+            self.fillFilesList(id=id)
+            self.history = self.history[:self.indexNow+1]
+            self.history.append(id)
+            self.indexNow += 1
         if type == "file":
             pass # uygun fonksiyon yazılacak
             
     def Back(self):
-        print "geri bass" # yazacağım bunu da
+        if self.indexNow != 0:
+            id = self.history[self.indexNow - 1]
+            self.fillFilesList(id=id)
+            self.indexNow -= 1
         
     def Next(self):
-        print "ileri bass" # yazacağım bunu da
+        if self.indexNow + 1 < len(self.history):
+            id = self.history[self.indexNow + 1]
+            self.fillFilesList(id=id)
+            self.indexNow += 1
         
     def Up(self):
-        print "yukarı bass" # yazacağım bunu da
+        if self.indexNow != 0 and self.history[self.indexNow] != 0:
+            EXP.chDir(id=self.history[self.indexNow])
+            EXP.chDir(dirname="..")
+            id = EXP.dirNow
+            self.fillFilesList(id=id)
+            self.history = self.history[:self.indexNow+1]
+            self.history.append(id)
+            self.indexNow += 1
                 
       
 app = QtGui.QApplication(sys.argv)

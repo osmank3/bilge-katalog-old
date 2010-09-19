@@ -162,8 +162,8 @@
     </widget>
     <addaction name="menuNew"/>
     <addaction name="actDel"/>
+    <addaction name="actCut"/>
     <addaction name="actCopy"/>
-    <addaction name="actMove"/>
     <addaction name="actPaste"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -389,9 +389,9 @@
     <string>&amp;Copy</string>
    </property>
   </action>
-  <action name="actMove">
+  <action name="actCut">
    <property name="text">
-    <string>&amp;Move</string>
+    <string>&amp;Cut</string>
    </property>
   </action>
   <action name="actPaste">
