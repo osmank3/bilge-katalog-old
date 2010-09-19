@@ -12,6 +12,8 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from uiQt_mainwindow import Ui_MainWindow
 
+import wizardCat
+
 EXP = libilge.explore()
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -36,6 +38,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actBack.triggered.connect(self.Back)
         self.actNext.triggered.connect(self.Next)
         self.actUp.triggered.connect(self.Up)
+        self.actCreateCatalog.triggered.connect(self.createCat)
         
         #toolbars
         self.addressToolBar.addAction(self.actBack)
@@ -114,6 +117,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.history = self.history[:self.indexNow+1]
             self.history.append(id)
             self.indexNow += 1
+            
+    def createCat(self):
+        crCat = wizardCat.CreateCat()
+        crCat.exec_()
                 
       
 app = QtGui.QApplication(sys.argv)
