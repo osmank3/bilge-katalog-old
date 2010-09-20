@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>createCatalogWizard</class>
  <widget class="QWizard" name="createCatalogWizard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>360</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Wizard</string>
   </property>
@@ -156,7 +164,9 @@
     <item>
      <widget class="QLabel" name="labelStat">
       <property name="text">
-       <string>Please wait for creating catalog...</string>
+       <string>Operation finished.
+
+Press Finish button.</string>
       </property>
      </widget>
     </item>

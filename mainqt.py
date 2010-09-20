@@ -34,7 +34,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
         self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
         #signals of actions
-        self.actExit.triggered.connect(self.Exit)
         self.actBack.triggered.connect(self.Back)
         self.actNext.triggered.connect(self.Next)
         self.actUp.triggered.connect(self.Up)
@@ -58,6 +57,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
+        self.listCat.clear()
         for i in dirs.keys():
             item = QtGui.QListWidgetItem()
             item.setText(i)
@@ -81,10 +81,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item = QtGui.QListWidgetItem()
             item.setText(i)
             item.setWhatsThis("file %s"% files[i])
-            self.listFiles.addItem(item) 
-            
-    def Exit(self):
-        sys.exit()
+            self.listFiles.addItem(item)
         
     def doubleClickAciton(self, itemSelected):
         type, id = str(itemSelected.whatsThis()).split()
@@ -121,6 +118,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def createCat(self):
         crCat = wizardCat.CreateCat()
         crCat.exec_()
+        self.fillCatList()
                 
       
 app = QtGui.QApplication(sys.argv)

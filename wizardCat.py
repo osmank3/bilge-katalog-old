@@ -5,6 +5,8 @@ import os
 import sys
 import libilge
 
+EXP = libilge.explore()
+
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
 
@@ -17,6 +19,9 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         QtGui.QWizard.__init__(self)
         self.setupUi(self)
         
+        self.setOption(QtGui.QWizard.DisabledBackButtonOnLastPage)
+        self.setOption(QtGui.QWizard.NoBackButtonOnStartPage)
+        
         #signals
         self.connect(self.buttonChoseDir, QtCore.SIGNAL("clicked()"), self.chooseDir)
         self.connect(self, QtCore.SIGNAL("currentIdChanged(int)"), self.nextPage)
@@ -28,17 +33,33 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
             back = False
             if self.lineName.text() == u"":
                 back = True
-            if self.lineDirPath.text() == u"" and self.fillRadio.isChecked():
+            elif self.lineDirPath.text() == u"" and self.fillRadio.isChecked():
                 back = True
+            else:
+                self.fillConf()
             if back:
                 self.back()
-                
         elif pageId == 3:
-            self.catalog2DB()
+            self.finish()
                 
     def chooseDir(self):
         dirname = QtGui.QFileDialog.getExistingDirectory(options = QtGui.QFileDialog.ShowDirsOnly)
         self.lineDirPath.setText(dirname)
+        
+    def fillConf(self):
+        Text = ""
+        Text += "%15s : %s\n"%("Name", str(self.lineName.text()))
+        Text += "%15s : %s\n"%("Description", str(self.lineDesc.toPlainText()))
+        Text += "%15s : %s\n"%("Date", self.dateTimeEdit.dateTime().toString())
+        directory = self.lineDirPath.text()
+        if directory != u"":
+            Text += "%15s : %s\n"%("Directory", directory)
+        self.lineConf.insertPlainText(Text)
+        
+    def finish(self):
+        self.setEnabled(False)
+        self.catalog2DB()
+        self.setEnabled(True)
         
     def catalog2DB(self):
         info = {}
@@ -47,8 +68,9 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         info["dateinsert"] = self.dateTimeEdit.dateTime().toPyDateTime()
         info["up_id"] = 0
         directory = self.lineDirPath.text()
-        if directory != u"":
-            print info, directory # ilgili fonksiyona yönlendirme yapılacak
+        if directory == u"":
+            directory = None
         else:
-            print info # ilgili fonksiyona yönlendirme yapılacak
+            directory = str(directory)
+        EXP.mkDir(address=directory, infos=info)
             
