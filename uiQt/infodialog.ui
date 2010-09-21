@@ -16,721 +16,841 @@
   <property name="locale">
    <locale language="English" country="UnitedKingdom"/>
   </property>
-  <layout class="QGridLayout" name="gridLayout_9">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="infoTab">
-        <attribute name="title">
-         <string>&amp;Info</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout_12">
-         <item row="0" column="0">
-          <widget class="QStackedWidget" name="stackedWidget_2">
-           <property name="currentIndex">
-            <number>1</number>
-           </property>
-           <widget class="QWidget" name="fileInfo">
-            <layout class="QGridLayout" name="gridLayout_11">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_2">
-               <property name="horizontalSpacing">
-                <number>20</number>
-               </property>
-               <item row="0" column="1" colspan="3">
-                <widget class="QLineEdit" name="infoNameEdit"/>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>&amp;Name</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>infoNameEdit</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="3">
-                <widget class="QDoubleSpinBox" name="infoSizeSpin"/>
-               </item>
-               <item row="2" column="3">
-                <widget class="QComboBox" name="infoTypeCombo"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>&amp;Size</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>infoSizeSpin</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>&amp;Type</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>infoTypeCombo</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>D&amp;ate</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>infoDate</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1" colspan="2">
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="1">
-                <spacer name="horizontalSpacer_3">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="2" colspan="2">
-                <widget class="QDateTimeEdit" name="infoDate"/>
-               </item>
-               <item row="2" column="1" colspan="2">
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_22">
-                 <property name="text">
-                  <string>Ta&amp;gs</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>infoTagsEdit</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1" colspan="3">
-                <widget class="QLineEdit" name="infoTagsEdit"/>
-               </item>
-               <item row="5" column="0" colspan="4">
-                <spacer name="verticalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="6" column="0" colspan="4">
-                <widget class="QPushButton" name="FillFromFile">
-                 <property name="text">
-                  <string>&amp;Fill all infos from an exist file</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="dirInfo">
-            <layout class="QGridLayout" name="gridLayout_10">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_8">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_25">
-                 <property name="text">
-                  <string>N&amp;ame</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>dirInfoName</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="dirInfoName"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_26">
-                 <property name="text">
-                  <string>Ta&amp;gs</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>dirInfoTags</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="dirInfoTags"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_27">
-                 <property name="text">
-                  <string>&amp;Date</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>dirInfoDate</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDateTimeEdit" name="dirInfoDate"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_28">
-                 <property name="text">
-                  <string>De&amp;scription</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>dirInfoDescription</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1" rowspan="2">
-                <widget class="QTextEdit" name="dirInfoDescription"/>
-               </item>
-               <item row="4" column="0">
-                <spacer name="verticalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="detailTab">
-        <attribute name="title">
-         <string>&amp;Detail</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout_13">
-         <item row="0" column="0">
-          <widget class="QStackedWidget" name="stackedWidget">
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="musicDetail">
-            <layout class="QGridLayout" name="gridLayout_14">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>&amp;Title</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicTitle</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="5">
-                <widget class="QLineEdit" name="detailMusicTitle"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>&amp;Artist</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicArtist</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1" colspan="5">
-                <widget class="QLineEdit" name="detailMusicArtist"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_7">
-                 <property name="text">
-                  <string>A&amp;lbum</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicAlbum</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1" colspan="5">
-                <widget class="QLineEdit" name="detailMusicAlbum"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_8">
-                 <property name="text">
-                  <string>&amp;Year</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicYear</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="2" colspan="2">
-                <widget class="QLabel" name="label_9">
-                 <property name="text">
-                  <string>T&amp;rack</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicTrack</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="4" colspan="2">
-                <widget class="QLineEdit" name="detailMusicTrack"/>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_10">
-                 <property name="text">
-                  <string>&amp;Genre</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicGenre</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1" colspan="5">
-                <widget class="QLineEdit" name="detailMusicGenre"/>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_11">
-                 <property name="text">
-                  <string>Co&amp;mment</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicComment</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1" colspan="5">
-                <widget class="QLineEdit" name="detailMusicComment"/>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_13">
-                 <property name="text">
-                  <string>&amp;Bitrate</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicBitrate</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QLineEdit" name="detailMusicBitrate"/>
-               </item>
-               <item row="6" column="2" colspan="2">
-                <widget class="QLabel" name="label_12">
-                 <property name="text">
-                  <string>&amp;Frequency</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicFrequency</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="4" colspan="2">
-                <widget class="QLineEdit" name="detailMusicFrequency"/>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_14">
-                 <property name="text">
-                  <string>D&amp;uration</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailMusicDuration</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1" colspan="5">
-                <widget class="QLineEdit" name="detailMusicDuration"/>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLineEdit" name="detailMusicYear"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="bookDetail">
-            <layout class="QGridLayout" name="gridLayout_15">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_5">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_16">
-                 <property name="text">
-                  <string>&amp;Author</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailBookAuthor</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="2">
-                <widget class="QLineEdit" name="detailBookAuthor"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_17">
-                 <property name="text">
-                  <string>Im&amp;print Info</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailBookImprintInfo</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1" colspan="2">
-                <widget class="QLineEdit" name="detailBookImprintInfo"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_18">
-                 <property name="text">
-                  <string>Call &amp;Number</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailBookCallNumber</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QLineEdit" name="detailBookCallNumber"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_19">
-                 <property name="text">
-                  <string>&amp;Year</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailBookYearSpin</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <spacer name="horizontalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="2">
-                <widget class="QSpinBox" name="detailBookYearSpin"/>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_20">
-                 <property name="text">
-                  <string>Pa&amp;ge</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailBookPageSpin</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <spacer name="horizontalSpacer_8">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="4" column="2">
-                <widget class="QSpinBox" name="detailBookPageSpin"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="ebookDetail">
-            <layout class="QGridLayout" name="gridLayout_16">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_4">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_38">
-                 <property name="text">
-                  <string>&amp;Title</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailEbookTitle</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="2">
-                <widget class="QLineEdit" name="detailEbookTitle"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_39">
-                 <property name="text">
-                  <string>&amp;Author</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailEbookAuthor</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1" colspan="2">
-                <widget class="QLineEdit" name="detailEbookAuthor"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_41">
-                 <property name="text">
-                  <string>&amp;Year</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailEbookYearSpin</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <spacer name="horizontalSpacer_5">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="2" column="2">
-                <widget class="QSpinBox" name="detailEbookYearSpin"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_42">
-                 <property name="text">
-                  <string>&amp;Page</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailEbookPageSpin</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="2">
-                <widget class="QSpinBox" name="detailEbookPageSpin"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="videoDetail">
-            <layout class="QGridLayout" name="gridLayout_17">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_37">
-                 <property name="text">
-                  <string>&amp;Title</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailVideoTitle</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="3">
-                <widget class="QLineEdit" name="detailVideoTitle"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_43">
-                 <property name="text">
-                  <string>D&amp;uration</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailVideoDuration</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_40">
-                 <property name="text">
-                  <string>Dimen&amp;sions</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailVideoWidth</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="3">
-                <widget class="QLineEdit" name="detailVideoHeight"/>
-               </item>
-               <item row="1" column="1" colspan="2">
-                <spacer name="horizontalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="2" column="2">
-                <widget class="QLabel" name="label_21">
-                 <property name="text">
-                  <string notr="true">&amp;X</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailVideoHeight</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="3">
-                <widget class="QLineEdit" name="detailVideoDuration"/>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="detailVideoWidth"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="imageDetail">
-            <layout class="QGridLayout" name="gridLayout_18">
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_7">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_15">
-                 <property name="text">
-                  <string>C&amp;reate Date</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailImageCreateDate</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="3">
-                <widget class="QDateTimeEdit" name="detailImageCreateDate"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_24">
-                 <property name="text">
-                  <string>Dimen&amp;sions</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>detailImageWidth</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="detailImageWidth"/>
-               </item>
-               <item row="1" column="2">
-                <widget class="QLabel" name="label_23">
-                 <property name="text">
-                  <string>X</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="3">
-                <widget class="QLineEdit" name="detailImageHeight"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </item>
-     <item>
-      <layout class="QGridLayout" name="gridLayout_6">
-       <item row="0" column="1">
-        <widget class="QPushButton" name="applyButton">
-         <property name="text">
-          <string>Apply</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="closeButton">
-         <property name="text">
-          <string>Close</string>
-         </property>
-        </widget>
-       </item>
+  <layout class="QGridLayout" name="gridLayout_6">
+   <item row="0" column="0" colspan="3">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="infoTab">
+      <attribute name="title">
+       <string>&amp;Info</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_12">
        <item row="0" column="0">
-        <widget class="QPushButton" name="resetButton">
-         <property name="text">
-          <string>Reset</string>
+        <widget class="QStackedWidget" name="infoSW">
+         <property name="currentIndex">
+          <number>0</number>
          </property>
+         <widget class="QWidget" name="fileInfo">
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelNameFile">
+             <property name="text">
+              <string>N&amp;ame</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoNameEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QLineEdit" name="infoNameEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelSizeFile">
+             <property name="text">
+              <string>&amp;Size</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoSizeSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>116</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="2">
+            <widget class="QDoubleSpinBox" name="infoSizeSpin"/>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="labelSizeMode">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelTypeFile">
+             <property name="text">
+              <string>&amp;Type</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoTypeCombo</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>116</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="2" colspan="2">
+            <widget class="QComboBox" name="infoTypeCombo"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelDateCreateFile">
+             <property name="text">
+              <string>&amp;Create Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoDateCreate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>116</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="2" colspan="2">
+            <widget class="QDateTimeEdit" name="infoDateCreate"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelDateModifyFile">
+             <property name="text">
+              <string>&amp;Modify Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoDateModify</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>116</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="4" column="2" colspan="2">
+            <widget class="QDateTimeEdit" name="infoDateModify"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelDateAccessFile">
+             <property name="text">
+              <string>Acc&amp;ess Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoDateAccess</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <spacer name="horizontalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>116</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="5" column="2" colspan="2">
+            <widget class="QDateTimeEdit" name="infoDateAccess"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelDateInsertFile">
+             <property name="text">
+              <string>I&amp;nsert Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoDateInsert</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <spacer name="horizontalSpacer_11">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>116</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="6" column="2" colspan="2">
+            <widget class="QDateTimeEdit" name="infoDateInsert"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="labelTagsFile">
+             <property name="text">
+              <string>Ta&amp;gs</string>
+             </property>
+             <property name="buddy">
+              <cstring>infoTagsEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1" colspan="3">
+            <widget class="QLineEdit" name="infoTagsEdit"/>
+           </item>
+           <item row="8" column="0" colspan="4">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="9" column="0" colspan="4">
+            <widget class="QPushButton" name="FillFromFile">
+             <property name="text">
+              <string>&amp;Fill all infos from an exist file</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="dirInfo">
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelNameDir">
+             <property name="text">
+              <string>N&amp;ame</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoName</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="dirInfoName"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelTagsDir">
+             <property name="text">
+              <string>Ta&amp;gs</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoTags</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="dirInfoTags"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelDateCreateDir">
+             <property name="text">
+              <string>&amp;Create Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoDateCreate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDateTimeEdit" name="dirInfoDateCreate"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelDateModifyDir">
+             <property name="text">
+              <string>&amp;Modify Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoDateModify</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDateTimeEdit" name="dirInfoDateModify"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelDateAccessDir">
+             <property name="text">
+              <string>Acc&amp;ess Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoDateAccess</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QDateTimeEdit" name="dirInfoDateAccess"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelDateInsertDir">
+             <property name="text">
+              <string>I&amp;nsert Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoDateInsert</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QDateTimeEdit" name="dirInfoDateInsert"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelDecription">
+             <property name="text">
+              <string>De&amp;scription</string>
+             </property>
+             <property name="buddy">
+              <cstring>dirInfoDescription</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1" rowspan="2">
+            <widget class="QTextEdit" name="dirInfoDescription"/>
+           </item>
+           <item row="7" column="0">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>78</width>
+               <height>67</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="8" column="0" colspan="2">
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>&amp;Fill all infos recursively from an exist directory</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
-     </item>
-    </layout>
+     </widget>
+     <widget class="QWidget" name="detailTab">
+      <attribute name="title">
+       <string>&amp;Detail</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_13">
+       <item row="0" column="0">
+        <widget class="QStackedWidget" name="detailSW">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="noDetail"/>
+         <widget class="QWidget" name="musicDetail">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelTitle">
+             <property name="text">
+              <string>&amp;Title</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicTitle</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicTitle"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelArtist">
+             <property name="text">
+              <string>&amp;Artist</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicArtist</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicArtist">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelAlbum">
+             <property name="text">
+              <string>A&amp;lbum</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicAlbum</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicAlbum"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelYear">
+             <property name="text">
+              <string>&amp;Year</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicYear</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="detailMusicYear"/>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="labelTrack">
+             <property name="text">
+              <string>T&amp;rack</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicTrack</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QLineEdit" name="detailMusicTrack"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelGenre">
+             <property name="text">
+              <string>&amp;Genre</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicGenre</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicGenre"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelComment">
+             <property name="text">
+              <string>Co&amp;mment</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicComment</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicComment"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelBitrate">
+             <property name="text">
+              <string>&amp;Bitrate</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicBitrate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="detailMusicBitrate"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="labelSampleRate">
+             <property name="text">
+              <string>&amp;Sample Rate</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicSampleRate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QLineEdit" name="detailMusicSampleRate"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="labelLength">
+             <property name="text">
+              <string>&amp;Length</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicLength</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicLength"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="bookDetail">
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelAuthorBook">
+             <property name="text">
+              <string>&amp;Author</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailBookAuthor</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QLineEdit" name="detailBookAuthor"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelImprintInfo">
+             <property name="text">
+              <string>Im&amp;print Info</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailBookImprintInfo</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="detailBookImprintInfo"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelCallNumber">
+             <property name="text">
+              <string>Call &amp;Number</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailBookCallNumber</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="detailBookCallNumber"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelYearBook">
+             <property name="text">
+              <string>&amp;Year</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailBookYearSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="horizontalSpacer_7">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>206</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="detailBookYearSpin"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelPageBook">
+             <property name="text">
+              <string>Pa&amp;ge</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailBookPageSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <spacer name="horizontalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>206</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="detailBookPageSpin"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="ebookDetail">
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelTitleEBook">
+             <property name="text">
+              <string>&amp;Title</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailEbookTitle</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QLineEdit" name="detailEbookTitle"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelAuthorEBook">
+             <property name="text">
+              <string>&amp;Author</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailEbookAuthor</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="detailEbookAuthor"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelYearEBook">
+             <property name="text">
+              <string>&amp;Year</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailEbookYearSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>244</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="detailEbookYearSpin"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelPageEBook">
+             <property name="text">
+              <string>&amp;Page</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailEbookPageSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>244</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="detailEbookPageSpin"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="videoDetail">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelTitleVideo">
+             <property name="text">
+              <string>&amp;Title</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailVideoTitle</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailVideoTitle"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelLengthVideo">
+             <property name="text">
+              <string>&amp;Length</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailVideoLength</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>123</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="2" colspan="2">
+            <widget class="QLineEdit" name="detailVideoLength"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelDimensionsVideo">
+             <property name="text">
+              <string>Dimen&amp;sions</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailVideoWidth</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="detailVideoWidth"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="labelXVideo">
+             <property name="text">
+              <string notr="true">&amp;X</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailVideoHeight</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLineEdit" name="detailVideoHeight"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="imageDetail">
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelCreate">
+             <property name="text">
+              <string>C&amp;reate Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailImageCreateDate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QDateTimeEdit" name="detailImageCreateDate"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelDimensionsImage">
+             <property name="text">
+              <string>Dimen&amp;sions</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailImageWidth</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="detailImageWidth"/>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="labelXImage">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLineEdit" name="detailImageHeight"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="resetButton">
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="applyButton">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="closeButton">
+     <property name="text">
+      <string>Close</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>infoDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>328</x>
+     <y>418</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>414</x>
+     <y>393</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

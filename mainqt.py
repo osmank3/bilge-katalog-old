@@ -13,6 +13,7 @@ from PyQt4 import QtGui
 from uiQt_mainwindow import Ui_MainWindow
 
 import wizardCat
+import infoDialog
 
 EXP = libilge.explore()
 
@@ -30,16 +31,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.history = [0]
         self.indexNow = 0
         
-        #signals
-        self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
-        self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAciton)
-        #signals of actions
-        self.actBack.triggered.connect(self.Back)
-        self.actNext.triggered.connect(self.Next)
-        self.actUp.triggered.connect(self.Up)
-        self.actCreateCatalog.triggered.connect(self.createCat)
-        
-        #toolbars
+        # toolbars
         self.addressToolBar.addAction(self.actBack)
         self.addressToolBar.addAction(self.actNext)
         self.addressToolBar.addAction(self.actUp)
@@ -54,6 +46,27 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchButton.setText("Search")
         self.searchToolBar.addWidget(self.searchLine)
         self.searchToolBar.addWidget(self.searchButton)
+        
+        # context menu
+        self.actInfo = QtGui.QAction(self)
+        self.actInfo.setText(QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
+        
+        self.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.addAction(self.actCut)
+        self.addAction(self.actCopy)
+        self.addAction(self.actPaste)
+        self.addAction(self.actDel)
+        self.addAction(self.actInfo)
+        
+        # signals
+        self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
+        self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
+        # signals of actions
+        self.actBack.triggered.connect(self.Back)
+        self.actNext.triggered.connect(self.Next)
+        self.actUp.triggered.connect(self.Up)
+        self.actCreateCatalog.triggered.connect(self.createCat)
+        self.actInfo.triggered.connect(self.infoAction)
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
@@ -83,7 +96,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item.setWhatsThis("file %s"% files[i])
             self.listFiles.addItem(item)
         
-    def doubleClickAciton(self, itemSelected):
+    def doubleClickAction(self, itemSelected):
         type, id = str(itemSelected.whatsThis()).split()
         if type == "directory":
             self.fillFilesList(id=id)
@@ -91,7 +104,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.history.append(id)
             self.indexNow += 1
         if type == "file":
-            pass # uygun fonksiyon yazılacak
+            self.openInfo(type=type, id=id)
+            
+    def infoAction(self):
+        item = self.listFiles.currentItem()
+        type, id = str(item.whatsThis()).split()
+        self.openInfo(type=str(type), id=id)
             
     def Back(self):
         if self.indexNow != 0:
@@ -119,6 +137,13 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         crCat = wizardCat.CreateCat()
         crCat.exec_()
         self.fillCatList()
+        
+    def openInfo(self, type, id):
+        dirId = self.history[self.indexNow]
+        itemInfos = infoDialog.infoDialog(type=type, id=id)
+        itemInfos.exec_()
+        self.fillCatList()
+        self.fillFilesList(id=dirId)
                 
       
 app = QtGui.QApplication(sys.argv)

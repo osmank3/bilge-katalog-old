@@ -382,7 +382,7 @@ class explore:
             address += i + "/"
         return address
             
-    def info(self, id=None, name=None, type=None):
+    def info(self, id=None, name=None, type=None, redict=False):
         if name:
             self.query.setStatTrue("select")
             self.query.setSelect(["name, id"])
@@ -441,12 +441,15 @@ class explore:
                         
             text = ""
             if len(infos.keys())>0:
-                for i in KeysQuene:
-                    if infos.has_key(i):
-                        if infos[i] == "" or infos[i] == 0:
-                            pass
-                        else:
-                            text += "%20s : %s\n"% (TransKeys[i], infos[i])
+                if redict:
+                    return infos
+                else:
+                    for i in KeysQuene:
+                        if infos.has_key(i):
+                            if infos[i] == "" or infos[i] == 0:
+                                pass
+                            else:
+                                text += "%20s : %s\n"% (TransKeys[i], infos[i])
             return text
         
     def search(self, wanted="", detail=False):
