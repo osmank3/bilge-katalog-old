@@ -19,9 +19,6 @@
   <layout class="QGridLayout" name="gridLayout_6">
    <item row="0" column="0" colspan="3">
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="infoTab">
       <attribute name="title">
        <string>&amp;Info</string>
@@ -29,9 +26,6 @@
       <layout class="QGridLayout" name="gridLayout_12">
        <item row="0" column="0">
         <widget class="QStackedWidget" name="infoSW">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
          <widget class="QWidget" name="fileInfo">
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
@@ -44,7 +38,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1" colspan="3">
+           <item row="0" column="1" colspan="2">
             <widget class="QLineEdit" name="infoNameEdit"/>
            </item>
            <item row="1" column="0">
@@ -71,12 +65,9 @@
             </spacer>
            </item>
            <item row="1" column="2">
-            <widget class="QDoubleSpinBox" name="infoSizeSpin"/>
-           </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="labelSizeMode">
-             <property name="text">
-              <string/>
+            <widget class="QDoubleSpinBox" name="infoSizeSpin">
+             <property name="maximum">
+              <double>1024.990000000000009</double>
              </property>
             </widget>
            </item>
@@ -103,8 +94,42 @@
              </property>
             </spacer>
            </item>
-           <item row="2" column="2" colspan="2">
-            <widget class="QComboBox" name="infoTypeCombo"/>
+           <item row="2" column="2">
+            <widget class="QComboBox" name="infoTypeCombo">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>book</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>e-book</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>image</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>music</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>video</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>other</string>
+              </property>
+             </item>
+            </widget>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="labelDateCreateFile">
@@ -129,7 +154,7 @@
              </property>
             </spacer>
            </item>
-           <item row="3" column="2" colspan="2">
+           <item row="3" column="2">
             <widget class="QDateTimeEdit" name="infoDateCreate"/>
            </item>
            <item row="4" column="0">
@@ -155,7 +180,7 @@
              </property>
             </spacer>
            </item>
-           <item row="4" column="2" colspan="2">
+           <item row="4" column="2">
             <widget class="QDateTimeEdit" name="infoDateModify"/>
            </item>
            <item row="5" column="0">
@@ -181,7 +206,7 @@
              </property>
             </spacer>
            </item>
-           <item row="5" column="2" colspan="2">
+           <item row="5" column="2">
             <widget class="QDateTimeEdit" name="infoDateAccess"/>
            </item>
            <item row="6" column="0">
@@ -207,7 +232,7 @@
              </property>
             </spacer>
            </item>
-           <item row="6" column="2" colspan="2">
+           <item row="6" column="2">
             <widget class="QDateTimeEdit" name="infoDateInsert"/>
            </item>
            <item row="7" column="0">
@@ -220,10 +245,10 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="1" colspan="3">
+           <item row="7" column="1" colspan="2">
             <widget class="QLineEdit" name="infoTagsEdit"/>
            </item>
-           <item row="8" column="0" colspan="4">
+           <item row="8" column="0" colspan="3">
             <spacer name="verticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -236,7 +261,7 @@
              </property>
             </spacer>
            </item>
-           <item row="9" column="0" colspan="4">
+           <item row="9" column="0" colspan="3">
             <widget class="QPushButton" name="FillFromFile">
              <property name="text">
               <string>&amp;Fill all infos from an exist file</string>
@@ -371,154 +396,6 @@
       <layout class="QGridLayout" name="gridLayout_13">
        <item row="0" column="0">
         <widget class="QStackedWidget" name="detailSW">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="noDetail"/>
-         <widget class="QWidget" name="musicDetail">
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelTitle">
-             <property name="text">
-              <string>&amp;Title</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicTitle</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1" colspan="3">
-            <widget class="QLineEdit" name="detailMusicTitle"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelArtist">
-             <property name="text">
-              <string>&amp;Artist</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicArtist</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" colspan="3">
-            <widget class="QLineEdit" name="detailMusicArtist">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="labelAlbum">
-             <property name="text">
-              <string>A&amp;lbum</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicAlbum</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1" colspan="3">
-            <widget class="QLineEdit" name="detailMusicAlbum"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="labelYear">
-             <property name="text">
-              <string>&amp;Year</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicYear</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="detailMusicYear"/>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="labelTrack">
-             <property name="text">
-              <string>T&amp;rack</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicTrack</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QLineEdit" name="detailMusicTrack"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="labelGenre">
-             <property name="text">
-              <string>&amp;Genre</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicGenre</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1" colspan="3">
-            <widget class="QLineEdit" name="detailMusicGenre"/>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="labelComment">
-             <property name="text">
-              <string>Co&amp;mment</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicComment</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1" colspan="3">
-            <widget class="QLineEdit" name="detailMusicComment"/>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="labelBitrate">
-             <property name="text">
-              <string>&amp;Bitrate</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicBitrate</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QLineEdit" name="detailMusicBitrate"/>
-           </item>
-           <item row="6" column="2">
-            <widget class="QLabel" name="labelSampleRate">
-             <property name="text">
-              <string>&amp;Sample Rate</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicSampleRate</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="3">
-            <widget class="QLineEdit" name="detailMusicSampleRate"/>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="labelLength">
-             <property name="text">
-              <string>&amp;Length</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailMusicLength</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1" colspan="3">
-            <widget class="QLineEdit" name="detailMusicLength"/>
-           </item>
-          </layout>
-         </widget>
          <widget class="QWidget" name="bookDetail">
           <layout class="QGridLayout" name="gridLayout_5">
            <item row="0" column="0">
@@ -584,7 +461,11 @@
             </spacer>
            </item>
            <item row="3" column="2">
-            <widget class="QSpinBox" name="detailBookYearSpin"/>
+            <widget class="QSpinBox" name="detailBookYearSpin">
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="labelPageBook">
@@ -610,7 +491,11 @@
             </spacer>
            </item>
            <item row="4" column="2">
-            <widget class="QSpinBox" name="detailBookPageSpin"/>
+            <widget class="QSpinBox" name="detailBookPageSpin">
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -666,7 +551,11 @@
             </spacer>
            </item>
            <item row="2" column="2">
-            <widget class="QSpinBox" name="detailEbookYearSpin"/>
+            <widget class="QSpinBox" name="detailEbookYearSpin">
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="labelPageEBook">
@@ -692,7 +581,224 @@
             </spacer>
            </item>
            <item row="3" column="2">
-            <widget class="QSpinBox" name="detailEbookPageSpin"/>
+            <widget class="QSpinBox" name="detailEbookPageSpin">
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="imageDetail">
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelCreate">
+             <property name="text">
+              <string>C&amp;reate Date</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailImageCreateDate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDateTimeEdit" name="detailImageCreateDate"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelHeightImage">
+             <property name="text">
+              <string>&amp;Height</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailImageHeightSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="detailImageHeightSpin">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelWidthImage">
+             <property name="text">
+              <string>&amp;Width</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailImageWidthSpin</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="detailImageWidthSpin">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="musicDetail">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelTitle">
+             <property name="text">
+              <string>&amp;Title</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicTitle</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicTitle"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelArtist">
+             <property name="text">
+              <string>&amp;Artist</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicArtist</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicArtist">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelAlbum">
+             <property name="text">
+              <string>A&amp;lbum</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicAlbum</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicAlbum"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelYear">
+             <property name="text">
+              <string>&amp;Year</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicYear</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="labelTrack">
+             <property name="text">
+              <string>T&amp;rack</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicTrack</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelGenre">
+             <property name="text">
+              <string>&amp;Genre</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicGenre</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicGenre"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelBitrate">
+             <property name="text">
+              <string>&amp;Bitrate</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicBitrate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="labelSampleRate">
+             <property name="text">
+              <string>&amp;Sample Rate</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicSampleRate</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelLength">
+             <property name="text">
+              <string>&amp;Length</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailMusicLength</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1" colspan="3">
+            <widget class="QLineEdit" name="detailMusicLength"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="detailMusicYear">
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QSpinBox" name="detailMusicTrack">
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="detailMusicBitrate">
+             <property name="suffix">
+              <string> kbit</string>
+             </property>
+             <property name="maximum">
+              <number>999</number>
+             </property>
+             <property name="singleStep">
+              <number>16</number>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="3">
+            <widget class="QSpinBox" name="detailMusicSampleRate">
+             <property name="suffix">
+              <string> Hz</string>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -734,77 +840,78 @@
              </property>
             </spacer>
            </item>
-           <item row="1" column="2" colspan="2">
+           <item row="1" column="2">
             <widget class="QLineEdit" name="detailVideoLength"/>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="labelDimensionsVideo">
+            <widget class="QLabel" name="labelHeightVideo">
              <property name="text">
-              <string>Dimen&amp;sions</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailVideoWidth</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="detailVideoWidth"/>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="labelXVideo">
-             <property name="text">
-              <string notr="true">&amp;X</string>
+              <string>&amp;Height</string>
              </property>
              <property name="buddy">
               <cstring>detailVideoHeight</cstring>
              </property>
             </widget>
            </item>
-           <item row="2" column="3">
-            <widget class="QLineEdit" name="detailVideoHeight"/>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelWidthVideo">
+             <property name="text">
+              <string notr="true">&amp;Width</string>
+             </property>
+             <property name="buddy">
+              <cstring>detailVideoWidth</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="detailVideoHeight">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <spacer name="horizontalSpacer_12">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="1">
+            <spacer name="horizontalSpacer_13">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="detailVideoWidth">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="imageDetail">
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelCreate">
-             <property name="text">
-              <string>C&amp;reate Date</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailImageCreateDate</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1" colspan="3">
-            <widget class="QDateTimeEdit" name="detailImageCreateDate"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelDimensionsImage">
-             <property name="text">
-              <string>Dimen&amp;sions</string>
-             </property>
-             <property name="buddy">
-              <cstring>detailImageWidth</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="detailImageWidth"/>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="labelXImage">
-             <property name="text">
-              <string>X</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QLineEdit" name="detailImageHeight"/>
-           </item>
-          </layout>
-         </widget>
+         <widget class="QWidget" name="noDetail"/>
         </widget>
        </item>
       </layout>
@@ -849,6 +956,22 @@
     <hint type="destinationlabel">
      <x>414</x>
      <y>393</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>infoTypeCombo</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>detailSW</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>219</y>
     </hint>
    </hints>
   </connection>

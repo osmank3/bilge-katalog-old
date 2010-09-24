@@ -32,9 +32,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.indexNow = 0
         
         # toolbars
-        self.addressToolBar.addAction(self.actBack)
-        self.addressToolBar.addAction(self.actNext)
-        self.addressToolBar.addAction(self.actUp)
+        self.exploreToolBar.addAction(self.actBack)
+        self.exploreToolBar.addAction(self.actNext)
+        self.exploreToolBar.addAction(self.actUp)
         self.editToolBar.addAction(self.actCut)
         self.editToolBar.addAction(self.actCopy)
         self.editToolBar.addAction(self.actPaste)
@@ -47,16 +47,28 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchToolBar.addWidget(self.searchLine)
         self.searchToolBar.addWidget(self.searchButton)
         
-        # context menu
-        self.actInfo = QtGui.QAction(self)
-        self.actInfo.setText(QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
+        # Files list context menu
+        self.actInfoFile = QtGui.QAction(self)
+        self.actInfoFile.setText(QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
         
-        self.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-        self.addAction(self.actCut)
-        self.addAction(self.actCopy)
-        self.addAction(self.actPaste)
-        self.addAction(self.actDel)
-        self.addAction(self.actInfo)
+        self.viewFiles.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.viewFiles.addAction(self.menuNew.menuAction())
+        self.viewFiles.addAction(self.actDel)
+        self.viewFiles.addAction(self.actCut)
+        self.viewFiles.addAction(self.actCopy)
+        self.viewFiles.addAction(self.actPaste)
+        self.viewFiles.addAction(self.actInfoFile)
+        
+        # Catalogs list context menu
+        
+        self.actInfoCat = QtGui.QAction(self)
+        self.actInfoCat.setText(QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
+        
+        self.viewCat.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.viewCat.addAction(self.actCreateCatalog)
+        self.viewCat.addAction(self.actDel)
+        self.viewCat.addAction(self.actPaste)
+        self.viewCat.addAction(self.actInfoCat)
         
         # signals
         self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
@@ -66,7 +78,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actNext.triggered.connect(self.Next)
         self.actUp.triggered.connect(self.Up)
         self.actCreateCatalog.triggered.connect(self.createCat)
-        self.actInfo.triggered.connect(self.infoAction)
+        self.actInfoFile.triggered.connect(self.infoFileAction)
+        self.actInfoCat.triggered.connect(self.infoCatAction)
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
@@ -106,8 +119,13 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         if type == "file":
             self.openInfo(type=type, id=id)
             
-    def infoAction(self):
+    def infoFileAction(self):
         item = self.listFiles.currentItem()
+        type, id = str(item.whatsThis()).split()
+        self.openInfo(type=str(type), id=id)
+        
+    def infoCatAction(self):
+        item = self.listCat.currentItem()
         type, id = str(item.whatsThis()).split()
         self.openInfo(type=str(type), id=id)
             

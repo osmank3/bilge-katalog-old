@@ -191,10 +191,10 @@
      <addaction name="actFileTableView"/>
      <addaction name="actFileIconView"/>
     </widget>
-    <addaction name="actShowStat"/>
     <addaction name="actShowEditTB"/>
-    <addaction name="actShowSearchingTB"/>
-    <addaction name="actShowAddressTB"/>
+    <addaction name="actShowExploreTB"/>
+    <addaction name="actShowSearchTB"/>
+    <addaction name="actShowStat"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="menuCatView"/>
@@ -206,9 +206,9 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="addressToolBar">
+  <widget class="QToolBar" name="exploreToolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Explore Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -219,7 +219,7 @@
   </widget>
   <widget class="QToolBar" name="editToolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Edit Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -230,7 +230,7 @@
   </widget>
   <widget class="QToolBar" name="searchToolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Search Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -347,7 +347,7 @@
     <string>Fi&amp;le</string>
    </property>
   </action>
-  <action name="actShowAddressTB">
+  <action name="actShowExploreTB">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -355,10 +355,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show a&amp;ddress bar</string>
+    <string>Show e&amp;xplore toolbar</string>
    </property>
   </action>
-  <action name="actShowSearchingTB">
+  <action name="actShowSearchTB">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -366,7 +366,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show sea&amp;rching bar</string>
+    <string>Show sea&amp;rch toolbar</string>
    </property>
   </action>
   <action name="actBack">
@@ -391,7 +391,7 @@
   </action>
   <action name="actCut">
    <property name="text">
-    <string>&amp;Cut</string>
+    <string>Cu&amp;t</string>
    </property>
   </action>
   <action name="actPaste">
@@ -404,9 +404,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>actShowAddressTB</sender>
+   <sender>actShowExploreTB</sender>
    <signal>triggered(bool)</signal>
-   <receiver>addressToolBar</receiver>
+   <receiver>exploreToolBar</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -464,6 +464,22 @@
     <hint type="destinationlabel">
      <x>309</x>
      <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actShowSearchTB</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>searchToolBar</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>29</y>
     </hint>
    </hints>
   </connection>
