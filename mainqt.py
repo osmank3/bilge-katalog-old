@@ -80,6 +80,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actCreateCatalog.triggered.connect(self.createCat)
         self.actInfoFile.triggered.connect(self.infoFileAction)
         self.actInfoCat.triggered.connect(self.infoCatAction)
+        self.actNewFile.triggered.connect(self.newFile)
+        self.actNewDir.triggered.connect(self.newDir)
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
@@ -128,6 +130,14 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         item = self.listCat.currentItem()
         type, id = str(item.whatsThis()).split()
         self.openInfo(type=str(type), id=id, cat=True)
+        
+    def newFile(self):
+        type = "file"
+        self.openInfo(type=str(type), id=-1)
+        
+    def newDir(self):
+        type = "directory"
+        self.openInfo(type=str(type), id=-1)
             
     def Back(self):
         if self.indexNow != 0:

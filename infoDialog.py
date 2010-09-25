@@ -4,7 +4,10 @@
 import os
 import sys
 import libilge
+import database
+import datetime
 
+Query = database.EditQuery()
 EXP = libilge.explore()
 
 #For using unicode utf-8
@@ -24,19 +27,33 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.type = type
         self.id = id
         self.upid = upid
+        if self.id == -1:
+            self.new = True
+        else:
+            self.new = False
         
         # signals
         self.connect(self.resetButton, QtCore.SIGNAL("clicked()"), self.parse)
         self.connect(self.applyButton, QtCore.SIGNAL("clicked()"), self.applyAction)
+        self.connect(self.fillFromFile, QtCore.SIGNAL("clicked()"), self.fillFileInfo)
+        self.connect(self.fillFromDir, QtCore.SIGNAL("clicked()"), self.fillDirInfo)
         
         self.parse()
         
     def parse(self):
-        if self.type == u"directory":
-            self.dirInfos()
+        if self.type == "directory":
+            self.fillFromDir.setEnabled(self.new)
+            if self.new:
+                self.setNewDirDialog()
+            else:
+                self.dirInfos()
             
         elif self.type == "file":
-            self.fileInfos()
+            self.fillFromFile.setEnabled(self.new)
+            if self.new:
+                self.setNewFileDialog()
+            else:
+                self.fileInfos()
             
     def dirInfos(self):
         self.infoTypeCombo.setCurrentIndex(5) #self.detailSW.setCurrentIndex(5)
@@ -197,3 +214,37 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             EXP.dirNow = dirnow
             
             self.parse()
+    
+    def setNewFileDialog(self):
+        self.infoSW.setCurrentIndex(0)
+        self.infoTypeCombo.setCurrentIndex(5)
+    
+    def setNewDirDialog(self):
+        self.infoSW.setCurrentIndex(1)
+        self.infoTypeCombo.setCurrentIndex(5)
+    
+    def fillFileInfo(self):
+        filename = QtGui.QFileDialog.getOpenFileName()
+        infos = {"up_id":self.upid}
+        EXP.mkFile(address=str(filename), infos=infos)
+        
+        Query.setStatTrue("select")
+        Query.setSelect(["max(id)"])
+        Query.setTables(["files"])
+        self.id = database.dataBase().execute(Query.returnQuery())[0][0]
+        self.new = False
+        
+        self.parse()
+        
+    def fillDirInfo(self):
+        dirname = QtGui.QFileDialog.getExistingDirectory(options = QtGui.QFileDialog.ShowDirsOnly)
+        infos = {"up_id":self.upid,"dateinsert":datetime.datetime.now()}
+        EXP.mkDir(address=str(dirname), infos=infos)
+        
+        Query.setStatTrue("select")
+        Query.setSelect(["max(id)"])
+        Query.setTables(["dirs"])
+        self.id = database.dataBase().execute(Query.returnQuery())[0][0]
+        self.new = False
+        
+        self.parse()
