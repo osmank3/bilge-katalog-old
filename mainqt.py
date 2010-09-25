@@ -127,7 +127,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def infoCatAction(self):
         item = self.listCat.currentItem()
         type, id = str(item.whatsThis()).split()
-        self.openInfo(type=str(type), id=id)
+        self.openInfo(type=str(type), id=id, cat=True)
             
     def Back(self):
         if self.indexNow != 0:
@@ -156,9 +156,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         crCat.exec_()
         self.fillCatList()
         
-    def openInfo(self, type, id):
+    def openInfo(self, type, id, cat=False):
         dirId = self.history[self.indexNow]
-        itemInfos = infoDialog.infoDialog(type=type, id=id)
+        if cat:
+            itemInfos = infoDialog.infoDialog(type=type, id=id, upid=0)
+        else:
+            itemInfos = infoDialog.infoDialog(type=type, id=id, upid=dirId)
         itemInfos.exec_()
         self.fillCatList()
         self.fillFilesList(id=dirId)
