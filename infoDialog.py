@@ -140,14 +140,17 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         
     def applyAction(self):
         ddata, diff = {}, {}
+        if self.new:
+            self.infos = {"size":0}
+            ddata["size"] = 0
         typedict = {0:"book",1:"ebook",2:"image",3:"music",4:"video",5:"other"}
         if self.type == "directory":
             ddata["name"] = str(self.dirInfoName.text())
             ddata["description"] = str(self.dirInfoDescription.toPlainText())
-            ddata["datecreate"] = self.dirInfoDateCreate.dateTime()
-            ddata["datemodify"] = self.dirInfoDateModify.dateTime()
-            ddata["dateaccess"] = self.dirInfoDateAccess.dateTime()
-            ddata["dateinsert"] = self.dirInfoDateInsert.dateTime()
+            ddata["datecreate"] = self.dirInfoDateCreate.dateTime().toPyDateTime()
+            ddata["datemodify"] = self.dirInfoDateModify.dateTime().toPyDateTime()
+            ddata["dateaccess"] = self.dirInfoDateAccess.dateTime().toPyDateTime()
+            ddata["dateinsert"] = self.dirInfoDateInsert.dateTime().toPyDateTime()
             
 
         elif self.type == "file":
@@ -157,55 +160,80 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
                 modes = {u" b":1,u" Kb":1024,u" Mb":1024**2,u" Gb":1024**3}
                 ddata["size"] = int(size * modes[str(sizemode)])
             
-            ddata["name"] = self.infoNameEdit.text()
-            ddata["datecreate"] = self.infoDateCreate.dateTime()
-            ddata["datemodify"] = self.infoDateModify.dateTime()
-            ddata["dateaccess"] = self.infoDateAccess.dateTime()
-            ddata["dateinsert"] = self.infoDateInsert.dateTime()
+            ddata["name"] = str(self.infoNameEdit.text())
+            ddata["datecreate"] = self.infoDateCreate.dateTime().toPyDateTime()
+            ddata["datemodify"] = self.infoDateModify.dateTime().toPyDateTime()
+            ddata["dateaccess"] = self.infoDateAccess.dateTime().toPyDateTime()
+            ddata["dateinsert"] = self.infoDateInsert.dateTime().toPyDateTime()
             
             ddata["type"] = typedict[self.infoTypeCombo.currentIndex()]
             
             if ddata["type"] == "book":
-                ddata["author"] = self.detailBookAuthor.text()
-                ddata["imprintinfo"] = self.detailBookImprintInfo.text()
-                ddata["callnumber"] = self.detailBookCallNuber.text()
+                ddata["author"] = str(self.detailBookAuthor.text())
+                ddata["imprintinfo"] = str(self.detailBookImprintInfo.text())
+                ddata["callnumber"] = str(self.detailBookCallNuber.text())
                 ddata["page"] = self.detailBookPageSpin.value()
                 ddata["year"] = self.detailBookYearSpin.value()
                 
             elif ddata["type"] == "ebook":
-                ddata["author"] = self.detailEBookAuthor.text()
-                ddata["title"] = self.detailEBookTitle.text()
+                ddata["author"] = str(self.detailEBookAuthor.text())
+                ddata["title"] = str(self.detailEBookTitle.text())
                 ddata["page"] = self.detailEBookPageSpin.value()
                 ddata["year"] = self.detailEBookYearSpin.value()
                 
             elif ddata["type"] == "image":
-                ddata["datecreate"] = self.detailImageCreateDate.dateTime()
+                ddata["datecreate"] = self.detailImageCreateDate.dateTime().toPyDateTime()
                 ddata["height"] = self.detailImageHeightSpin.value()
                 ddata["width"] = self.detailImageWidthSpin.value()
                 
             elif ddata["type"] == "music":
-                ddata["title"] = self.detailMusicTitle.text()
-                ddata["artist"] = self.detailMusicArtist.text()
-                ddata["album"] = self.detailMusicAlbum.text()
+                ddata["title"] = str(self.detailMusicTitle.text())
+                ddata["artist"] = str(self.detailMusicArtist.text())
+                ddata["album"] = str(self.detailMusicAlbum.text())
                 ddata["date"] = self.detailMusicYear.value()
                 ddata["tracknumber"] = self.detailMusicTrack.value()
-                ddata["genre"] = self.detailMusicGenre.text()
+                ddata["genre"] = str(self.detailMusicGenre.text())
                 ddata["bitrate"] = self.detailMusicBitrate.value()*1000
                 ddata["samplerate"] = self.detailMusicSampleRate.value()
                 ddata["length"] = int(self.detailMusicLength.text())
                 
             elif ddata["type"] == "video":
-                ddata["title"] = self.detailVideoTitle.text()
+                ddata["title"] = str(self.detailVideoTitle.text())
                 ddata["length"] = int(self.detailVideoLength.text())
                 ddata["height"] = self.detailVideoHeight.value()
                 ddata["width"] = self.detailVideoWidth.value()
                     
-            #if ddata["type"] != infos["type"]:
+            #if ddata["type"] != infos["type"] and not self.new:
                 #burada infos["type"]'daki ayrıntı verileri silinmeli.
+        
+        if self.new:
+            ddata["up_id"] = self.upid
+            Query.setStatTrue("select")
+            Query.setSelect(["max(id)"])
+            
+            if self.type == "file":
+                EXP.mkFile(infos=ddata)
+                Query.setTables(["files"])
                 
-        for i in ddata.keys():
-            if ddata[i] != self.infos[i]:
-                diff[i] = ddata[i]
+            if self.type == "directory":
+                EXP.mkDir(infos=ddata)
+                Query.setTables(["dirs"])
+                
+            self.id = database.dataBase().execute(Query.returnQuery())[0][0]
+            self.new = False
+            
+            self.infos["name"] = ddata["name"]
+            
+            for i in ddata.keys():
+                if not i in ["name", "size", "type", "description",
+                             "datecreate","datemodify", "dateaccess",
+                             "dateinsert"]:
+                    diff[i] = ddata[i]
+        
+        else:
+            for i in ddata.keys():
+                if ddata[i] != self.infos[i]:
+                    diff[i] = ddata[i]
         
         if len(diff.keys()) > 0:
             dirnow = EXP.dirNow
@@ -213,18 +241,30 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             EXP.update(updated=self.infos["name"], parameters=diff)
             EXP.dirNow = dirnow
             
-            self.parse()
+        self.parse()
     
     def setNewFileDialog(self):
         self.infoSW.setCurrentIndex(0)
         self.infoTypeCombo.setCurrentIndex(5)
+        self.infoSizeSpin.setSuffix(" b")
+        self.infoDateCreate.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.infoDateModify.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.infoDateAccess.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.infoDateInsert.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.detailImageCreateDate.setDateTime(QtCore.QDateTime.currentDateTime())
     
     def setNewDirDialog(self):
         self.infoSW.setCurrentIndex(1)
         self.infoTypeCombo.setCurrentIndex(5)
+        self.dirInfoDateCreate.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.dirInfoDateModify.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.dirInfoDateAccess.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.dirInfoDateInsert.setDateTime(QtCore.QDateTime.currentDateTime())
     
     def fillFileInfo(self):
         filename = QtGui.QFileDialog.getOpenFileName()
+        if filename == u"":
+            return
         infos = {"up_id":self.upid}
         EXP.mkFile(address=str(filename), infos=infos)
         
@@ -238,6 +278,8 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         
     def fillDirInfo(self):
         dirname = QtGui.QFileDialog.getExistingDirectory(options = QtGui.QFileDialog.ShowDirsOnly)
+        if dirname == u"":
+            return
         infos = {"up_id":self.upid,"dateinsert":datetime.datetime.now()}
         EXP.mkDir(address=str(dirname), infos=infos)
         

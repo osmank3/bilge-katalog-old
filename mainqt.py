@@ -116,8 +116,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         if type == "directory":
             self.fillFilesList(id=id)
             self.history = self.history[:self.indexNow+1]
-            self.history.append(id)
-            self.indexNow += 1
+            if self.history[-1] != id:
+                self.history.append(id)
+                self.indexNow += 1
         if type == "file":
             self.openInfo(type=type, id=id)
             
@@ -174,7 +175,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             itemInfos = infoDialog.infoDialog(type=type, id=id, upid=dirId)
         itemInfos.exec_()
         self.fillCatList()
-        self.fillFilesList(id=dirId)
+        if dirId != 0:
+            self.fillFilesList(id=dirId)
                 
       
 app = QtGui.QApplication(sys.argv)

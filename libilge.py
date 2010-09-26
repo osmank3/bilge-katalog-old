@@ -146,6 +146,7 @@ class explore:
                         self.mkFile(addrI, infos)
                     
     def mkFile(self, address=None, infos={}):
+        details=None
         if address != None:
             infos["name"] = os.path.split(address)[-1]
             if infos["name"] == "":
@@ -165,11 +166,8 @@ class explore:
             infos["type"] = types[name[-4:].lower()]
             if address:
                 details = tagging(address, name[-4:].lower())
-            else:
-                details = None
         elif infos.has_key("type") == False:
             infos["type"] = "other"
-            details = None
             
         if not infos.has_key("datecreate"):
             infos["datecreate"] = datetime.datetime.now()
