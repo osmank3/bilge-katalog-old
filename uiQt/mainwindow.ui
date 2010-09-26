@@ -399,6 +399,21 @@
     <string>&amp;Paste</string>
    </property>
   </action>
+  <action name="actInfoFile">
+   <property name="text">
+    <string>Info</string>
+   </property>
+  </action>
+  <action name="actInfoCat">
+   <property name="text">
+    <string>Info</string>
+   </property>
+  </action>
+  <action name="actDelCat">
+   <property name="text">
+    <string>&amp;Delete</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

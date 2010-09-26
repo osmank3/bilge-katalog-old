@@ -47,10 +47,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchToolBar.addWidget(self.searchLine)
         self.searchToolBar.addWidget(self.searchButton)
         
-        # Files list context menu
-        self.actInfoFile = QtGui.QAction(self)
-        self.actInfoFile.setText(QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
-        
+        # Files context menu        
         self.viewFiles.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         self.viewFiles.addAction(self.menuNew.menuAction())
         self.viewFiles.addAction(self.actDel)
@@ -59,14 +56,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.viewFiles.addAction(self.actPaste)
         self.viewFiles.addAction(self.actInfoFile)
         
-        # Catalogs list context menu
-        
-        self.actInfoCat = QtGui.QAction(self)
-        self.actInfoCat.setText(QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
-        
+        # Catalogs context menu        
         self.viewCat.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         self.viewCat.addAction(self.actCreateCatalog)
-        self.viewCat.addAction(self.actDel)
+        self.viewCat.addAction(self.actDelCat)
         self.viewCat.addAction(self.actPaste)
         self.viewCat.addAction(self.actInfoCat)
         
@@ -82,6 +75,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actInfoCat.triggered.connect(self.infoCatAction)
         self.actNewFile.triggered.connect(self.newFile)
         self.actNewDir.triggered.connect(self.newDir)
+        self.actDel.triggered.connect(self.delete)
+        self.actDelCat.triggered.connect(self.deleteCat)
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
@@ -177,7 +172,25 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.fillCatList()
         if dirId != 0:
             self.fillFilesList(id=dirId)
-                
+            
+    def delete(self):
+        item = self.listFiles.currentItem()
+        type, id = str(item.whatsThis()).split()
+        if type == "file":
+            EXP.delFile(id=id)
+        elif type == "directory":
+            EXP.delDir(id=id)
+            
+        self.fillFilesList(id=self.history[self.indexNow])
+        
+    def deleteCat(self):
+        item = self.listCat.currentItem()
+        type, id = str(item.whatsThis()).split()
+        EXP.delDir(id=id)
+        
+        self.fillCatList()
+        
+        
       
 app = QtGui.QApplication(sys.argv)
 window = MainWindow()
