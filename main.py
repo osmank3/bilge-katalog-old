@@ -267,6 +267,13 @@ def mainloop():
                 else:
                     EXP.update(updated=moved, parameters=params)
                     
+        elif command == "cp":
+            if parameters.has_key("to") and len(additions)>0:
+                copied = " ".join(additions)
+                to = addressParser(parameters["to"])
+                
+                EXP.copy(name=copied, to=to)
+                    
 mainloop()
 
 print _("Thanks for using bilge-katalog")

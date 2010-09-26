@@ -145,8 +145,7 @@ class explore:
                     else:
                         self.mkFile(addrI, infos)
                     
-    def mkFile(self, address=None, infos={}):
-        details=None
+    def mkFile(self, address=None, infos={}, details=None):
         if address != None:
             infos["name"] = os.path.split(address)[-1]
             if infos["name"] == "":
@@ -596,8 +595,95 @@ class explore:
                 self.query.setSet(usingParams)
                 self.query.setWhere([{"id":ids}])
                 DB.execute(self.query.returnQuery())
+    
+    
+    def copy(self, name=None, to=[]):
+        if name:
+            self.query.setStatTrue("select")
+            self.query.setSelect(["name, id"])
+            self.query.setTables(["dirs"])
+            self.query.setWhere([{"up_id":self.dirNow}])
+            Dirs = DB.execute(self.query.returnQuery())
+            for i in Dirs:
+                if i[0] == name:
+                    id = i[1]
+                    type = "dirs"
+            self.query.setTables(["files"])
+            Files = DB.execute(self.query.returnQuery())
+            for i in Files:
+                if i[0] == name:
+                    id = i[1]
+                    type = "files"
+        
+            if type == "files":
+                self.copyFile(id=id, to=to)
+            elif type == "dirs":
+                self.copyDir(id=id, to=to)
+        
+    def copyFile(self, id=None, to=[]):
+        infos, details = {}, {}
+        oldId = self.dirNow
+        for i in to[:-1]:
+            if i:
+                stat = self.chDir(dirname=i)
+                if stat != True:
+                    print _("%s is not a directory"% i)
+        stat = self.chDir(dirname=to[-1])
+        if stat != True:
+            infos["name"] = to[-1]
+        infos["up_id"] = self.dirNow
+        self.dirNow = oldId
+        
+        infosOrj = self.info(id=id, type="files", redict=True)
+        
+        for i in infosOrj.keys():
+            if i in ["size", "type", "datecreate", "datemodify", "dateaccess",
+                     "dateinsert"]:
+                infos[i] = infosOrj[i]
+            elif not infos.has_key("name") and i == "name":
+                infos[i] = infosOrj[i]
+            elif not i in ["up_id", "address"]:
+                details[i] = infosOrj[i]
                 
-
+        self.mkFile(infos=infos, details=details)
+        
+    def copyDir(self, id=None, to=[]):
+        infos = {}
+        oldId = self.dirNow
+        for i in to[:-1]:
+            if i:
+                stat = self.chDir(dirname=i)
+                if stat != True:
+                    print _("%s is not a directory"% i)
+        stat = self.chDir(dirname=to[-1])
+        if stat != True:
+            infos["name"] = to[-1]
+        infos["up_id"] = self.dirNow
+        self.dirNow = oldId
+        
+        infosOrj = self.info(id=id, type="dirs", redict=True)
+        
+        for i in infosOrj.keys():
+            if i in ["description", "datecreate", "datemodify", "dateaccess",
+                     "dateinsert"]:
+                infos[i] = infosOrj[i]
+            elif not infos.has_key("name") and i == "name":
+                infos[i] = infosOrj[i]
+                
+        self.mkDir(infos=infos)
+        
+        if to[-1] != infos["name"]:
+            to.append(infos["name"])
+        
+        dirs, files = self.dirList(id=id, partite=True)
+        
+        for i in files.keys():
+            self.copyFile(id=files[i], to=to)
+            
+        for i in dirs.keys():
+            self.copyDir(id=dirs[i], to=to)
+        
+        
 
 
 
