@@ -48,19 +48,6 @@ def parser(entry):
         additions.remove('""')
     return command, parameters, additions
     
-def addressParser(address):
-    addressList = []
-    if "/" in address:
-        if address.find("/") == 0:
-            addressList.append("/")
-        parts = address.split("/")
-        for i in parts:
-            if i != "":
-                addressList.append(i)
-    else:
-        addressList.append(address)
-    return addressList
-
 DB = database.dataBase()
 EXP = libilge.explore()
 
@@ -138,7 +125,7 @@ def mainloop():
                 name = " ".join(additions)
                 if name.find("/") != -1:
                     oldId = EXP.dirNow
-                    address = addressParser(name)
+                    address = EXP.parseAddress(name)
                     for i in address[:-1]:
                         EXP.chDir(dirname=i)
                     EXP.dirList(dirname=address[-1])
@@ -155,7 +142,7 @@ def mainloop():
             elif len(additions)>0:
                 name = " ".join(additions)
                 if name.find("/") != -1:
-                    address = addressParser(name)                    
+                    address = EXP.parseAddress(name)                    
                     for i in address:
                         status = EXP.chDir(dirname=i)
                         if status != True:
@@ -173,7 +160,7 @@ def mainloop():
                 name = " ".join(additions)
                 if name.find("/") != -1:
                     oldId = EXP.dirNow
-                    address = addressParser(name)
+                    address = EXP.parseAddress(name)
                     for i in address[:-1]:
                         EXP.chDir(dirname=i)
                     EXP.dirDir(dirname=address[-1])
@@ -189,7 +176,7 @@ def mainloop():
                 name = " ".join(additions)
                 if name.find("/") != -1:
                     oldId = EXP.dirNow
-                    address = addressParser(name)
+                    address = EXP.parseAddress(name)
                     for i in address[:-1]:
                         EXP.chDir(dirname=i)
                     EXP.dirFile(filename=address[-1])
@@ -202,7 +189,7 @@ def mainloop():
                 name = " ".join(additions)
                 if name.find("/") != -1:
                     oldId = EXP.dirNow
-                    address = addressParser(name)
+                    address = EXP.parseAddress(name)
                     for i in address[:-1]:
                         EXP.chDir(dirname=i)
                     info = EXP.info(name=address[-1])
@@ -230,7 +217,7 @@ def mainloop():
                 updated = " ".join(additions)
                 if updated.find("/") != -1:
                     oldId = EXP.dirNow
-                    address = addressParser(updated)
+                    address = EXP.parseAddress(updated)
                     for i in address[:-1]:
                         EXP.chDir(dirname=i)
                     if len(parameters.keys())>0:
@@ -242,7 +229,7 @@ def mainloop():
         elif command == "mv":
             if parameters.has_key("to") and len(additions)>0:
                 moved = " ".join(additions)
-                to = addressParser(parameters["to"])
+                to = EXP.parseAddress(parameters["to"])
                 params = {}
                 
                 oldId = EXP.dirNow
@@ -259,7 +246,7 @@ def mainloop():
                 
                 if moved.find("/") != -1:
                     oldId = EXP.dirNow
-                    address = addressParser(moved)
+                    address = EXP.parseAddress(moved)
                     for i in address[:-1]:
                         EXP.chDir(dirname=i)
                     EXP.update(updated=address[-1], parameters=params)
@@ -270,7 +257,7 @@ def mainloop():
         elif command == "cp":
             if parameters.has_key("to") and len(additions)>0:
                 copied = " ".join(additions)
-                to = addressParser(parameters["to"])
+                to = EXP.parseAddress(parameters["to"])
                 
                 EXP.copy(name=copied, to=to)
                     

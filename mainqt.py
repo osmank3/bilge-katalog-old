@@ -30,6 +30,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         
         self.history = [0]
         self.indexNow = 0
+        self.willPaste = None
+        self.everyTime = None
         
         # toolbars
         self.exploreToolBar.addAction(self.actBack)
@@ -47,36 +49,70 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchToolBar.addWidget(self.searchLine)
         self.searchToolBar.addWidget(self.searchButton)
         
-        # Files context menu        
-        self.viewFiles.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-        self.viewFiles.addAction(self.menuNew.menuAction())
-        self.viewFiles.addAction(self.actDel)
-        self.viewFiles.addAction(self.actCut)
-        self.viewFiles.addAction(self.actCopy)
-        self.viewFiles.addAction(self.actPaste)
-        self.viewFiles.addAction(self.actInfoFile)
+        # Files context menu
+        self.contextFilesMenu = QtGui.QMenu(self.viewFiles)
+        self.contextFilesMenu.addAction(self.menuNew.menuAction())
+        self.contextFilesMenu.addAction(self.actDel)
+        self.contextFilesMenu.addAction(self.actCut)
+        self.contextFilesMenu.addAction(self.actCopy)
+        self.contextFilesMenu.addAction(self.actPaste)
+        self.contextFilesMenu.addAction(self.actInfo)
         
-        # Catalogs context menu        
-        self.viewCat.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-        self.viewCat.addAction(self.actCreateCatalog)
-        self.viewCat.addAction(self.actDelCat)
-        self.viewCat.addAction(self.actPaste)
-        self.viewCat.addAction(self.actInfoCat)
+        # Catalogs context menu
+        self.contextCatsMenu = QtGui.QMenu(self.viewCat)
+        self.contextCatsMenu.addAction(self.actCreateCatalog)
+        self.contextCatsMenu.addAction(self.actDel)
+        self.contextCatsMenu.addAction(self.actPaste)
+        self.contextCatsMenu.addAction(self.actInfo)
         
         # signals
         self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
         self.connect(self.listFiles, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
+        self.connect(self.listCat, QtCore.SIGNAL("itemClicked(QListWidgetItem *)"), self.clickAction)
+        self.connect(self.listFiles, QtCore.SIGNAL("itemClicked(QListWidgetItem *)"), self.clickAction)
+        self.connect(self.viewFiles, QtCore.SIGNAL("customContextMenuRequested(const QPoint &)"), self.contextFiles)
+        self.connect(self.viewCat, QtCore.SIGNAL("customContextMenuRequested(const QPoint &)"), self.contextCats)
         # signals of actions
         self.actBack.triggered.connect(self.Back)
         self.actNext.triggered.connect(self.Next)
         self.actUp.triggered.connect(self.Up)
         self.actCreateCatalog.triggered.connect(self.createCat)
-        self.actInfoFile.triggered.connect(self.infoFileAction)
-        self.actInfoCat.triggered.connect(self.infoCatAction)
+        self.actInfo.triggered.connect(self.infoAction)
         self.actNewFile.triggered.connect(self.newFile)
         self.actNewDir.triggered.connect(self.newDir)
         self.actDel.triggered.connect(self.delete)
-        self.actDelCat.triggered.connect(self.deleteCat)
+        self.actCopy.triggered.connect(self.copy)
+        self.actCut.triggered.connect(self.cut)
+        self.actPaste.triggered.connect(self.paste)
+        self.actRefresh.triggered.connect(self.refresh)
+
+    def contextFiles(self, point):
+        self.item = None
+        self.item = self.listFiles.itemAt(point)
+        if not self.item:
+            if self.history[self.indexNow] != 0:
+                infos = EXP.info(id=self.history[self.indexNow],
+                                 type="dirs", redict=True)
+            else:
+                infos = {"name":"/"}
+            self.item = QtGui.QListWidgetItem()
+            self.item.setText(infos["name"])
+            self.item.setWhatsThis("directory %s"% self.history[self.indexNow])
+            
+        coordinate = self.viewFiles.mapToGlobal(point)
+        self.contextFilesMenu.exec_(coordinate)
+        
+    def contextCats(self, point):
+        self.item = None
+        self.item = self.listCat.itemAt(point)
+        if not self.item:
+            infos = {"name":"/"}
+            self.item = QtGui.QListWidgetItem()
+            self.item.setText(infos["name"])
+            self.item.setWhatsThis("directory %s"% self.history[self.indexNow])
+        
+        coordinate = self.viewCat.mapToGlobal(point)
+        self.contextCatsMenu.exec_(coordinate)
         
     def fillCatList(self):
         dirs, files = EXP.dirList(id=0, partite=True)
@@ -106,6 +142,11 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item.setWhatsThis("file %s"% files[i])
             self.listFiles.addItem(item)
         
+    def refresh(self):
+        self.fillCatList()
+        if self.indexNow != 0:
+            self.fillFilesList(id=self.history[self.indexNow])
+        
     def doubleClickAction(self, itemSelected):
         type, id = str(itemSelected.whatsThis()).split()
         if type == "directory":
@@ -117,15 +158,13 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         if type == "file":
             self.openInfo(type=type, id=id)
             
-    def infoFileAction(self):
-        item = self.listFiles.currentItem()
-        type, id = str(item.whatsThis()).split()
-        self.openInfo(type=str(type), id=id)
-        
-    def infoCatAction(self):
-        item = self.listCat.currentItem()
-        type, id = str(item.whatsThis()).split()
-        self.openInfo(type=str(type), id=id, cat=True)
+    def clickAction(self, itemSelected):
+        self.item = itemSelected
+            
+    def infoAction(self):
+        if self.item.text() != "/":
+            type, id = str(self.item.whatsThis()).split()
+            self.openInfo(type=str(type), id=id)
         
     def newFile(self):
         type = "file"
@@ -160,36 +199,56 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def createCat(self):
         crCat = wizardCat.CreateCat()
         crCat.exec_()
-        self.fillCatList()
+        self.refresh()
         
     def openInfo(self, type, id, cat=False):
-        dirId = self.history[self.indexNow]
-        if cat:
-            itemInfos = infoDialog.infoDialog(type=type, id=id, upid=0)
-        else:
-            itemInfos = infoDialog.infoDialog(type=type, id=id, upid=dirId)
+        itemInfos = infoDialog.infoDialog(type=type, id=id)
         itemInfos.exec_()
-        self.fillCatList()
-        if dirId != 0:
-            self.fillFilesList(id=dirId)
+        self.refresh()
             
     def delete(self):
-        item = self.listFiles.currentItem()
-        type, id = str(item.whatsThis()).split()
+        type, id = str(self.item.whatsThis()).split()
         if type == "file":
             EXP.delFile(id=id)
         elif type == "directory":
             EXP.delDir(id=id)
             
-        self.fillFilesList(id=self.history[self.indexNow])
+        self.refresh()
         
-    def deleteCat(self):
-        item = self.listCat.currentItem()
-        type, id = str(item.whatsThis()).split()
-        EXP.delDir(id=id)
+    def copy(self):
+        self.willPaste = (str(self.item.text()), self.history[self.indexNow])
+        self.pasteType = "copy"
         
-        self.fillCatList()
+    def cut(self):
+        self.willPaste = (str(self.item.text()), self.history[self.indexNow])
+        self.pasteType = "cut"
         
+    def paste(self):
+        newUpType, newUpId = str(self.item.whatsThis()).split()
+        if self.willPaste and newUpType == "directory":
+            name, oldUpId = self.willPaste
+            if self.pasteType == "cut":
+                infos = {"up_id":newUpId}
+                
+                dirnow = EXP.dirNow
+                EXP.chDir(id=oldUpId)
+                EXP.update(updated=name, parameters=infos)
+                EXP.dirNow = dirnow
+                
+                self.willPaste = None
+            elif self.pasteType == "copy":
+                to = EXP.parseAddress(EXP.genAddress(newUpId))
+                
+                dirnow = EXP.dirNow
+                EXP.chDir(id=oldUpId)
+                EXP.copy(name=name, to=to)
+                EXP.dirNow = dirnow
+                
+            self.refresh()
+                
+        elif newUpType == "file":
+            # ekrana hata mesajı bastırmalı
+            print _("This selection is not a directory.")
         
       
 app = QtGui.QApplication(sys.argv)

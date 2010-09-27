@@ -378,7 +378,20 @@ class explore:
         for i in upDirs:
             address += i + "/"
         return address
-            
+        
+    def parseAddress(self, address):
+        addressList = []
+        if "/" in address:
+            if address.find("/") == 0:
+                addressList.append("/")
+            parts = address.split("/")
+            for i in parts:
+                if i != "":
+                    addressList.append(i)
+        else:
+            addressList.append(address)
+        return addressList
+        
     def info(self, id=None, name=None, type=None, redict=False):
         if name:
             self.query.setStatTrue("select")

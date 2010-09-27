@@ -10,6 +10,9 @@
     <height>420</height>
    </rect>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::CustomContextMenu</enum>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -30,8 +33,8 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QStackedWidget" name="viewCat">
-       <property name="currentIndex">
-        <number>0</number>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
        </property>
        <widget class="QWidget" name="pageListCat">
         <layout class="QGridLayout" name="gridLayout_2">
@@ -71,8 +74,8 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="currentIndex">
-        <number>2</number>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
        </property>
        <widget class="QWidget" name="pageListFiles">
         <layout class="QGridLayout" name="gridLayout_4">
@@ -165,6 +168,8 @@
     <addaction name="actCut"/>
     <addaction name="actCopy"/>
     <addaction name="actPaste"/>
+    <addaction name="actRefresh"/>
+    <addaction name="actInfo"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -399,19 +404,14 @@
     <string>&amp;Paste</string>
    </property>
   </action>
-  <action name="actInfoFile">
+  <action name="actRefresh">
    <property name="text">
-    <string>Info</string>
+    <string>&amp;Refresh</string>
    </property>
   </action>
-  <action name="actInfoCat">
+  <action name="actInfo">
    <property name="text">
-    <string>Info</string>
-   </property>
-  </action>
-  <action name="actDelCat">
-   <property name="text">
-    <string>&amp;Delete</string>
+    <string>&amp;Info</string>
    </property>
   </action>
  </widget>

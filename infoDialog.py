@@ -20,17 +20,22 @@ from uiQt_infodialog import Ui_infoDialog
 TYPES = {"directory":"dirs", "file":"files"}
 
 class infoDialog(QtGui.QDialog, Ui_infoDialog):
-    def __init__(self, type, id, upid):
+    def __init__(self, type, id):
         QtGui.QDialog.__init__(self)
         self.setupUi(self)
         
         self.type = type
         self.id = id
-        self.upid = upid
         if self.id == -1:
             self.new = True
         else:
             self.new = False
+            
+            Query.setStatTrue("select")
+            Query.setSelect(["up_id"])
+            Query.setTables(["dirs"])
+            Query.setWhere({"id":self.id})
+            self.upid = database.dataBase().execute(Query.returnQuery())[0][0]
         
         # signals
         self.connect(self.resetButton, QtCore.SIGNAL("clicked()"), self.parse)
