@@ -462,7 +462,7 @@ class explore:
                                 text += "%20s : %s\n"% (TransKeys[i], infos[i])
             return text
         
-    def search(self, wanted="", detail=False):
+    def search(self, wanted="", detail=""):
         if wanted:
             dirs, files = [], []
             self.query.setStatTrue("select")
@@ -485,13 +485,15 @@ class explore:
                 
             wantedList = dirs + files
             
-            if detail:
+            if detail == "basic":
+                return wantedList
+            elif detail == "all":
                 textList = [wanted + ":"]
                 for i in wantedList:
                     text = self.info(id=i[0], type=i[3])
                     textList.append(i[1] + "\n" + text)
                 return textList
-            else:
+            elif detail == "address":
                 addresses = [wanted + ":"]
                 for i in wantedList:
                     addresses.append(" " + i[2] + i[1])

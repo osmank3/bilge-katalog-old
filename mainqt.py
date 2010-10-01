@@ -30,8 +30,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         
         self.history = [0]
         self.indexNow = 0
+        self.searching = False
         self.willPaste = None
-        self.everyTime = None
+        self.pasteType = None
         
         # toolbars
         self.exploreToolBar.addAction(self.actBack)
@@ -72,6 +73,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.listFiles, QtCore.SIGNAL("itemClicked(QListWidgetItem *)"), self.clickAction)
         self.connect(self.viewFiles, QtCore.SIGNAL("customContextMenuRequested(const QPoint &)"), self.contextFiles)
         self.connect(self.viewCat, QtCore.SIGNAL("customContextMenuRequested(const QPoint &)"), self.contextCats)
+        self.connect(self.searchButton, QtCore.SIGNAL("clicked()"), self.search)
+        self.connect(self.searchLine, QtCore.SIGNAL("returnPressed()"), self.search)
         # signals of actions
         self.actBack.triggered.connect(self.Back)
         self.actNext.triggered.connect(self.Next)
@@ -157,6 +160,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                 self.indexNow += 1
         if type == "file":
             self.openInfo(type=type, id=id)
+        if self.searching:
+            self.searching = False
+            self.searchLine.clear()
             
     def clickAction(self, itemSelected):
         self.item = itemSelected
@@ -177,19 +183,31 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.openInfo(type=str(type), id=None, upid=upid)
             
     def Back(self):
-        if self.indexNow != 0:
+        if self.searching:
+            self.refresh()
+            self.searching = False
+            self.searchLine.clear()
+        elif self.indexNow != 0:
             id = self.history[self.indexNow - 1]
             self.fillFilesList(id=id)
             self.indexNow -= 1
         
     def Next(self):
-        if self.indexNow + 1 < len(self.history):
+        if self.searching:
+            self.refresh()
+            self.searching = False
+            self.searchLine.clear()
+        elif self.indexNow + 1 < len(self.history):
             id = self.history[self.indexNow + 1]
             self.fillFilesList(id=id)
             self.indexNow += 1
         
     def Up(self):
-        if self.indexNow != 0 and self.history[self.indexNow] != 0:
+        if self.searching:
+            self.refresh()
+            self.searching = False
+            self.searchLine.clear()
+        elif self.indexNow != 0 and self.history[self.indexNow] != 0:
             EXP.chDir(id=self.history[self.indexNow])
             EXP.chDir(dirname="..")
             id = EXP.dirNow
@@ -251,6 +269,20 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         elif newUpType == "file":
             # ekrana hata mesajı bastırmalı
             print _("This selection is not a directory.")
+            
+    def search(self):
+        self.searching = True
+        wanted = str(self.searchLine.text())
+        listOfFounded = EXP.search(wanted, "basic") # [(id, name, address, dir or file)]
+        self.listFiles.clear()
+        for i in listOfFounded:
+            item = QtGui.QListWidgetItem()
+            item.setText(i[1])
+            if i[3] == "dirs":
+                item.setWhatsThis("directory %s"% i[0])
+            elif i[3] == "files":
+                item.setWhatsThis("file %s"% i[0])
+            self.listFiles.addItem(item)
         
       
 app = QtGui.QApplication(sys.argv)

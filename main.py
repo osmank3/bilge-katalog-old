@@ -201,14 +201,14 @@ def mainloop():
         elif command == "whereis":
             if len(additions)>0:
                 wanted = " ".join(additions)
-                printList = EXP.search(wanted)
+                printList = EXP.search(wanted, "address")
                 for i in printList:
                     print i
                     
         elif command == "search":
             if len(additions)>0:
                 wanted = " ".join(additions)
-                printList = EXP.search(wanted, True)
+                printList = EXP.search(wanted, "all")
                 for i in printList:
                     print i
                     
