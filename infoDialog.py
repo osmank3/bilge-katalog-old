@@ -20,14 +20,15 @@ from uiQt_infodialog import Ui_infoDialog
 TYPES = {"directory":"dirs", "file":"files"}
 
 class infoDialog(QtGui.QDialog, Ui_infoDialog):
-    def __init__(self, type, id):
+    def __init__(self, type, id, upid=None):
         QtGui.QDialog.__init__(self)
         self.setupUi(self)
         
         self.type = type
         self.id = id
-        if self.id == -1:
+        if self.id == None:
             self.new = True
+            self.upid = upid
         else:
             self.new = False
             
@@ -67,6 +68,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.infos = EXP.info(id=self.id, type=TYPES[str(self.type)], redict=True)
         
         self.dirInfoName.setText(self.infos["name"])
+        self.dirInfoAddress.setText(self.infos["address"])
         self.dirInfoDescription.setPlainText(self.infos["description"])
         self.dirInfoDateCreate.setDateTime(self.infos["datecreate"])
         self.dirInfoDateModify.setDateTime(self.infos["datemodify"])
@@ -94,6 +96,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.infos["size"] = self.infoSizeSpin.value()
         self.infoSizeSpin.setSuffix(self.infos["sizemode"])
         self.infoNameEdit.setText(self.infos["name"])
+        self.infoAddress.setText(self.infos["address"])
         self.infoDateCreate.setDateTime(self.infos["datecreate"])
         self.infoDateModify.setDateTime(self.infos["datemodify"])
         self.infoDateAccess.setDateTime(self.infos["dateaccess"])

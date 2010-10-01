@@ -167,12 +167,14 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.openInfo(type=str(type), id=id)
         
     def newFile(self):
+        upid = str(self.item.whatsThis()).split()[-1]
         type = "file"
-        self.openInfo(type=str(type), id=-1)
+        self.openInfo(type=str(type), id=None, upid=upid)
         
     def newDir(self):
+        upid = str(self.item.whatsThis()).split()[-1]
         type = "directory"
-        self.openInfo(type=str(type), id=-1)
+        self.openInfo(type=str(type), id=None, upid=upid)
             
     def Back(self):
         if self.indexNow != 0:
@@ -201,8 +203,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         crCat.exec_()
         self.refresh()
         
-    def openInfo(self, type, id, cat=False):
-        itemInfos = infoDialog.infoDialog(type=type, id=id)
+    def openInfo(self, type, id, upid=None):
+        itemInfos = infoDialog.infoDialog(type=type, id=id, upid=upid)
         itemInfos.exec_()
         self.refresh()
             
