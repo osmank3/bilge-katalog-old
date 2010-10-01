@@ -7,6 +7,8 @@ import libilge
 import database
 import datetime
 
+from detailer import getKeys
+
 Query = database.EditQuery()
 EXP = libilge.explore()
 
@@ -119,7 +121,6 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             
         elif self.infos["type"] == "image":
             self.infoTypeCombo.setCurrentIndex(2)
-            self.detailImageCreateDate.setDateTime(self.infos["datecreate"])
             self.detailImageHeightSpin.setValue(self.infos["height"])
             self.detailImageWidthSpin.setValue(self.infos["width"])
             
@@ -190,7 +191,6 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
                 ddata["year"] = self.detailEBookYearSpin.value()
                 
             elif ddata["type"] == "image":
-                ddata["datecreate"] = self.detailImageCreateDate.dateTime().toPyDateTime()
                 ddata["height"] = self.detailImageHeightSpin.value()
                 ddata["width"] = self.detailImageWidthSpin.value()
                 
@@ -211,8 +211,32 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
                 ddata["height"] = self.detailVideoHeight.value()
                 ddata["width"] = self.detailVideoWidth.value()
                     
-            #if ddata["type"] != infos["type"] and not self.new:
-                #burada infos["type"]'daki ayrıntı verileri silinmeli.
+            if not self.new and ddata["type"] != self.infos["type"]:
+                oldType = self.infos["type"]
+                if oldType != "other":
+                    Query.setStatTrue("delete")
+                    Query.setTables([libilge.typeDb[oldType]])
+                    Query.setWhere([{"f_id":self.id}])
+                    database.dataBase().execute(Query.returnQuery())
+                    
+                    oldKeys = getKeys(libilge.typeDb[oldType])
+                    for i in oldKeys.keys():
+                        if i != "f_id":
+                            self.infos.pop(i)
+                        
+                newType = ddata["type"]
+                newKeys = getKeys(libilge.typeDb[newType])
+                for i in newKeys.keys():
+                    if i != "f_id":
+                        self.infos[i] = newKeys[i]
+                        
+                dirnow = EXP.dirNow
+                EXP.chDir(id=self.upid)
+                EXP.update(updated=self.infos["name"],
+                           parameters={"type":ddata["type"]})
+                EXP.dirNow = dirnow
+                
+                self.infos["type"] = ddata["type"]
         
         if self.new:
             ddata["up_id"] = self.upid
