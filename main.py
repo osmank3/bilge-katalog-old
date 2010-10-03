@@ -261,6 +261,22 @@ def mainloop():
                 
                 EXP.copy(name=copied, to=to)
                     
-mainloop()
+argv = sys.argv
+
+if "qt" in argv:
+    from PyQt4 import QtGui
+    from PyQt4 import QtCore
+    import mainqt
+    
+    app = QtGui.QApplication(argv)
+    window = mainqt.MainWindow()
+    window.show()
+    #translator = QtCore.QTranslator()
+    #translator.load(".qm")
+    #app.installTranslator(translator)
+    sys.exit(app.exec_())
+
+else:
+    mainloop()
 
 print _("Thanks for using bilge-katalog")

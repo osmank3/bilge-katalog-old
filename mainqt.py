@@ -147,8 +147,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         
     def refresh(self):
         self.fillCatList()
-        if self.indexNow != 0:
+        if self.indexNow != 0 and not self.searching:
             self.fillFilesList(id=self.history[self.indexNow])
+            self.searchLine.clear()
         
     def doubleClickAction(self, itemSelected):
         type, id = str(itemSelected.whatsThis()).split()
@@ -158,11 +159,11 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             if self.history[-1] != id:
                 self.history.append(id)
                 self.indexNow += 1
+            if self.searching:
+                self.searching = False
+                self.searchLine.clear()
         if type == "file":
             self.openInfo(type=type, id=id)
-        if self.searching:
-            self.searching = False
-            self.searchLine.clear()
             
     def clickAction(self, itemSelected):
         self.item = itemSelected
@@ -184,19 +185,19 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             
     def Back(self):
         if self.searching:
-            self.refresh()
             self.searching = False
             self.searchLine.clear()
-        elif self.indexNow != 0:
+            self.refresh()
+        elif self.history[self.indexNow - 1] != 0:
             id = self.history[self.indexNow - 1]
             self.fillFilesList(id=id)
             self.indexNow -= 1
         
     def Next(self):
         if self.searching:
-            self.refresh()
             self.searching = False
             self.searchLine.clear()
+            self.refresh()
         elif self.indexNow + 1 < len(self.history):
             id = self.history[self.indexNow + 1]
             self.fillFilesList(id=id)
@@ -204,17 +205,20 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         
     def Up(self):
         if self.searching:
-            self.refresh()
             self.searching = False
             self.searchLine.clear()
+            self.refresh()
         elif self.indexNow != 0 and self.history[self.indexNow] != 0:
             EXP.chDir(id=self.history[self.indexNow])
             EXP.chDir(dirname="..")
             id = EXP.dirNow
-            self.fillFilesList(id=id)
-            self.history = self.history[:self.indexNow+1]
-            self.history.append(id)
-            self.indexNow += 1
+            if int(id) == int(self.history[self.indexNow - 1]):
+                self.Back()
+            elif id != 0:
+                self.fillFilesList(id=id)
+                self.history = self.history[:self.indexNow+1]
+                self.history.append(id)
+                self.indexNow += 1
             
     def createCat(self):
         crCat = wizardCat.CreateCat()
@@ -284,8 +288,4 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                 item.setWhatsThis("file %s"% i[0])
             self.listFiles.addItem(item)
         
-      
-app = QtGui.QApplication(sys.argv)
-window = MainWindow()
-window.show()
-sys.exit(app.exec_())
+

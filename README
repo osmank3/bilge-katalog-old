@@ -4,6 +4,7 @@ Requirements:
 -Python >= 2.6
 -Mutagen
 -kaa.metadata
+-PyQt4
 
 Installation:
 -Installation script does not yet
