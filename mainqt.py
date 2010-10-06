@@ -38,6 +38,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.exploreToolBar.addAction(self.actBack)
         self.exploreToolBar.addAction(self.actNext)
         self.exploreToolBar.addAction(self.actUp)
+        self.exploreToolBar.addAction(self.actRefresh)
         self.editToolBar.addAction(self.actCut)
         self.editToolBar.addAction(self.actCopy)
         self.editToolBar.addAction(self.actPaste)
@@ -47,6 +48,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchButton = QtGui.QPushButton()
         self.searchButton.setObjectName("searchButton")
         self.searchButton.setText("Search")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/image/images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.searchButton.setIcon(icon)
         self.searchToolBar.addWidget(self.searchLine)
         self.searchToolBar.addWidget(self.searchButton)
         
@@ -124,6 +128,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item = QtGui.QListWidgetItem()
             item.setText(i)
             item.setWhatsThis("directory %s"% dirs[i])
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(":/image/images/bilge-katalog.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            item.setIcon(icon)
             self.listCat.addItem(item)
         for i in files.keys():
             item = QtGui.QListWidgetItem()
@@ -138,12 +145,36 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item = QtGui.QListWidgetItem()
             item.setText(i)
             item.setWhatsThis("directory %s"% dirs[i])
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(":/image/images/directory.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            item.setIcon(icon)
             self.listFiles.addItem(item)
         for i in files.keys():
             item = QtGui.QListWidgetItem()
             item.setText(i)
             item.setWhatsThis("file %s"% files[i])
+            icon = self.setFileIcon(files[i])
+            item.setIcon(icon)
             self.listFiles.addItem(item)
+        
+    def setFileIcon(self, fid):
+        infos = EXP.info(id=fid, type="files", redict=True)
+        icon = QtGui.QIcon()
+        type = infos["type"]
+        if type == "book":
+            icon.addPixmap(QtGui.QPixmap(":/image/images/book.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        elif type == "ebook":
+            icon.addPixmap(QtGui.QPixmap(":/image/images/ebook.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        elif type == "image":
+            icon.addPixmap(QtGui.QPixmap(":/image/images/image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        elif type == "music":
+            icon.addPixmap(QtGui.QPixmap(":/image/images/music.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        elif type == "video":
+            icon.addPixmap(QtGui.QPixmap(":/image/images/video.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        else:
+            icon.addPixmap(QtGui.QPixmap(":/image/images/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        
+        return icon
         
     def refresh(self):
         self.fillCatList()

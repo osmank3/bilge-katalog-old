@@ -283,7 +283,6 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.infoDateModify.setDateTime(QtCore.QDateTime.currentDateTime())
         self.infoDateAccess.setDateTime(QtCore.QDateTime.currentDateTime())
         self.infoDateInsert.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.detailImageCreateDate.setDateTime(QtCore.QDateTime.currentDateTime())
     
     def setNewDirDialog(self):
         self.infoSW.setCurrentIndex(1)

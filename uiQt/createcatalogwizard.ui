@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Wizard</string>
+   <string>Create Catalog Wizard</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="QtRc.qrc">
+    <normaloff>:/image/images/catalog_new.png</normaloff>:/image/images/catalog_new.png</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedKingdom"/>
@@ -184,7 +188,9 @@ Press Finish button.</string>
   <tabstop>buttonChoseDir</tabstop>
   <tabstop>lineConf</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="QtRc.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>fillRadio</sender>

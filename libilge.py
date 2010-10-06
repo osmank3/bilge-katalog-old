@@ -699,32 +699,3 @@ class explore:
             self.copyDir(id=dirs[i], to=to)
         
         
-
-
-
-
-
-
-# Colored printing
-
-def clr_blue(text):
-    return "\033[94m" + text + "\033[0m"
-def clr_no(text):
-    return "\033[0m" + text + "\033[0m"
-def clr_yellow(text):
-    return "\033[93m" + text + "\033[0m"
-    
-# testing codes
-def test():
-    #şimdilik buradan sonrası deneme amaçlı kalsın...
-    rows, columns = os.popen("stty size", "r").read().split()
-    maxleight=0
-    for i in list:
-        if maxleight<len(i):
-            maxleight = len(i)
-    for i in list:
-        if len(i)<maxleight:
-            number = list.index(i)
-            while len(i) == maxleight:
-                i += " "
-            list[number] = i

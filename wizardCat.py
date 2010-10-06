@@ -48,12 +48,12 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         
     def fillConf(self):
         Text = ""
-        Text += "%15s : %s\n"%("Name", str(self.lineName.text()))
-        Text += "%15s : %s\n"%("Description", str(self.lineDesc.toPlainText()))
-        Text += "%15s : %s\n"%("Date", self.dateTimeEdit.dateTime().toString())
+        Text += "%s\t\t: %s\n"%("Name", str(self.lineName.text()))
+        Text += "%s\t\t: %s\n"%("Description", str(self.lineDesc.toPlainText()))
+        Text += "%s\t\t: %s\n"%("Date", self.dateTimeEdit.dateTime().toString())
         directory = self.lineDirPath.text()
         if directory != u"":
-            Text += "%15s : %s\n"%("Directory", directory)
+            Text += "%s\t\t: %s\n"%("Directory", directory)
         self.lineConf.insertPlainText(Text)
         
     def finish(self):

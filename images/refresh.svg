@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="300"
+   height="300"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="refresh.svg"
+   inkscape:export-filename="/home/osmank3/refresh.png"
+   inkscape:export-xdpi="38.400002"
+   inkscape:export-ydpi="38.400002">
+  <title
+     id="title2998">Refresh</title>
+  <defs
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3836">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.19292605"
+         offset="0"
+         id="stop3838" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="1"
+         id="stop3840" />
+    </linearGradient>
+    <linearGradient
+       osb:paint="solid"
+       id="linearGradient3821">
+      <stop
+         id="stop3823"
+         offset="0"
+         style="stop-color:#f4f4f4;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3879"
+       inkscape:collect="always">
+      <stop
+         id="stop3881"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:0.90032154" />
+      <stop
+         id="stop3883"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0.13826367" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3879"
+       id="linearGradient3851"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.8814383,0,0,1.8814383,-484.89779,-2.6941194)"
+       x1="272.16629"
+       y1="477.36218"
+       x2="341.83371"
+       y2="477.02884" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3836"
+       id="linearGradient3853"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-122.83105,13.242009)"
+       x1="242.58961"
+       y1="866.51746"
+       x2="242.46948"
+       y2="797.11096" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="-23.10938"
+     inkscape:cy="150"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="885"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Refresh</dc:title>
+        <dc:date>2010-10-04</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Osman Karagöz</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-752.36218)">
+    <g
+       id="g3844"
+       transform="matrix(1.2464613,0,0,1.2464613,6.8574909,-232.74597)">
+      <path
+         sodipodi:nodetypes="czzzcssccscccccsccssczczcc"
+         inkscape:connector-curvature="0"
+         id="path3009-8"
+         d="m 78.397464,869.44963 c 0.143134,-24.49533 9.655179,-42.67949 50.132366,-42.64389 40.47719,0.0356 42.67163,48.47385 42.1117,80.59205 -0.55993,32.1182 0.74753,87.92435 -38.1117,88.59211 -38.85923,0.66776 -56.276332,-8.54894 -57.355964,-37.26186 l -0.767693,-49.93119 c -0.0578,-3.75919 2.352687,-8.0179 6.046967,-3.48864 5.609753,6.87766 8.747172,16.95419 9.535598,21.62954 0,7.05479 -0.232573,16.43535 -0.232573,23.49014 0,0 1.165596,4.4888 6.046971,4.65151 6.977264,0.23257 7.442424,-5.81439 7.442424,-5.81439 0,-8.45025 0,-16.9005 0,-25.35075 -3.02094,-19.91084 -18.41802,-37.24659 -35.409654,-37.7354 -18.999081,0.0873 -34.875447,21.24769 -35.409642,37.61912 0,8.45024 0,16.90049 0,25.35074 0,0 0.465155,5.81439 7.442423,5.81439 4.884089,0 6.046971,-4.65151 6.046971,-4.65151 0,-7.05479 -0.232573,-16.43535 -0.232573,-23.49014 0.788422,-4.67535 3.259361,-15.35417 9.535598,-21.62954 3.770067,-3.76955 6.106105,-2.51272 6.046967,3.48864 l -0.50456,51.20271 c -0.492985,40.1102 26.003721,54.56843 72.6742,52.88783 46.67048,-1.6806 52.48088,-39.69357 52.68434,-106.76508 -0.0136,-77.32466 -17.91987,-94.60176 -56.68434,-94.76504 -38.764472,-0.16328 -65.396216,9.16142 -66.343766,58.97934 0.422313,9.17865 15.201427,7.10278 15.30594,-0.77069 z"
+         style="fill:#217821;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <g
+         transform="matrix(0.37084764,0,0,0.37084764,13.383112,598.25517)"
+         inkscape:label="Layer 1"
+         id="layer1-5">
+        <g
+           id="g3897"
+           transform="matrix(0,1,1,0,-748.60004,748.60004)">
+          <path
+             sodipodi:nodetypes="cccccccc"
+             inkscape:connector-curvature="0"
+             id="path2987-2-3"
+             d="m 88.156272,913.15026 c -10.137885,-0.0376 -21.620454,6.34408 -9.407191,16.3058 43.181079,29.94699 95.983649,61.46033 50.171699,61.46033 C 75.230678,982.77034 28.484387,941.25174 27.166308,895.43337 27.401732,844.20187 84.46124,801.39085 128.6072,799.95038 c 46.14601,0.2872 -11.06523,29.64885 -50.171699,61.46033 -10.164696,10.16608 -6.776301,16.36597 9.407192,16.3058 133.001767,-0.2456 132.244887,35.01731 0.313579,35.43375 z"
+             style="fill:url(#linearGradient3851);fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        </g>
+      </g>
+      <path
+         sodipodi:nodetypes="cszsccszssscc"
+         inkscape:connector-curvature="0"
+         id="path3009-8-5"
+         d="m 80.648982,851.62182 c 4.376009,-5.64887 5.386504,-10.96892 9.720138,-14.51896 10.12401,-8.29342 26.07215,-9.95823 36.19145,-9.94933 10.1193,0.009 26.44473,3.84426 34.3416,18.60541 1.97421,3.69028 3.24812,6.88021 4.3151,11.556 6.45735,18.92456 19.52364,21.89758 16.69514,-1.73642 -1.78629,-12.49606 -4.91071,-19.17026 -9.57262,-26.17289 -9.32382,-14.00527 -24.22374,-18.40618 -44.87376,-18.447 -20.65002,-0.0408 -28.04017,0.24953 -42.08489,8.77733 -3.51118,2.13195 -6.75333,4.77874 -9.64894,7.93891 -2.8956,3.16016 -5.44464,6.83371 -7.56959,11.01916 -2.12496,4.18545 -3.838064,3.75415 -3.938292,14.09063 -1.772561,27.00738 13.827504,26.92208 16.424664,-1.16284 z"
+         style="fill:url(#linearGradient3853);fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+  </g>
+</svg>
