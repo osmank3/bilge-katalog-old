@@ -20,8 +20,8 @@
   <property name="locale">
    <locale language="English" country="UnitedKingdom"/>
   </property>
-  <property name="wizardStyle">
-   <enum>QWizard::ClassicStyle</enum>
+  <property name="options">
+   <set>QWizard::DisabledBackButtonOnLastPage|QWizard::NoBackButtonOnStartPage</set>
   </property>
   <widget class="QWizardPage" name="wizardPage1">
    <layout class="QVBoxLayout" name="verticalLayout">

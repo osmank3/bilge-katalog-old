@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="image">
+    <file>../images/image.png</file>
+    <file>../images/video.png</file>
+    <file>../images/copy.png</file>
+    <file>../images/exit.png</file>
     <file>../images/search.png</file>
     <file>../images/delete.png</file>
     <file>../images/book.png</file>

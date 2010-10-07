@@ -285,6 +285,10 @@
    </property>
   </action>
   <action name="actExit">
+   <property name="icon">
+    <iconset resource="QtRc.qrc">
+     <normaloff>:/image/images/exit.png</normaloff>:/image/images/exit.png</iconset>
+   </property>
    <property name="text">
     <string>E&amp;xit</string>
    </property>
@@ -493,6 +497,10 @@
    </property>
   </action>
   <action name="actCopy">
+   <property name="icon">
+    <iconset resource="QtRc.qrc">
+     <normaloff>:/image/images/copy.png</normaloff>:/image/images/copy.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Copy</string>
    </property>

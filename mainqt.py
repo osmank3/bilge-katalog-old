@@ -14,6 +14,7 @@ from uiQt_mainwindow import Ui_MainWindow
 
 import wizardCat
 import infoDialog
+import aboutDialog
 
 EXP = libilge.explore()
 
@@ -92,6 +93,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actCut.triggered.connect(self.cut)
         self.actPaste.triggered.connect(self.paste)
         self.actRefresh.triggered.connect(self.refresh)
+        self.actAbout.triggered.connect(self.about)
 
     def contextFiles(self, point):
         self.item = None
@@ -263,11 +265,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             
     def delete(self):
         type, id = str(self.item.whatsThis()).split()
+        self.setCursor(QtCore.Qt.WaitCursor)
         if type == "file":
             EXP.delFile(id=id)
         elif type == "directory":
             EXP.delDir(id=id)
-            
+        self.setCursor(QtCore.Qt.ArrowCursor)
         self.refresh()
         
     def copy(self):
@@ -281,6 +284,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def paste(self):
         newUpType, newUpId = str(self.item.whatsThis()).split()
         if self.willPaste and newUpType == "directory":
+            self.setCursor(QtCore.Qt.WaitCursor)
             name, oldUpId = self.willPaste
             if self.pasteType == "cut":
                 infos = {"up_id":newUpId}
@@ -299,6 +303,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                 EXP.copy(name=name, to=to)
                 EXP.dirNow = dirnow
                 
+            self.setCursor(QtCore.Qt.ArrowCursor)
             self.refresh()
                 
         elif newUpType == "file":
@@ -310,6 +315,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         wanted = str(self.searchLine.text())
         listOfFounded = EXP.search(wanted, "basic") # [(id, name, address, dir or file)]
         self.listFiles.clear()
+        self.setCursor(QtCore.Qt.WaitCursor)
         for i in listOfFounded:
             item = QtGui.QListWidgetItem()
             item.setText(i[1])
@@ -318,5 +324,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             elif i[3] == "files":
                 item.setWhatsThis("file %s"% i[0])
             self.listFiles.addItem(item)
-        
+        self.setCursor(QtCore.Qt.ArrowCursor)
+    
+    def about(self):
+        about = aboutDialog.aboutDialog()
+        about.exec_()
 

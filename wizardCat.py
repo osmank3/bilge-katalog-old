@@ -19,9 +19,6 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         QtGui.QWizard.__init__(self)
         self.setupUi(self)
         
-        self.setOption(QtGui.QWizard.DisabledBackButtonOnLastPage)
-        self.setOption(QtGui.QWizard.NoBackButtonOnStartPage)
-        
         #signals
         self.connect(self.buttonChoseDir, QtCore.SIGNAL("clicked()"), self.chooseDir)
         self.connect(self, QtCore.SIGNAL("currentIdChanged(int)"), self.nextPage)
@@ -57,9 +54,11 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         self.lineConf.insertPlainText(Text)
         
     def finish(self):
+        self.setCursor(QtCore.Qt.WaitCursor)
         self.setEnabled(False)
         self.catalog2DB()
         self.setEnabled(True)
+        self.setCursor(QtCore.Qt.ArrowCursor)
         
     def catalog2DB(self):
         info = {}

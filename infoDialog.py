@@ -293,6 +293,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.dirInfoDateInsert.setDateTime(QtCore.QDateTime.currentDateTime())
     
     def fillFileInfo(self):
+        self.setCursor(QtCore.Qt.WaitCursor)
         filename = QtGui.QFileDialog.getOpenFileName()
         if filename == u"":
             return
@@ -305,9 +306,11 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.id = database.dataBase().execute(Query.returnQuery())[0][0]
         self.new = False
         
+        self.setCursor(QtCore.Qt.ArrowCursor)
         self.parse()
         
     def fillDirInfo(self):
+        self.setCursor(QtCore.Qt.WaitCursor)
         dirname = QtGui.QFileDialog.getExistingDirectory(options = QtGui.QFileDialog.ShowDirsOnly)
         if dirname == u"":
             return
@@ -320,4 +323,5 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.id = database.dataBase().execute(Query.returnQuery())[0][0]
         self.new = False
         
+        self.setCursor(QtCore.Qt.ArrowCursor)
         self.parse()
