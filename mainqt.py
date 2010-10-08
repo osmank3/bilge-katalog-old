@@ -48,7 +48,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchLine = QtGui.QLineEdit()
         self.searchButton = QtGui.QPushButton()
         self.searchButton.setObjectName("searchButton")
-        self.searchButton.setText("Search")
+        #self.searchButton.setText("Search")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/image/images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.searchButton.setIcon(icon)

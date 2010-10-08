@@ -70,6 +70,9 @@ def tagging(address, type):
     elif type == ".ogg":
         infos = detailer.oggTags(address)
         return infos
+    elif type == ".pdf":
+        infos = detailer.pdfInfo(address)
+        return infos
     
 class explore:
     def __init__(self):

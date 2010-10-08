@@ -4,8 +4,10 @@
 import os
 import sys
 import gettext
+import re
 import sqlite3
 import datetime
+from constants import VERSION
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -14,6 +16,8 @@ reload(sys).setdefaultencoding("utf-8")
 gettext.install("bilge-katalog", unicode=1)
 
 DBFile = "database.db"# yerine kullanalım.":memory:"#hız için şimdilik        
+
+
 
 class dataBase:
     def __init__(self):
@@ -24,6 +28,7 @@ class dataBase:
         self.cur = self.db.cursor()
         if creating:
             self.createTables()
+        self.versionControl()
             
     def createTables(self):
         self.cur.execute("CREATE TABLE dirs ("
@@ -102,6 +107,10 @@ class dataBase:
         self.cur.execute("CREATE TABLE icons ("
                "f_type TEXT PRIMARY KEY, "
                "icon DATA)")
+               
+        self.cur.execute("CREATE TABLE app ("
+               "version TEXT)")
+        self.cur.execute("INSERT INTO app (version) VALUES (\"%s\")"% (VERSION))
         
         self.db.commit()
         
@@ -113,6 +122,17 @@ class dataBase:
         else:
             self.db.commit()
             return True
+            
+    def versionControl(self):
+        databaseVersion = self.cur.execute("SELECT version FROM app").fetchone()[0]
+        if databaseVersion == VERSION:
+            pass
+        else:
+            self.convertDatabase(databaseVersion)
+            
+    def convertDatabase(self, oldVersion):
+        pass
+        
         
 class EditQuery:
     def __init__(self):        

@@ -114,10 +114,10 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             
         elif self.infos["type"] == "ebook":
             self.infoTypeCombo.setCurrentIndex(1)
-            self.detailEBookAuthor.setText(self.infos["author"])
-            self.detailEBookTitle.setText(self.infos["title"])
-            self.detailEBookPageSpin.setValue(self.infos["page"])
-            self.detailEBookYearSpin.setValue(self.infos["year"])
+            self.detailEbookAuthor.setText(self.infos["author"])
+            self.detailEbookTitle.setText(self.infos["title"])
+            self.detailEbookPageSpin.setValue(self.infos["page"])
+            self.detailEbookYearSpin.setValue(self.infos["year"])
             
         elif self.infos["type"] == "image":
             self.infoTypeCombo.setCurrentIndex(2)

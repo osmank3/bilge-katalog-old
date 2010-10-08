@@ -4,6 +4,7 @@ Requirements:
 -Python >= 2.6
 -Mutagen
 -kaa.metadata
+-reportlab
 -PyQt4
 
 Installation:
