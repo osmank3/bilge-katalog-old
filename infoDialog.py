@@ -108,7 +108,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             self.infoTypeCombo.setCurrentIndex(0)
             self.detailBookAuthor.setText(self.infos["author"])
             self.detailBookImprintInfo.setText(self.infos["imprintinfo"])
-            self.detailBookCallNuber.setText(self.infos["callnumber"])
+            self.detailBookCallNumber.setText(self.infos["callnumber"])
             self.detailBookPageSpin.setValue(self.infos["page"])
             self.detailBookYearSpin.setValue(self.infos["year"])
             
@@ -180,7 +180,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             if ddata["type"] == "book":
                 ddata["author"] = str(self.detailBookAuthor.text())
                 ddata["imprintinfo"] = str(self.detailBookImprintInfo.text())
-                ddata["callnumber"] = str(self.detailBookCallNuber.text())
+                ddata["callnumber"] = str(self.detailBookCallNumber.text())
                 ddata["page"] = self.detailBookPageSpin.value()
                 ddata["year"] = self.detailBookYearSpin.value()
                 

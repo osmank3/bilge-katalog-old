@@ -7,7 +7,7 @@ import gettext
 import re
 import sqlite3
 import datetime
-from constants import VERSION
+from constants import (VERSION, DBDIR)
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -15,7 +15,7 @@ reload(sys).setdefaultencoding("utf-8")
 #For multilanguage support
 gettext.install("bilge-katalog", unicode=1)
 
-DBFile = "database.db"# yerine kullanalım.":memory:"#hız için şimdilik        
+DBFile = DBDIR + "database.db"
 
 
 

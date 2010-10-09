@@ -63,7 +63,102 @@ def mainloop():
         #print command , parameters , additions
         
         if command == "help":
-            print _("helping information")
+            if additions[0] == "cd":
+                print "cd OPTS      " + _("changing current directory")
+                print _("Usage:")
+                print "cd id=ID     " + _("change current directory which id is ID")
+                print "cd NAME      " + _("change current directory which name is NAME")
+                
+            elif additions[0] == "cp":
+                print "cp OPTS      " + _("copy files and directories")
+                print _("Usage:")
+                print "cp NAME to=ADDRESS     " + _("copy NAME to ADDRESS")
+                
+            elif additions[0] == "info":
+                print "info OPTS    " + _("informations about file or directory")
+                print _("Usage:")
+                print "info NAME    " + _("informations about NAME")
+                
+            elif additions[0] == "ls":
+                print "ls OPTS      " + _("listing directory")
+                print _("Usage:")
+                print "ls id=ID     " + _("list directory which id is ID")
+                print "ls NAME      " + _("list directory which name is NAME")
+                
+            elif additions[0] == "mkcat":
+                print "mkcat OPTS   " + _("creating catalog.")
+                print _("Usage:")
+                print "mkcat name=NAME desc=DESCRIPTIONS dir=DIRECTORY\n\t" + \
+                        _("create catalog, NAME is name of catalog") + "\n\t" + \
+                        _("DESCRIPTIONS is description of catalog (optional)") + \
+                        "\n\t" + _("DIRECTORY for creating catalog (optional)")
+                        
+            elif additions[0] == "mkfile":
+                print "mkdir OPTS   " + _("creating a directory.")
+                print _("Usage:")
+                print "mkdir name=NAME desc=DESCRIPTIONS dir=DIRECTORY\n\t" + \
+                        _("create directory, NAME is name of directory") + "\n\t" + \
+                        _("DESCRIPTIONS is description of directory (optional)") + \
+                        "\n\t" + _("DIRECTORY for creating directory (optional)")
+                
+            elif additions[0] == "mkfile":
+                print "mkfile OPTS  " + _("creating a file.")
+                print _("Usage:")
+                print "mkfile NAME type=TYPE address=ADDRESS\n\t" + \
+                        _("create file, NAME is name of file") + "\n\t" + \
+                        _("TYPE is type of file (optional)") + "\n\t" + \
+                        _("ADDRESS for creating file (optional)")
+                        
+            elif additions[0] == "mv":
+                print "mv OPTS      " + _("move files and directories")
+                print _("Usage:")
+                print "mv NAME to=ADDRESS     " + _("move NAME to ADDRESS")
+                
+            elif additions[0] == "rm":
+                print "rm OPTS      " + _("removing file")
+                print _("Usage:")
+                print "rm id=ID     " + _("remove file which id is ID")
+                print "rm NAME      " + _("remove file which name is NAME")
+                
+            elif additions[0] == "rmdir":
+                print "rmdir OPTS   " + _("removing directory")
+                print _("Usage:")
+                print "rmdir id=ID  " + _("remove directory which id is ID")
+                print "rmdir NAME   " + _("remove directory which name is NAME")
+                
+            elif additions[0] == "search":
+                print "search OPTS  " + _("searching for entry")
+                print _("Usage:")
+                print "search ENTRY   " + _("search for ENTRY and print all informations of founded")
+                
+            elif additions[0] == "update":
+                print "update OPTS  " + _("updating files or directories informations")
+                print _("Usage:")
+                print "update NAME KEY=VALUE    " + _("update NAME's VALUE of KEY")
+                
+            elif additions[0] == "whereis":
+                print "whereis OPTS " + _("searching for entry and return theirs address")
+                print _("Usage:")
+                print "whereis ENTRY    " + _("search for ENTRY en print addresses of founded")
+                
+            else:
+                print _("Useful commands:")
+                print "cd OPTS      " + _("changing current directory")
+                print "cp OPTS      " + _("copy files and directories")
+                print "exit         " + _("quiting on application")
+                print "help OPTS    " + _("this help or using details of command")
+                print "info OPTS    " + _("informations about file or directory")
+                print "ls OPTS      " + _("listing directory")
+                print "mkcat OPTS   " + _("creating catalog.")
+                print "mkdir OPTS   " + _("creating a directory.")
+                print "mkfile OPTS  " + _("creating a file.")
+                print "mv OPTS      " + _("move files and directories")
+                print "quit         " + _("quiting on application")
+                print "rm OPTS      " + _("removing file")
+                print "rmdir OPTS   " + _("removing directory")
+                print "search OPTS  " + _("searching for entry")
+                print "update OPTS  " + _("updating files or directories informations")
+                print "whereis OPTS " + _("searching for entry and return theirs address")
         
         elif command == "quit" or command == "exit":
             QUIT = True
@@ -110,7 +205,7 @@ def mainloop():
                 address = parameters["address"]
                 infos["name"] = str(name)
                 infos["dateinsert"]=now
-                EXP.mkFile(infos=infos)
+                EXP.mkFile(infos=infos, address=address)
             elif len(additions)>0:
                 name = additions[0]
                 infos["name"]=str(name)
@@ -260,7 +355,10 @@ def mainloop():
                 to = EXP.parseAddress(parameters["to"])
                 
                 EXP.copy(name=copied, to=to)
-                    
+                
+
+    print _("Thanks for using bilge-katalog")
+    
 argv = sys.argv
 
 if "qt" in argv:
@@ -269,14 +367,12 @@ if "qt" in argv:
     import mainqt
     
     app = QtGui.QApplication(argv)
+    #translator = QtCore.QTranslator()
+    #translator.load("tr.qm")
+    #app.installTranslator(translator)
     window = mainqt.MainWindow()
     window.show()
-    #translator = QtCore.QTranslator()
-    #translator.load(".qm")
-    #app.installTranslator(translator)
     sys.exit(app.exec_())
 
-else:
+elif "cli" in argv:
     mainloop()
-
-print _("Thanks for using bilge-katalog")

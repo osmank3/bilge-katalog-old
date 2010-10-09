@@ -6,9 +6,15 @@ Requirements:
 -kaa.metadata
 -reportlab
 -PyQt4
+-PyQt4-devel(for installing)
 
 Installation:
--Installation script does not yet
+-building command:
+    python setup.py build
+-installing command:
+    python setup.py install
+-removing build files command:
+    python setup.py remove
 
 Translations:
--Not ready to translate
+-Translations are on transifex.net

@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+import sys
+from bilge_katalog.main import *
+
+if "qt" in sys.argv:
+    from PyQt4 import QtGui
+    from PyQt4 import QtCore
+    import bilge_katalog.mainqt as mainqt
+    
+    app = QtGui.QApplication(sys.argv)
+    #translator = QtCore.QTranslator()
+    #translator.load("tr.qm")
+    #app.installTranslator(translator)
+    window = mainqt.MainWindow()
+    window.show()
+    sys.exit(app.exec_())
+
+else:
+    mainloop()

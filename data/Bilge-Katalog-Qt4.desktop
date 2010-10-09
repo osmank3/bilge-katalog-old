@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Bilge-Katalog
+GenericName=Bilge-Katalog-Qt4
+Type=Application
+Comment=Cataloging application
+Comment[tr]=Kataloglama uygulaması
+Exec=bilge-katalog qt
+Icon=bilge-katalog
+Categories=Utility;
