@@ -5,16 +5,16 @@ import os
 import sys
 import gettext
 import database
-import re
+import datetime
 
 from warnings import simplefilter # for ignoriny DeprecationWarning.
 simplefilter("ignore", DeprecationWarning)
 
 import kaa.metadata as Meta
+import pyPdf
 import mutagen
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3
-from reportlab.pdfgen import canvas
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -23,11 +23,6 @@ reload(sys).setdefaultencoding("utf-8")
 gettext.install("bilge-katalog", unicode=1)
 
 DB = database.dataBase()
-
-pdfpage = re.compile("/Count\s+(\d+)")
-pdfauthor = re.compile("/Author\s+\((.*)\)")
-pdftitle = re.compile("/Title\s+\((.*)\)")
-pdfyear = re.compile("/CreationDate\s+\(D:(....)")
 
 def getKeys(type):
     infos = {}
@@ -114,16 +109,14 @@ def imageInfo(file):
 
 def pdfInfo(file):
     infos = getKeys("ebook")
-    pdf = canvas.Canvas(file)
-    pdfMetaText = pdf.getpdfdata()
-    if pdfauthor.findall(pdfMetaText)[0] != "anonymous":
-        infos["author"] = pdfauthor.findall(pdfMetaText)[0]
-    if pdftitle.findall(pdfMetaText)[0] != "untitled":
-        infos["title"] = pdftitle.findall(pdfMetaText)[0]
-    infos["year"] = int(pdfyear.findall(pdfMetaText)[0])
-    pdffile = open(file, "rb", 1).read()
-    pages = 0
-    for match in pdfpage.finditer(pdffile):
-        pages = int(match.group(1))
-    infos["page"] = int(pages)
+    openPdf = open(file, "r")
+    pdfFile = pyPdf.PdfFileReader(openPdf)
+    pdfInfos = pdfFile.getDocumentInfo()
+    if pdfInfos.has_key("/Author"):
+        infos["author"] = pdfInfos["/Author"]
+    if pdfInfos.has_key("/Title"):
+        infos["title"] = pdfInfos["/Title"]
+    if pdfInfos.has_key("/CreationDate"):
+        infos["year"] = int(pdfInfos["/CreationDate"][2:6])
+    infos["page"] = int(pdfFile.getNumPages())
     return infos
