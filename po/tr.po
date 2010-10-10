@@ -1,0 +1,310 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2010-10-09 22:47+0300\n"
+"PO-Revision-Date: 2010-10-10 17:11+0300\n"
+"Last-Translator: Osman Karagöz <osmank3 [at] gmail.com>\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.4\n"
+
+#: constants.py:15
+msgid "Cataloging application"
+msgstr "Kataloglama uygulaması"
+
+#: constants.py:16
+msgid "Bilge-Katalog is cataloging file's infos for founding where is file(s)."
+msgstr ""
+"Bilge-Katalog dosyaların bilgilerini toplayıp daha sonra nerede "
+"olduklarını bulmakta yardımcı olur."
+
+#: libilge.py:26
+msgid "Name"
+msgstr "Ad"
+
+#: libilge.py:27
+msgid "Address"
+msgstr "Adres"
+
+#: libilge.py:28
+msgid "Create Date"
+msgstr "Oluşturma Tarihi"
+
+#: libilge.py:29
+msgid "Modify Date"
+msgstr "Değiştirme Tarihi"
+
+#: libilge.py:30
+msgid "Access Date"
+msgstr "Erişim Tarihi"
+
+#: libilge.py:31
+msgid "Cataloging Date"
+msgstr "Kataloglanma Tarihi"
+
+#: libilge.py:32
+msgid "Description"
+msgstr "Özet"
+
+#: libilge.py:33
+msgid "Size"
+msgstr "Boyut"
+
+#: libilge.py:34
+msgid "Type"
+msgstr "Biçim"
+
+#: libilge.py:35
+msgid "Title"
+msgstr "Başlık"
+
+#: libilge.py:36
+msgid "Artist"
+msgstr "Artist"
+
+#: libilge.py:37
+msgid "Album"
+msgstr "Albüm"
+
+#: libilge.py:38 libilge.py:47
+msgid "Year"
+msgstr "Yıl"
+
+#: libilge.py:39
+msgid "Track"
+msgstr "Parça"
+
+#: libilge.py:40
+msgid "Genre"
+msgstr "Tür"
+
+#: libilge.py:41
+msgid "Bitrate"
+msgstr "Bit Oranı"
+
+#: libilge.py:42
+msgid "Sample Rate"
+msgstr "Örnek Oranı"
+
+#: libilge.py:43
+msgid "Length"
+msgstr "Süre"
+
+#: libilge.py:44
+msgid "Author"
+msgstr "Yazar"
+
+#: libilge.py:45
+msgid "Imprint Info"
+msgstr "Baskı Bilgisi"
+
+#: libilge.py:46
+msgid "Call Number"
+msgstr "Tasnif No"
+
+#: libilge.py:48
+msgid "Page"
+msgstr "Sayfa"
+
+#: libilge.py:49
+msgid "Width"
+msgstr "Genişlik"
+
+#: libilge.py:50
+msgid "Height"
+msgstr "Yükseklik"
+
+#: libilge.py:247 libilge.py:303 libilge.py:648 libilge.py:675 main.py:244
+#: main.py:248 main.py:335
+#, python-format
+msgid "%s is not a directory"
+msgstr "%s dizin değil"
+
+#: libilge.py:344
+#, python-format
+msgid "%s is not a file"
+msgstr "%s dosya değil"
+
+#: main.py:55
+msgid ""
+"Welcome to bilge-katalog!\n"
+"For helping only write 'help' an press Enter"
+msgstr ""
+"Bilge-katalog'a hoşgeldiniz!\n"
+"Yardım almak için 'help' yazıp onaylayın"
+
+#: main.py:67 main.py:146
+msgid "changing current directory"
+msgstr "Bulunulan dizini değiştir"
+
+#: main.py:68 main.py:74 main.py:79 main.py:84 main.py:90 main.py:98
+#: main.py:106 main.py:114 main.py:119 main.py:125 main.py:131 main.py:136
+#: main.py:141
+msgid "Usage:"
+msgstr "Kullanım:"
+
+#: main.py:69
+msgid "change current directory which id is ID"
+msgstr "anahtarı ID olan dizine geç"
+
+#: main.py:70
+msgid "change current directory which name is NAME"
+msgstr "adı NAME olan dizine geç"
+
+#: main.py:73 main.py:147
+msgid "copy files and directories"
+msgstr "dosya ve dizinleri kopyala"
+
+#: main.py:75
+msgid "copy NAME to ADDRESS"
+msgstr "NAME'i ADDRESS'e kopyala"
+
+#: main.py:78 main.py:150
+msgid "informations about file or directory"
+msgstr "dosya veya dizin hakkında bilgiler"
+
+#: main.py:80
+msgid "informations about NAME"
+msgstr "NAME hakkında bilgiler"
+
+#: main.py:83 main.py:151
+msgid "listing directory"
+msgstr "dizini listele"
+
+#: main.py:85
+msgid "list directory which id is ID"
+msgstr "anahtarı ID olan dizini listele"
+
+#: main.py:86
+msgid "list directory which name is NAME"
+msgstr "adı NAME olan dizini listele"
+
+#: main.py:89 main.py:152
+msgid "creating catalog."
+msgstr "katalog oluştur"
+
+#: main.py:92
+msgid "create catalog, NAME is name of catalog"
+msgstr "katalog oluştur, adı NAME olan"
+
+#: main.py:93
+msgid "DESCRIPTIONS is description of catalog (optional)"
+msgstr "özeti DESCRIPTION olan (opsiyonel)"
+
+#: main.py:94
+msgid "DIRECTORY for creating catalog (optional)"
+msgstr "verilerin alınacağı yer DIRECTORY olan (opsiyonel)"
+
+#: main.py:97 main.py:153
+msgid "creating a directory."
+msgstr "dizin oluştur"
+
+#: main.py:100
+msgid "create directory, NAME is name of directory"
+msgstr "dizin oluştur, adı NAME olan"
+
+#: main.py:101
+msgid "DESCRIPTIONS is description of directory (optional)"
+msgstr "özeti DESCRIPTION olan (opsiyonel)"
+
+#: main.py:102
+msgid "DIRECTORY for creating directory (optional)"
+msgstr "verilerin alınacağı yer DIRECTORY olan (opsiyonel)"
+
+#: main.py:105 main.py:154
+msgid "creating a file."
+msgstr "dosya oluştur."
+
+#: main.py:108
+msgid "create file, NAME is name of file"
+msgstr "dosya oluştur, adı NAME olan"
+
+#: main.py:109
+msgid "TYPE is type of file (optional)"
+msgstr "biçimi TYPE olan (opsiyonel)"
+
+#: main.py:110
+msgid "ADDRESS for creating file (optional)"
+msgstr "verilerin alınacağı yer ADDRESS olan (opsiyonel)"
+
+#: main.py:113 main.py:155
+msgid "move files and directories"
+msgstr "dosya ve dizinleri taşı"
+
+#: main.py:115
+msgid "move NAME to ADDRESS"
+msgstr "NAME'i ADDRESS'e taşı"
+
+#: main.py:118 main.py:157
+msgid "removing file"
+msgstr "dosya sil"
+
+#: main.py:120
+msgid "remove file which id is ID"
+msgstr "anahtarı ID olan dosyayı sil"
+
+#: main.py:121
+msgid "remove file which name is NAME"
+msgstr "adı NAME olan dosyayı sil"
+
+#: main.py:124 main.py:158
+msgid "removing directory"
+msgstr "dizin sil"
+
+#: main.py:126
+msgid "remove directory which id is ID"
+msgstr "anahtarı ID olan dizini sil"
+
+#: main.py:127
+msgid "remove directory which name is NAME"
+msgstr "adı NAME olan dizini sil"
+
+#: main.py:130 main.py:159
+msgid "searching for entry"
+msgstr "girileni ara"
+
+#: main.py:132
+msgid "search for ENTRY and print all informations of founded"
+msgstr "ENTRY'yi ara ve bulunanların tüm bilgilerini göster"
+
+#: main.py:135 main.py:160
+msgid "updating files or directories informations"
+msgstr "dosya ve dizinlerin bilgilerini güncelle"
+
+#: main.py:137
+msgid "update NAME's VALUE of KEY"
+msgstr "NAME'in KEY anahtarının değerini VALUE ile değiştir"
+
+#: main.py:140 main.py:161
+msgid "searching for entry and return theirs address"
+msgstr "girileni ara ve bulunanların adreslerini yaz"
+
+#: main.py:142
+msgid "search for ENTRY en print addresses of founded"
+msgstr "ENTRY'yi ara ve bulunanların adreslerini yaz"
+
+#: main.py:145
+msgid "Useful commands:"
+msgstr "Kullanışlı komutlar:"
+
+#: main.py:148 main.py:156
+msgid "quiting on application"
+msgstr "uygulamadan çıkış"
+
+#: main.py:149
+msgid "this help or using details of command"
+msgstr "bu yardım metni veya verilen komutun ayrıntılı kullanımı"
+
+#: main.py:360
+msgid "Thanks for using bilge-katalog"
+msgstr "Bilge-katalog'u kullandığınız için teşekkür ederiz"
+
+#: mainqt.py:311
+msgid "This selection is not a directory."
+msgstr "Seçilen bir dizin değil"
+
