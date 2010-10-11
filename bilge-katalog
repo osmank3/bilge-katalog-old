@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import sys
+import os
 from bilge_katalog.main import *
 
 if "qt" in sys.argv:
@@ -10,9 +11,13 @@ if "qt" in sys.argv:
     import bilge_katalog.mainqt as mainqt
     
     app = QtGui.QApplication(sys.argv)
-    #translator = QtCore.QTranslator()
-    #translator.load("tr.qm")
-    #app.installTranslator(translator)
+    language = QtCore.QLocale.system().name()
+    locale = "/usr/share/locale/%s/LC_MESSAGES"% language
+    if not os.path.isdir(locale):
+        locale = "/usr/share/locale/%s/LC_MESSAGES"% language[:2]
+    translator = QtCore.QTranslator()
+    translator.load("bilge-katalog.qm", locale)
+    app.installTranslator(translator)
     window = mainqt.MainWindow()
     window.show()
     sys.exit(app.exec_())
