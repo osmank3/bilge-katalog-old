@@ -1,0 +1,4 @@
+*.pyc
+uiQt_*
+*_rc.py
+database.db

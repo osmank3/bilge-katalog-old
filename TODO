@@ -1,0 +1,27 @@
+Etiketleme sistemi yazılacak
+    konsol için
+        etiketleme
+        etiket okuma
+        etiket düzenleme
+    qt arayüz için
+        etiketleme
+        etiket okuma
+        etiket düzenleme
+        
+Ödünç sistemi yazılacak
+    dosyalar(kitaplar) için
+        ödünç sistemi
+    kataloglar(dvd-cd arşivler) için
+        ödünç sistemi
+        
+Qt arayüze
+    katalog görümümü için
+        ağaç görünümü
+    dosya-dizin görünümü için
+        ayrıntı görünümü
+        simgeler görünümü
+        
+Daha uzak bir zamanda
+    Ağ arayüz
+        django ile arayüz hazırlanacak
+            veritabanı okunup görüntülenecek
