@@ -126,6 +126,10 @@ class explore:
         self.query.setTables(["dirs"])
         upId = DB.execute(self.query.returnQuery())[0][0]
         
+        if infos.has_key("tags"):
+            tags = infos["tags"]
+            self.addTags(id=upId, type="directory", tags=tags)
+        
         if address:
             ListDir = os.listdir(address)
             if len(ListDir)>0:
@@ -195,6 +199,14 @@ class explore:
         self.query.setValues(values)
         self.query.setTables(["files"])
         DB.execute(self.query.returnQuery())
+        
+        if infos.has_key("tags"):
+            tags = infos["tags"]
+            self.query.setStatTrue("select")
+            self.query.setSelect(["max(id)"])
+            self.query.setTables(["files"])
+            fId = DB.execute(self.query.returnQuery())[0][0]
+            self.addTags(id=fId, type="file", tags=tags)
         
         if details:
             self.query.setStatTrue("select")
@@ -701,4 +713,38 @@ class explore:
         for i in dirs.keys():
             self.copyDir(id=dirs[i], to=to)
         
-        
+    def addTags(self, id, type, tags):
+        tagsList = tags.split(",")
+        for tag in tagsList:
+            try:
+                self.query.setStatTrue("select")
+                self.query.setSelect(["id"])
+                self.query.setTables(["tags"])
+                self.query.setWhereLike({"name":tag.strip()})
+                tagId = DB.execute(self.query.returnQuery())[0][0]
+            except IndexError:
+                self.query.setStatTrue("insert")
+                self.query.setTables(["tags"])
+                self.query.setKeys(["name"])
+                self.query.setValues([tag.strip()])
+                DB.execute(self.query.returnQuery())
+                
+                self.query.setStatTrue("select")
+                self.query.setSelect(["max(id)"])
+                self.query.setTables(["tags"])
+                tagId = DB.execute(self.query.returnQuery())[0][0]
+                
+            if type == "directory":
+                self.query.setStatTrue("insert")
+                self.query.setTables(["tagdirs"])
+                self.query.setKeys(["d_id", "tags_id"])
+                self.query.setValues([id, tagId])
+                DB.execute(self.query.returnQuery())
+            if type == "file":
+                self.query.setStatTrue("insert")
+                self.query.setTables(["tagfiles"])
+                self.query.setKeys(["f_id", "tags_id"])
+                self.query.setValues([id, tagId])
+                DB.execute(self.query.returnQuery())
+                
+                

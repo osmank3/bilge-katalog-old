@@ -11,7 +11,7 @@ reload(sys).setdefaultencoding("utf-8")
 gettext.install("bilge-katalog", unicode=1)
 
 NAME = "Bilge-Katalog"
-VERSION = "0.1"
+VERSION = "0.2"
 SUMMARY = _("Cataloging application")
 DESCRIPTION = _("Bilge-Katalog is cataloging file's infos for founding where is file(s).")
 CORE_DEVELOPER = "Osman Karagöz"

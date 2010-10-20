@@ -175,6 +175,8 @@ def mainloop():
             now = datetime.datetime.now()
             infos = {"name":str(name), "description":str(desc),
                      "dateinsert":now, "up_id":0 }
+            if parameters.has_key("tags"):
+                infos["tags"] = paramaters["tags"]
             EXP.mkDir(address=directory, infos=infos)
                 
         elif command == "mkdir":
@@ -182,17 +184,24 @@ def mainloop():
             desc = ""
             name = ""
             directory = None
+            infos = {}
             if parameters.has_key("name"):
                 name = parameters["name"]
             if parameters.has_key("desc"):
                 desc = parameters["desc"]
+            
+            infos["desc"] = str(desc)
+            infos["dateinsert"] = now
+            
+            if parameters.has_key("tags"):
+                infos["tags"] = parameters["tags"]
             if parameters.has_key("dir"):
                 directory = parameters["dir"]
-                infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+                infos["name"] = str(name)
                 EXP.mkDir(address=directory, infos=infos)
             elif len(additions)>0:
                 name = additions[0]
-                infos = {"name":str(name), "desc":str(desc), "dateinsert":now}
+                infos["name"] = str(name)
                 EXP.mkDir(infos=infos)
             
         elif command == "mkfile":
@@ -200,6 +209,8 @@ def mainloop():
             name = ""
             address = None
             infos = {}
+            if parameters.has_key("tags"):
+                infos["tags"] = str(parameters["tags"])
             if parameters.has_key("type"):
                 infos["type"] = str(parameters["type"])
             if parameters.has_key("address"):

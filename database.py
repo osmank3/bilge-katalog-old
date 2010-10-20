@@ -96,7 +96,6 @@ class dataBase:
                "name TEXT)")
 
         self.cur.execute("CREATE TABLE tagfiles ("
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "f_id INTEGER, "
                "tags_id INTEGER)")
 
@@ -125,13 +124,25 @@ class dataBase:
             
     def versionControl(self):
         databaseVersion = self.cur.execute("SELECT version FROM app").fetchone()[0]
-        if databaseVersion == VERSION:
-            pass
-        else:
-            self.convertDatabase(databaseVersion)
+        while databaseVersion != VERSION:
+            databaseVersion = self.cur.execute("SELECT version FROM app").fetchone()[0]
+            if databaseVersion != VERSION:
+                self.convertDatabase(databaseVersion)
             
     def convertDatabase(self, oldVersion):
-        pass
+        if oldVersion == "0.1":
+            self.cur.execute("CREATE TEMPORARY TABLE tagfiles_backup(f_id, tags_id)")
+            self.cur.execute("INSERT INTO tagfiles_backup SELECT f_id, tags_id FROM tagfiles")
+            self.cur.execute("DROP TABLE tagfiles")
+            self.cur.execute("CREATE TABLE tagfiles(f_id, tags_id)")
+            self.cur.execute("INSERT INTO tagfiles SELECT f_id, tags_id FROM tagfiles_backup")
+            self.cur.execute("DROP TABLE tagfiles_backup")
+            
+            self.cur.execute("UPDATE app SET version='0.2'")
+            self.db.commit()
+        
+        #if oldVersion == ...:
+        #    ...
         
         
 class EditQuery:
