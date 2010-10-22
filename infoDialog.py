@@ -36,8 +36,11 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             
             Query.setStatTrue("select")
             Query.setSelect(["up_id"])
-            Query.setTables(["dirs"])
-            Query.setWhere({"id":self.id})
+            if self.type == "directory":
+                Query.setTables(["dirs"])
+            elif self.type == "file":
+                Query.setTables(["files"])
+            Query.setWhere([{"id":self.id}])
             self.upid = database.dataBase().execute(Query.returnQuery())[0][0]
         
         # signals

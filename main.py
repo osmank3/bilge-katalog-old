@@ -31,13 +31,17 @@ def parser(entry):
     additions = []
     address = []
     entry = entry.replace("'","\"")
-    parsed = parse1.findall(entry)
-    parsed += parse2.findall(entry)
+    parsed1 = parse1.findall(entry)
+    for i in parsed1:
+        entry = entry.replace(i,"")
+    parsed2 = parse2.findall(entry)
+    for i in parsed2:
+        entry = entry.replace(i,"")
+    parsed = parsed1 + parsed2
     for i in parsed:
         key, value = i.split("=")
         value = value.replace("\"","")
         parameters[key]=value
-        entry = entry.replace(i,"")
     for i in parse3.findall(entry):
         value = i.replace("\"","")
         additions.append(value)
