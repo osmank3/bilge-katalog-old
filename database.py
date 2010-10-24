@@ -134,7 +134,9 @@ class dataBase:
             self.cur.execute("CREATE TEMPORARY TABLE tagfiles_backup(f_id, tags_id)")
             self.cur.execute("INSERT INTO tagfiles_backup SELECT f_id, tags_id FROM tagfiles")
             self.cur.execute("DROP TABLE tagfiles")
-            self.cur.execute("CREATE TABLE tagfiles(f_id, tags_id)")
+            self.cur.execute("CREATE TABLE tagfiles ("
+               "f_id INTEGER, "
+               "tags_id INTEGER)")
             self.cur.execute("INSERT INTO tagfiles SELECT f_id, tags_id FROM tagfiles_backup")
             self.cur.execute("DROP TABLE tagfiles_backup")
             

@@ -321,8 +321,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             item.setText(i[1])
             if i[3] == "dirs":
                 item.setWhatsThis("directory %s"% i[0])
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(":/image/images/directory.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             elif i[3] == "files":
                 item.setWhatsThis("file %s"% i[0])
+                icon = self.setFileIcon(i[0])
+            item.setIcon(icon)
             self.listFiles.addItem(item)
         self.setCursor(QtCore.Qt.ArrowCursor)
     

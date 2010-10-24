@@ -532,9 +532,13 @@ class explore:
         if files.has_key(updated):
             table = "files"
             ids = files[updated]
+            if parameters.has_key("tags"):
+                self.editTags(ids, "file", parameters["tags"])
         elif dirs.has_key(updated):
             table = "dirs"
             ids = dirs[updated]
+            if parameters.has_key("tags"):
+                self.editTags(ids, "directory", parameters["tags"])
         else:
             return False
         
@@ -715,12 +719,13 @@ class explore:
         
     def addTags(self, id, type, tags):
         tagsList = tags.split(",")
+        tagsList.remove("")
         for tag in tagsList:
             try:
                 self.query.setStatTrue("select")
                 self.query.setSelect(["id"])
                 self.query.setTables(["tags"])
-                self.query.setWhereLike({"name":tag.strip()})
+                self.query.setWhereLike([{"name":tag.strip()}])
                 tagId = DB.execute(self.query.returnQuery())[0][0]
             except IndexError:
                 self.query.setStatTrue("insert")
@@ -733,7 +738,6 @@ class explore:
                 self.query.setSelect(["max(id)"])
                 self.query.setTables(["tags"])
                 tagId = DB.execute(self.query.returnQuery())[0][0]
-                
             if type == "directory":
                 self.query.setStatTrue("insert")
                 self.query.setTables(["tagdirs"])
@@ -747,4 +751,49 @@ class explore:
                 self.query.setValues([id, tagId])
                 DB.execute(self.query.returnQuery())
                 
-                
+    def editTags(self, id, type, tags):
+        oldTags, newTags = set(), set()
+        for i in tags.split(","):
+            newTags.add(i)
+        self.query.setStatTrue("select")
+        self.query.setSelect(["tags.name"])
+        if type == "file":
+            self.query.setTables(["tags","tagfiles"])
+            self.query.setWhere([{"tags.id":"tagfiles.tags_id"},
+                                  "AND", {"tagfiles.f_id":id}])
+        elif type == "directory":
+            self.query.setTables(["tagdirs"])
+            self.query.setWhere([{"tags.id":"tagdirs.tags_id"},
+                                  "AND", {"tagdirs.d_id":id}])
+        for i in DB.execute(self.query.returnQuery()):
+            oldTags.add(i[0])
+        
+        delTags = oldTags - newTags
+        addTags = ""
+        for i in (newTags - oldTags):
+            if  not i == "":
+                addTags += i + ","
+        
+        for i in delTags:
+            self.query.setStatTrue("select")
+            self.query.setSelect(["tags.id"])
+            self.query.setTables(["tags"])
+            self.query.setWhere([{"tags.name":"'%s'"% i}])
+            tagId = self.query.returnQuery()[0]
+            
+            self.query.setStatTrue("delete")
+            if type == "file":
+                self.query.setTables(["tagfiles"])
+                self.query.setWhere([{"(%s)"% tagId:"tagfiles.tags_id"},
+                                      "AND", {"tagfiles.f_id":id}])
+            elif type == "directory":
+                self.query.setTables(["tagdirs"])
+                self.query.setWhere([{"(%s)"% tagId:"tagdirs.tags_id"},
+                                      "AND", {"tagdirs.d_id":id}])
+            if type:
+                DB.execute(self.query.returnQuery())
+            
+        if len(addTags)>0:
+            self.addTags(id, type, addTags)
+        
+        
