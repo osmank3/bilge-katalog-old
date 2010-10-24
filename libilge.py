@@ -47,13 +47,14 @@ TransKeys = {   "name"          :   _("Name"),
                 "year"          :   _("Year"),
                 "page"          :   _("Page"),
                 "width"         :   _("Width"),
-                "height"        :   _("Height")    }
+                "height"        :   _("Height"),
+                "tags"          :   _("Tags")    }
 
 KeysQuene = [   "name", "address", "size", "type", "description", "title",
                 "artist", "album", "date", "tracknumber", "genre", "bitrate",
                 "samplerate", "length", "author", "page", "year",
                 "callnumber", "imprintinfo", "width", "height", "datecreate",
-                "datemodify", "dateaccess", "dateinsert"]
+                "datemodify", "dateaccess", "dateinsert", "tags"]
 
 DB = database.dataBase()
 
@@ -324,6 +325,8 @@ class explore:
         self.query.setWhere([{"id":id}])
         DB.execute(self.query.returnQuery()) #delete directory
         
+        self.editTags(id, "directory", "") #delete tags
+        
         self.query.setStatTrue("select")
         self.query.setSelect(["id"])
         self.query.setTables(["files"])
@@ -367,6 +370,8 @@ class explore:
             self.query.setTables(["files"])
             self.query.setWhere([{"id":id}])
             DB.execute(self.query.returnQuery()) # delete file
+            
+            self.editTags(id, "file", "") # delete tags
             
             if type != "other":
                 self.query.setTables([typeDb[type]])
@@ -444,6 +449,11 @@ class explore:
                     address = self.genAddress(values[0][n])
                     infos["address"] = address
                 n += 1
+                
+            if type == "files":
+                infos["tags"] = self.getTags(id, "file")
+            elif type == "dirs":
+                infos["tags"] = self.getTags(id, "directory")
             
             if type == "files":
                 if infos["type"] != "other":
@@ -750,11 +760,9 @@ class explore:
                 self.query.setKeys(["f_id", "tags_id"])
                 self.query.setValues([id, tagId])
                 DB.execute(self.query.returnQuery())
-                
-    def editTags(self, id, type, tags):
-        oldTags, newTags = set(), set()
-        for i in tags.split(","):
-            newTags.add(i)
+        
+    def getTags(self, id, type):
+        tags = ""
         self.query.setStatTrue("select")
         self.query.setSelect(["tags.name"])
         if type == "file":
@@ -766,8 +774,20 @@ class explore:
             self.query.setWhere([{"tags.id":"tagdirs.tags_id"},
                                   "AND", {"tagdirs.d_id":id}])
         for i in DB.execute(self.query.returnQuery()):
-            oldTags.add(i[0])
-        
+            tags += i[0] + ","
+            
+        return tags
+                
+    def editTags(self, id, type, tags):
+        oldTags, newTags = set(), set()
+        for i in tags.split(","):
+            if not i == "":
+                newTags.add(i)
+            
+        for i in self.getTags(id, type).split(","):
+            if not i == "":
+                oldTags.add(i)
+                
         delTags = oldTags - newTags
         addTags = ""
         for i in (newTags - oldTags):
