@@ -48,6 +48,7 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         Text += "%s\t\t: %s\n"%("Name", str(self.lineName.text()))
         Text += "%s\t\t: %s\n"%("Description", str(self.lineDesc.toPlainText()))
         Text += "%s\t\t: %s\n"%("Date", self.dateTimeEdit.dateTime().toString())
+        Text += "%s\t\t: %s\n"%("Tags", self.lineTags.text())
         directory = self.lineDirPath.text()
         if directory != u"":
             Text += "%s\t\t: %s\n"%("Directory", directory)
@@ -65,6 +66,7 @@ class CreateCat(QtGui.QWizard, Ui_createCatalogWizard):
         info["name"] = str(self.lineName.text())
         info["description"] = str(self.lineDesc.toPlainText())
         info["dateinsert"] = self.dateTimeEdit.dateTime().toPyDateTime()
+        info["tags"] = str(self.lineTags.text())
         info["up_id"] = 0
         directory = self.lineDirPath.text()
         if directory == u"":

@@ -729,7 +729,10 @@ class explore:
         
     def addTags(self, id, type, tags):
         tagsList = tags.split(",")
-        tagsList.remove("")
+        try:
+            tagsList.remove("")
+        except ValueError:
+            pass
         for tag in tagsList:
             try:
                 self.query.setStatTrue("select")
@@ -770,13 +773,16 @@ class explore:
             self.query.setWhere([{"tags.id":"tagfiles.tags_id"},
                                   "AND", {"tagfiles.f_id":id}])
         elif type == "directory":
-            self.query.setTables(["tagdirs"])
+            self.query.setTables(["tags","tagdirs"])
             self.query.setWhere([{"tags.id":"tagdirs.tags_id"},
                                   "AND", {"tagdirs.d_id":id}])
         for i in DB.execute(self.query.returnQuery()):
             tags += i[0] + ","
             
-        return tags
+        if len(tags)>0:
+            return tags
+        else:
+            return ""
                 
     def editTags(self, id, type, tags):
         oldTags, newTags = set(), set()

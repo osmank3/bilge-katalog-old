@@ -74,6 +74,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         
         self.dirInfoName.setText(self.infos["name"])
         self.dirInfoAddress.setText(self.infos["address"])
+        self.dirInfoTags.setText(self.infos["tags"])
         self.dirInfoDescription.setPlainText(self.infos["description"])
         self.dirInfoDateCreate.setDateTime(self.infos["datecreate"])
         self.dirInfoDateModify.setDateTime(self.infos["datemodify"])
@@ -106,6 +107,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.infoDateModify.setDateTime(self.infos["datemodify"])
         self.infoDateAccess.setDateTime(self.infos["dateaccess"])
         self.infoDateInsert.setDateTime(self.infos["dateinsert"])
+        self.infoTagsEdit.setText(self.infos["tags"])
         
         if self.infos["type"] == "book":
             self.infoTypeCombo.setCurrentIndex(0)
@@ -158,6 +160,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         typedict = {0:"book",1:"ebook",2:"image",3:"music",4:"video",5:"other"}
         if self.type == "directory":
             ddata["name"] = str(self.dirInfoName.text())
+            ddata["tags"] = str(self.dirInfoTags.text())
             ddata["description"] = str(self.dirInfoDescription.toPlainText())
             ddata["datecreate"] = self.dirInfoDateCreate.dateTime().toPyDateTime()
             ddata["datemodify"] = self.dirInfoDateModify.dateTime().toPyDateTime()
@@ -177,6 +180,7 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
             ddata["datemodify"] = self.infoDateModify.dateTime().toPyDateTime()
             ddata["dateaccess"] = self.infoDateAccess.dateTime().toPyDateTime()
             ddata["dateinsert"] = self.infoDateInsert.dateTime().toPyDateTime()
+            ddata["tags"] = str(self.infoTagsEdit.text())
             
             ddata["type"] = typedict[self.infoTypeCombo.currentIndex()]
             
