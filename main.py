@@ -68,7 +68,13 @@ def mainloop():
         
         if command == "help":
             if len(additions)>0:
-                if additions[0] == "cd":
+                if additions[0] == "borrow":
+                    print "borrow OPTS  " + _("borrowing file or directory")
+                    print _("Usage:")
+                    print "borrow NAME to=USERID    " + _("NAME borrowing to USERID")
+                    print "borrow NAME              " + _("NAME borrowing to reserved user")
+                    
+                elif additions[0] == "cd":
                     print "cd OPTS      " + _("changing current directory")
                     print _("Usage:")
                     print "cd id=ID     " + _("change current directory which id is ID")
@@ -136,10 +142,27 @@ def mainloop():
                     print _("Usage:")
                     print "search ENTRY   " + _("search for ENTRY and print all informations of founded")
                     
+                elif additions[0] == "tkback":
+                    print "tkback OPTS  " + _("take back borrowed file or directory")
+                    print _("Usage:")
+                    print "tkback NAME  " + _("take back borrowed NAME")
+                    
                 elif additions[0] == "update":
                     print "update OPTS  " + _("updating files or directories informations")
                     print _("Usage:")
                     print "update NAME KEY=VALUE    " + _("update NAME's VALUE of KEY")
+                    
+                elif additions[0] == "user":
+                    print "user OPTS    " + _("user actions")
+                    print _("Usage:")
+                    print "user add name=NAME surname=SURNAME ...\n\t" + \
+                        _("add user with NAME SURNAME ... informations")
+                    print "user del ID  " + _("Delete which user's id is ID")
+                    print "user info ID " + _("Information about which user id is ID")
+                    print "user update ID KEY=VALUE     " + _("update ID's VALUE of KEY")
+                    print "user search ENTRY    " + _("search for ENTRY and print all informations of founded")
+                    print "user search name=NAME surname=SURNAME ...\n\t" + \
+                        _("search for which name is NAME and which surname is SURNAME")
                     
                 elif additions[0] == "whereis":
                     print "whereis OPTS " + _("searching for entry and return theirs address")
@@ -148,6 +171,7 @@ def mainloop():
                     
             else:
                 print _("Useful commands:")
+                print "borrow OPTS  " + _("borrowing file or directory")
                 print "cd OPTS      " + _("changing current directory")
                 print "cp OPTS      " + _("copy files and directories")
                 print "exit         " + _("quiting on application")
@@ -162,7 +186,9 @@ def mainloop():
                 print "rm OPTS      " + _("removing file")
                 print "rmdir OPTS   " + _("removing directory")
                 print "search OPTS  " + _("searching for entry")
+                print "tkback OPTS  " + _("take back borrowed file or directory")
                 print "update OPTS  " + _("updating files or directories informations")
+                print "user OPTS    " + _("user actions")
                 print "whereis OPTS " + _("searching for entry and return theirs address")
         
         elif command == "quit" or command == "exit":
@@ -371,6 +397,47 @@ def mainloop():
                 to = EXP.parseAddress(parameters["to"])
                 
                 EXP.copy(name=copied, to=to)
+                
+        elif command == "borrow":
+            if len(additions)>0:
+                borrowed = " ".join(additions)
+                if parameters.has_key("to"):
+                    uid = parameters["to"]
+                    if EXP.borrow(borrowed, uid) == False:
+                        question = raw_input(_("%s is borrowed to ."))
+                        EXP.reserve(borrowed, uid)
+                        
+                else:
+                    pass# using for reserved object
+                    
+        elif command == "tkback":
+            if len(additions)>0:
+                borrowed = " ".join(additions)
+                EXP.takeback(borrowed)
+                
+        elif command == "reserve":
+            pass
+                
+        elif command == "user":
+            action = additions[0]
+            additions.pop(0)
+            if action == "add":
+                EXP.addUser(parameters)
+            elif action == "del" and len(additions)>0:
+                ID = additions[0]
+                EXP.delUser(ID)
+            elif action == "update" and len(additions)>0:
+                ID = additions[0]
+                EXP.updateUser(ID, parameters)
+            elif action == "info" and len(additions)>0:
+                ID = additions[0]
+                print EXP.infoUser(ID)
+            elif action == "search":
+                if len(additions)>0:
+                    text = " ".join(additions)
+                    EXP.searchUserAll(text)
+                else:
+                    EXP.searchUserParams(parameters)
                 
 
     print _("Thanks for using bilge-katalog")

@@ -23,7 +23,13 @@ types = {   ".aac":"music", ".acc":"music", ".mp3":"music", ".ogg":"music",
 typeDb = {  "book":"binfo", "ebook":"einfo", "image":"iinfo",
             "music":"minfo", "video":"vinfo"}
 
-TransKeys = {   "name"          :   _("Name"),
+TransKeys = {   "id"            :   _("Identify"),
+                "name"          :   _("Name"),
+                "surname"       :   _("Surname"),
+                "email"         :   _("E-mail"),
+                "mobilenumber"  :   _("Mobile Number"),
+                "homenumber"    :   _("Home Number"),
+                "worknumber"    :   _("Work Number"),
                 "address"       :   _("Address"),
                 "datecreate"    :   _("Create Date"),
                 "datemodify"    :   _("Modify Date"),
@@ -50,7 +56,8 @@ TransKeys = {   "name"          :   _("Name"),
                 "height"        :   _("Height"),
                 "tags"          :   _("Tags")    }
 
-KeysQuene = [   "name", "address", "size", "type", "description", "title",
+KeysQuene = [   "id", "name", "surname", "email", "mobilenumber", "homenumber",
+                "worknumber", "address", "size", "type", "description", "title",
                 "artist", "album", "date", "tracknumber", "genre", "bitrate",
                 "samplerate", "length", "author", "page", "year",
                 "callnumber", "imprintinfo", "width", "height", "datecreate",
@@ -821,5 +828,122 @@ class explore:
             
         if len(addTags)>0:
             self.addTags(id, type, addTags)
+            
+    def borrow(self, borrowed, uid):
+        now = datetime.datetime.now()
+        extension = 0
+        kind = None
+        dirs, files = self.dirList(partite=True)
+        if borrowed in dirs.keys():
+            kind = "dirs"
+            k_id = dirs[borrowed]
+        if borrowed in files.keys():
+            kind = "files"
+            k_id = files[borrowed]
         
+        ######
+        if kind != None:
+            self.setStatTrue("insert")
+            self.setTables(["borrow"])
+            self.setKeys(["kind", "k_id", "u_id", "borrowdate", "finishdate",  
+                          "extension"])
+            self.setValues([kind, k_id, uid, now, now, extension])
+            DB.execute(self.query.returnQuery())
+        ######
+        
+    def takeback(self, borrowed):
+        pass
+        
+    def getReserveList(self, borrowed):
+        pass
+        
+    def reserve(self, reserved, uid):
+        status = "active"
+        kind = None
+        dirs, files = self.dirList(partite=True)
+        if reserved in dirs.keys():
+            kind = "dirs"
+            k_id = dirs[reserved]
+        if reserved in files.keys():
+            kind = "files"
+            k_id = files[reserved]
+            
+        ######
+        ######
+        
+    def addUser(self, params):
+        Keys = detailer.getKeys("users")
+        del Keys["id"]
+        for i in Keys.keys():
+            if params.has_key(i):
+                Keys[i] = params[i]
+        keys, values = [], []
+        for i in Keys.keys():
+            keys.append(i)
+            values.append(Keys[i])
+        
+        self.query.setStatTrue("insert")
+        self.query.setTables(["users"])
+        self.query.setKeys(keys)
+        self.query.setValues(values)
+        
+        DB.execute(self.query.returnQuery())
+        
+    def delUser(self, id):
+        self.query.setStatTrue("delete")
+        self.query.setTables(["users"])
+        self.query.setWhere([{"id":id}])
+        
+        DB.execute(self.query.returnQuery())
+        
+    def updateUser(self, id, params):
+        infos = {}
+        Keys = detailer.getKeys("users")
+        for i in params.keys():
+            if Keys.has_key(i):
+                infos[i] = params[i]
+            
+        if len(infos.keys())>0:
+            self.query.setStatTrue("update")
+            self.query.setTables(["users"])
+            self.query.setSet(infos)
+            self.query.setWhere([{"id":id}])
+            
+            DB.execute(self.query.returnQuery())
+        
+    def infoUser(self, id, redict=False):
+        self.query.setStatTrue("pragma")
+        self.query.setTables(["users"])
+        keys = DB.execute(self.query.returnQuery())
+        
+        self.query.setStatTrue("select")
+        self.query.setSelect(["*"])
+        self.query.setTables(["users"])
+        self.query.setWhere([{"id":id}])
+        values = DB.execute(self.query.returnQuery())
+        
+        infos = {}
+        n = 0
+        while n<len(keys):
+            infos[keys[n][1]] = values[0][n]
+            n += 1
+            
+        text = ""    
+        if len(infos.keys())>0:
+            if redict:
+                return infos
+            else:
+                for i in KeysQuene:
+                    if infos.has_key(i):
+                        if infos[i] == "" or infos[i] == 0:
+                            pass
+                        else:
+                            text += "%20s : %s\n"% (TransKeys[i], infos[i])
+                return text
+        
+    def searchUserAll(self, searched):
+        pass
+        
+    def searchUserParams(self, params):
+        pass
         

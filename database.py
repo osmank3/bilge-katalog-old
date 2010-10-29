@@ -102,10 +102,32 @@ class dataBase:
         self.cur.execute("CREATE TABLE tagdirs ("
                "d_id INTEGER, "
                "tags_id INTEGER)")
+                       
+        self.cur.execute("CREATE TABLE borrow ( "
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "kind TEXT, "
+               "k_id INTEGER, "
+               "u_id INTEGER, "
+               "borrowdate TIMESTAMP, "
+               "extension INTEGER, "
+               "status TEXT)")
+               
+        self.cur.execute("CREATE TABLE reserve ( "
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "kind TEXT, "
+               "k_id INTEGER, "
+               "u_id INTEGER, "
+               "status TEXT)")
 
-        self.cur.execute("CREATE TABLE icons ("
-               "f_type TEXT PRIMARY KEY, "
-               "icon DATA)")
+        self.cur.execute("CREATE TABLE users ( "
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "name TEXT, "
+               "surname TEXT, "
+               "email TEXT, "
+               "mobilenumber TEXT, "
+               "homenumber TEXT, "
+               "worknumber TEXT, "
+               "address TEXT)")
                
         self.cur.execute("CREATE TABLE app ("
                "version TEXT)")
@@ -140,7 +162,36 @@ class dataBase:
             self.cur.execute("INSERT INTO tagfiles SELECT f_id, tags_id FROM tagfiles_backup")
             self.cur.execute("DROP TABLE tagfiles_backup")
             
+            self.cur.execute("DROP TABLE icons")
+            
+            self.cur.execute("CREATE TABLE borrow ( "
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "kind TEXT, "
+               "k_id INTEGER, "
+               "u_id INTEGER, "
+               "borrowdate TIMESTAMP, "
+               "extension INTEGER, "
+               "status TEXT)")
+
+            self.cur.execute("CREATE TABLE reserve ( "
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "kind TEXT, "
+               "k_id INTEGER, "
+               "u_id INTEGER, "
+               "status TEXT)")
+
+            self.cur.execute("CREATE TABLE users ( "
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "name TEXT, "
+               "surname TEXT, "
+               "email TEXT, "
+               "mobilenumber TEXT, "
+               "homenumber TEXT, "
+               "worknumber TEXT, "
+               "address TEXT)")
+            
             self.cur.execute("UPDATE app SET version='0.2'")
+            
             self.db.commit()
         
         #if oldVersion == ...:
