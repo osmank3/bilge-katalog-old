@@ -111,13 +111,6 @@ class dataBase:
                "borrowdate TIMESTAMP, "
                "extension INTEGER, "
                "status TEXT)")
-               
-        self.cur.execute("CREATE TABLE reserve ( "
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "kind TEXT, "
-               "k_id INTEGER, "
-               "u_id INTEGER, "
-               "status TEXT)")
 
         self.cur.execute("CREATE TABLE users ( "
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -171,13 +164,6 @@ class dataBase:
                "u_id INTEGER, "
                "borrowdate TIMESTAMP, "
                "extension INTEGER, "
-               "status TEXT)")
-
-            self.cur.execute("CREATE TABLE reserve ( "
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "kind TEXT, "
-               "k_id INTEGER, "
-               "u_id INTEGER, "
                "status TEXT)")
 
             self.cur.execute("CREATE TABLE users ( "

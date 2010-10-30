@@ -189,6 +189,9 @@ class explore:
             infos["dateaccess"] = datetime.datetime.now()
             infos["dateinsert"] = datetime.datetime.now()
         
+        if not infos.has_key("size"):
+            infos["size"] = 0
+        
         values = []
         keys = []
         self.query.setStatTrue("pragma")
@@ -829,8 +832,10 @@ class explore:
         if len(addTags)>0:
             self.addTags(id, type, addTags)
             
-    def borrow(self, borrowed, uid):
+    def borrow(self, borrowed, uid=None):
+        isReserve = False
         now = datetime.datetime.now()
+        status = "borrowed"
         extension = 0
         kind = None
         dirs, files = self.dirList(partite=True)
@@ -841,24 +846,115 @@ class explore:
             kind = "files"
             k_id = files[borrowed]
         
-        ######
         if kind != None:
-            self.setStatTrue("insert")
-            self.setTables(["borrow"])
-            self.setKeys(["kind", "k_id", "u_id", "borrowdate", "finishdate",  
-                          "extension"])
-            self.setValues([kind, k_id, uid, now, now, extension])
-            DB.execute(self.query.returnQuery())
-        ######
+            self.query.setStatTrue("select")
+            self.query.setTables(["borrow"])
+            self.query.setSelect(["*"])
+            self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
+                                 "AND", {"status":"'borrowed'"}])
+            request = DB.execute(self.query.returnQuery())
+            if len(request)>0:
+                return (False, _("That object is borrowed."))
+            else:
+                reserveList = self.getReserveList(borrowed)
+                if uid == None:
+                    if len(reserveList)>0:
+                        uid = reserveList[0]
+                        isReserve = True
+                    else:
+                        return (False, _("No user id given!"))
+                        
+                if len(reserveList)>0 and uid != reserveList[0]:
+                    return (False, _("Wait for the order!"))
+                    
+                else:
+                    self.query.setStatTrue("select")
+                    self.query.setSelect(["*"])
+                    self.query.setTables(["users"])
+                    self.query.setWhere([{"id":uid}])
+                    request2 = DB.execute(self.query.returnQuery())
+                    if not len(request2)>0:
+                        return (False, _("That user not registered!"))
+                    
+                    if isReserve:
+                        self.query.setStatTrue("update")
+                        self.query.setTables(["borrow"])
+                        self.query.setSet({"borrowdate":now,
+                                            "extension":extension,
+                                            "status":status})
+                        self.query.setWhere([{"kind":"'%s'"% kind}, "AND",
+                                             {"k_id":k_id}, "AND",
+                                             {"status":"'waiting'"}, "AND",
+                                             {"u_id":uid}])
+                        DB.execute(self.query.returnQuery())
+                    else:
+                        self.query.setStatTrue("insert")
+                        self.query.setTables(["borrow"])
+                        self.query.setKeys(["kind", "k_id", "u_id",
+                                            "borrowdate", "extension",
+                                            "status"])
+                        self.query.setValues([kind, k_id, uid, now, extension,
+                                              status])
+                        DB.execute(self.query.returnQuery())
+                    
+                    self.query.setStatTrue("select")
+                    self.query.setTables(["borrow"])
+                    self.query.setSelect(["id"])
+                    self.query.setWhere([{"kind":"'%s'"% kind}, "AND",
+                                         {"k_id":k_id}, "AND",
+                                         {"status":"'borrowed'"}, "AND",
+                                         {"u_id":uid}])
+                    bid = DB.execute(self.query.returnQuery())[0][0]
+                    
+                    text = ""
+                    text += "%20s : %s\n"% (_("Borrow ID"), bid)
+                    text += "%20s : %s\n"% (_("Borrowed"), borrowed)
+                    text += "%20s : %s\n"% (_("Borrowed user ID"), uid)
+                    
+                    return (True, text)
         
     def takeback(self, borrowed):
-        pass
+        status = "returned"
+        dirs, files = self.dirList(partite=True)
+        if borrowed in dirs.keys():
+            kind = "dirs"
+            k_id = dirs[borrowed]
+        if borrowed in files.keys():
+            kind = "files"
+            k_id = files[borrowed]
+            
+        self.query.setStatTrue("update")
+        self.query.setSet({"status":status})
+        self.query.setTables(["borrow"])
+        self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
+                             "AND", {"status":"'borrowed'"}])
+                             
+        DB.execute(self.query.returnQuery())
         
     def getReserveList(self, borrowed):
-        pass
+        dirs, files = self.dirList(partite=True)
+        if borrowed in dirs.keys():
+            kind = "dirs"
+            k_id = dirs[borrowed]
+        if borrowed in files.keys():
+            kind = "files"
+            k_id = files[borrowed]
+            
+        reserveList = []
+        
+        self.query.setStatTrue("select")
+        self.query.setSelect(["u_id"])
+        self.query.setTables(["borrow"])
+        self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
+                             "AND", {"status":"'waiting'"}])
+        request = DB.execute(self.query.returnQuery())        
+        for i in request:
+            reserveList.append(i[0])
+            
+        return reserveList
         
     def reserve(self, reserved, uid):
-        status = "active"
+        status = "waiting"
         kind = None
         dirs, files = self.dirList(partite=True)
         if reserved in dirs.keys():
@@ -868,8 +964,11 @@ class explore:
             kind = "files"
             k_id = files[reserved]
             
-        ######
-        ######
+        self.query.setStatTrue("insert")
+        self.query.setTables(["borrow"])
+        self.query.setKeys(["kind", "k_id", "u_id", "status"])
+        self.query.setValues([kind, k_id, uid, status])
+        DB.execute(self.query.returnQuery())
         
     def addUser(self, params):
         Keys = detailer.getKeys("users")
@@ -889,7 +988,7 @@ class explore:
         
         DB.execute(self.query.returnQuery())
         
-    def delUser(self, id):
+    def delUser(self, id): # kullanıcıda ödünç verilen varsa silmeyi önleme eklenecek
         self.query.setStatTrue("delete")
         self.query.setTables(["users"])
         self.query.setWhere([{"id":id}])

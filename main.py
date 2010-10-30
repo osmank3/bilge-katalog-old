@@ -125,6 +125,10 @@ def mainloop():
                     print _("Usage:")
                     print "mv NAME to=ADDRESS     " + _("move NAME to ADDRESS")
                     
+                elif additions[0] == "reserve":
+                    print "reserve OPTS " + _("reserving file or directory")
+                    print _("Usage:")
+                    print "reserve NAME to=USERID   " + _("NAME reserving to USERID")
                 elif additions[0] == "rm":
                     print "rm OPTS      " + _("removing file")
                     print _("Usage:")
@@ -183,6 +187,7 @@ def mainloop():
                 print "mkfile OPTS  " + _("creating a file.")
                 print "mv OPTS      " + _("move files and directories")
                 print "quit         " + _("quiting on application")
+                print "reserve OPTS " + _("reserving file or directory")
                 print "rm OPTS      " + _("removing file")
                 print "rmdir OPTS   " + _("removing directory")
                 print "search OPTS  " + _("searching for entry")
@@ -403,12 +408,21 @@ def mainloop():
                 borrowed = " ".join(additions)
                 if parameters.has_key("to"):
                     uid = parameters["to"]
-                    if EXP.borrow(borrowed, uid) == False:
-                        question = raw_input(_("%s is borrowed to ."))
-                        EXP.reserve(borrowed, uid)
-                        
                 else:
-                    pass# using for reserved object
+                    uid = None
+                status = EXP.borrow(borrowed, uid)
+                print status[1]
+                if status[0] == False:
+                    question = None
+                    if status[1] == _("That object is borrowed."):
+                        question = raw_input(_("Are you want to reserve it. ") +
+                                      "(" + _("yes") + "/" + _("no") +"): ")
+                    elif status[1] == _("Wait for the order!"):
+                        question = raw_input(_("Are you want to reserve it. ") +
+                                      "(" + _("yes") + "/" + _("no") +"): ")
+                        
+                    if question == _("yes"):
+                        EXP.reserve(borrowed, uid)
                     
         elif command == "tkback":
             if len(additions)>0:
@@ -416,8 +430,12 @@ def mainloop():
                 EXP.takeback(borrowed)
                 
         elif command == "reserve":
-            pass
-                
+            if len(additions)>0:
+                reserved = " ".join(additions)
+                if parameters.has_key("to"):
+                    uid = parameters["to"]
+                    EXP.reserve(reserved, uid)
+                    
         elif command == "user":
             action = additions[0]
             additions.pop(0)
