@@ -1,8 +1,6 @@
 Ödünç sistemi yazılacak
-    dosyalar(kitaplar) için
-        ödünç sistemi
-    kataloglar(dvd-cd arşivler) için
-        ödünç sistemi
+    info'da ödünç bilgileri gösterilecek
+    ödünç sistemi ve kullanıcı sistemi qt arayüze uyarlanacak
         
 Qt arayüze
     katalog görümümü için

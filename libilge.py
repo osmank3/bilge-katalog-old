@@ -950,6 +950,7 @@ class explore:
         self.query.setTables(["lend"])
         self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
                              "AND", {"status":"'waiting'"}])
+        self.query.setAppendix("ORDER BY id")
         request = DB.execute(self.query.returnQuery())        
         for i in request:
             reserveList.append(i[0])
