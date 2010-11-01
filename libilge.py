@@ -27,9 +27,9 @@ TransKeys = {   "id"            :   _("Identify"),
                 "name"          :   _("Name"),
                 "surname"       :   _("Surname"),
                 "email"         :   _("E-mail"),
-                "mobilenumber"  :   _("Mobile Number"),
-                "homenumber"    :   _("Home Number"),
-                "worknumber"    :   _("Work Number"),
+                "mobile"        :   _("Mobile Number"),
+                "home"          :   _("Home Number"),
+                "work"          :   _("Work Number"),
                 "address"       :   _("Address"),
                 "datecreate"    :   _("Create Date"),
                 "datemodify"    :   _("Modify Date"),
@@ -56,8 +56,8 @@ TransKeys = {   "id"            :   _("Identify"),
                 "height"        :   _("Height"),
                 "tags"          :   _("Tags")    }
 
-KeysQuene = [   "id", "name", "surname", "email", "mobilenumber", "homenumber",
-                "worknumber", "address", "size", "type", "description", "title",
+KeysQuene = [   "id", "name", "surname", "email", "mobile", "home", "work", 
+                "address", "size", "type", "description", "title",
                 "artist", "album", "date", "tracknumber", "genre", "bitrate",
                 "samplerate", "length", "author", "page", "year",
                 "callnumber", "imprintinfo", "width", "height", "datecreate",
@@ -832,31 +832,31 @@ class explore:
         if len(addTags)>0:
             self.addTags(id, type, addTags)
             
-    def borrow(self, borrowed, uid=None):
+    def lend(self, lended, uid=None):
         isReserve = False
         now = datetime.datetime.now()
-        status = "borrowed"
+        status = "lended"
         extension = 0
         kind = None
         dirs, files = self.dirList(partite=True)
-        if borrowed in dirs.keys():
+        if lended in dirs.keys():
             kind = "dirs"
-            k_id = dirs[borrowed]
-        if borrowed in files.keys():
+            k_id = dirs[lended]
+        if lended in files.keys():
             kind = "files"
-            k_id = files[borrowed]
+            k_id = files[lended]
         
         if kind != None:
             self.query.setStatTrue("select")
-            self.query.setTables(["borrow"])
+            self.query.setTables(["lend"])
             self.query.setSelect(["*"])
             self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
-                                 "AND", {"status":"'borrowed'"}])
+                                 "AND", {"status":"'lended'"}])
             request = DB.execute(self.query.returnQuery())
             if len(request)>0:
-                return (False, _("That object is borrowed."))
+                return (False, _("That object is lended."))
             else:
-                reserveList = self.getReserveList(borrowed)
+                reserveList = self.getReserveList(lended)
                 if uid == None:
                     if len(reserveList)>0:
                         uid = reserveList[0]
@@ -864,6 +864,9 @@ class explore:
                     else:
                         return (False, _("No user id given!"))
                         
+                if len(reserveList)>0 and uid == reserveList[0]:
+                    isReserve = True
+                    
                 if len(reserveList)>0 and uid != reserveList[0]:
                     return (False, _("Wait for the order!"))
                     
@@ -878,8 +881,8 @@ class explore:
                     
                     if isReserve:
                         self.query.setStatTrue("update")
-                        self.query.setTables(["borrow"])
-                        self.query.setSet({"borrowdate":now,
+                        self.query.setTables(["lend"])
+                        self.query.setSet({"lenddate":now,
                                             "extension":extension,
                                             "status":status})
                         self.query.setWhere([{"kind":"'%s'"% kind}, "AND",
@@ -889,62 +892,62 @@ class explore:
                         DB.execute(self.query.returnQuery())
                     else:
                         self.query.setStatTrue("insert")
-                        self.query.setTables(["borrow"])
+                        self.query.setTables(["lend"])
                         self.query.setKeys(["kind", "k_id", "u_id",
-                                            "borrowdate", "extension",
+                                            "lenddate", "extension",
                                             "status"])
                         self.query.setValues([kind, k_id, uid, now, extension,
                                               status])
                         DB.execute(self.query.returnQuery())
                     
                     self.query.setStatTrue("select")
-                    self.query.setTables(["borrow"])
+                    self.query.setTables(["lend"])
                     self.query.setSelect(["id"])
                     self.query.setWhere([{"kind":"'%s'"% kind}, "AND",
                                          {"k_id":k_id}, "AND",
-                                         {"status":"'borrowed'"}, "AND",
+                                         {"status":"'lended'"}, "AND",
                                          {"u_id":uid}])
                     bid = DB.execute(self.query.returnQuery())[0][0]
                     
                     text = ""
-                    text += "%20s : %s\n"% (_("Borrow ID"), bid)
-                    text += "%20s : %s\n"% (_("Borrowed"), borrowed)
-                    text += "%20s : %s\n"% (_("Borrowed user ID"), uid)
+                    text += "%20s : %s\n"% (_("Lending ID"), bid)
+                    text += "%20s : %s\n"% (_("Lended"), lended)
+                    text += "%20s : %s\n"% (_("Borrower ID"), uid)
                     
                     return (True, text)
         
-    def takeback(self, borrowed):
+    def takeback(self, lended):
         status = "returned"
         dirs, files = self.dirList(partite=True)
-        if borrowed in dirs.keys():
+        if lended in dirs.keys():
             kind = "dirs"
-            k_id = dirs[borrowed]
-        if borrowed in files.keys():
+            k_id = dirs[lended]
+        if lended in files.keys():
             kind = "files"
-            k_id = files[borrowed]
+            k_id = files[lended]
             
         self.query.setStatTrue("update")
         self.query.setSet({"status":status})
-        self.query.setTables(["borrow"])
+        self.query.setTables(["lend"])
         self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
-                             "AND", {"status":"'borrowed'"}])
+                             "AND", {"status":"'lended'"}])
                              
         DB.execute(self.query.returnQuery())
         
-    def getReserveList(self, borrowed):
+    def getReserveList(self, lended):
         dirs, files = self.dirList(partite=True)
-        if borrowed in dirs.keys():
+        if lended in dirs.keys():
             kind = "dirs"
-            k_id = dirs[borrowed]
-        if borrowed in files.keys():
+            k_id = dirs[lended]
+        if lended in files.keys():
             kind = "files"
-            k_id = files[borrowed]
+            k_id = files[lended]
             
         reserveList = []
         
         self.query.setStatTrue("select")
         self.query.setSelect(["u_id"])
-        self.query.setTables(["borrow"])
+        self.query.setTables(["lend"])
         self.query.setWhere([{"kind":"'%s'"% kind}, "AND", {"k_id":k_id},
                              "AND", {"status":"'waiting'"}])
         request = DB.execute(self.query.returnQuery())        
@@ -965,7 +968,7 @@ class explore:
             k_id = files[reserved]
             
         self.query.setStatTrue("insert")
-        self.query.setTables(["borrow"])
+        self.query.setTables(["lend"])
         self.query.setKeys(["kind", "k_id", "u_id", "status"])
         self.query.setValues([kind, k_id, uid, status])
         DB.execute(self.query.returnQuery())

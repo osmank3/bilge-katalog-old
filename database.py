@@ -103,12 +103,12 @@ class dataBase:
                "d_id INTEGER, "
                "tags_id INTEGER)")
                        
-        self.cur.execute("CREATE TABLE borrow ( "
+        self.cur.execute("CREATE TABLE lend ( "
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "kind TEXT, "
                "k_id INTEGER, "
                "u_id INTEGER, "
-               "borrowdate TIMESTAMP, "
+               "lenddate TIMESTAMP, "
                "extension INTEGER, "
                "status TEXT)")
 
@@ -117,9 +117,9 @@ class dataBase:
                "name TEXT, "
                "surname TEXT, "
                "email TEXT, "
-               "mobilenumber TEXT, "
-               "homenumber TEXT, "
-               "worknumber TEXT, "
+               "mobile TEXT, "
+               "home TEXT, "
+               "work TEXT, "
                "address TEXT)")
                
         self.cur.execute("CREATE TABLE app ("
@@ -157,12 +157,12 @@ class dataBase:
             
             self.cur.execute("DROP TABLE icons")
             
-            self.cur.execute("CREATE TABLE borrow ( "
+            self.cur.execute("CREATE TABLE lend ( "
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "kind TEXT, "
                "k_id INTEGER, "
                "u_id INTEGER, "
-               "borrowdate TIMESTAMP, "
+               "lenddate TIMESTAMP, "
                "extension INTEGER, "
                "status TEXT)")
 
@@ -171,9 +171,9 @@ class dataBase:
                "name TEXT, "
                "surname TEXT, "
                "email TEXT, "
-               "mobilenumber TEXT, "
-               "homenumber TEXT, "
-               "worknumber TEXT, "
+               "mobile TEXT, "
+               "home TEXT, "
+               "work TEXT, "
                "address TEXT)")
             
             self.cur.execute("UPDATE app SET version='0.2'")
@@ -206,6 +206,7 @@ class EditQuery:
             self.select = ""
             self.keys = ""
             self.values = ""
+            self.appendix = " "
             self.additions = []
             
     def setTables(self, tables): # [x1, x2, ...]
@@ -265,6 +266,10 @@ class EditQuery:
                               str(i.items()[0][1]))
             else:
                 self.where += " " + str(i) + " "
+                
+    def setAppendix(self, appendix):
+        self.appendix = " "
+        self.appendix += appendix
                
     def setQuery(self):
         self.query = ""
@@ -295,6 +300,9 @@ class EditQuery:
         elif self.status["pragma"]:
             if self.table != "":
                 self.query += "PRAGMA TABLE_INFO(" + self.table + ")"
+                
+        if self.appendix != " ":
+            self.query += self.appendix
             
     def returnQuery(self):
         self.setQuery()

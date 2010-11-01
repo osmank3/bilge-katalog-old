@@ -68,13 +68,7 @@ def mainloop():
         
         if command == "help":
             if len(additions)>0:
-                if additions[0] == "borrow":
-                    print "borrow OPTS  " + _("borrowing file or directory")
-                    print _("Usage:")
-                    print "borrow NAME to=USERID    " + _("NAME borrowing to USERID")
-                    print "borrow NAME              " + _("NAME borrowing to reserved user")
-                    
-                elif additions[0] == "cd":
+                if additions[0] == "cd":
                     print "cd OPTS      " + _("changing current directory")
                     print _("Usage:")
                     print "cd id=ID     " + _("change current directory which id is ID")
@@ -89,6 +83,12 @@ def mainloop():
                     print "info OPTS    " + _("informations about file or directory")
                     print _("Usage:")
                     print "info NAME    " + _("informations about NAME")
+                    
+                elif additions[0] == "lend":
+                    print "lend OPTS    " + _("lending file or directory")
+                    print _("Usage:")
+                    print "lend NAME to=USERID    " + _("NAME lending to USERID")
+                    print "lend NAME              " + _("NAME lending to reserved user")
                     
                 elif additions[0] == "ls":
                     print "ls OPTS      " + _("listing directory")
@@ -175,12 +175,12 @@ def mainloop():
                     
             else:
                 print _("Useful commands:")
-                print "borrow OPTS  " + _("borrowing file or directory")
                 print "cd OPTS      " + _("changing current directory")
                 print "cp OPTS      " + _("copy files and directories")
                 print "exit         " + _("quiting on application")
                 print "help OPTS    " + _("this help or using details of command")
                 print "info OPTS    " + _("informations about file or directory")
+                print "lend OPTS    " + _("lending file or directory")
                 print "ls OPTS      " + _("listing directory")
                 print "mkcat OPTS   " + _("creating catalog.")
                 print "mkdir OPTS   " + _("creating a directory.")
@@ -403,14 +403,14 @@ def mainloop():
                 
                 EXP.copy(name=copied, to=to)
                 
-        elif command == "borrow":
+        elif command == "lend":
             if len(additions)>0:
-                borrowed = " ".join(additions)
+                lended = " ".join(additions)
                 if parameters.has_key("to"):
                     uid = parameters["to"]
                 else:
                     uid = None
-                status = EXP.borrow(borrowed, uid)
+                status = EXP.lend(lended, uid)
                 print status[1]
                 if status[0] == False:
                     question = None
@@ -422,12 +422,12 @@ def mainloop():
                                       "(" + _("yes") + "/" + _("no") +"): ")
                         
                     if question == _("yes"):
-                        EXP.reserve(borrowed, uid)
+                        EXP.reserve(lended, uid)
                     
         elif command == "tkback":
             if len(additions)>0:
-                borrowed = " ".join(additions)
-                EXP.takeback(borrowed)
+                lended = " ".join(additions)
+                EXP.takeback(lended)
                 
         elif command == "reserve":
             if len(additions)>0:

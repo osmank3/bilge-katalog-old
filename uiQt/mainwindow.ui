@@ -117,12 +117,6 @@
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
           </widget>
          </item>
         </layout>
@@ -138,7 +132,7 @@
      <x>0</x>
      <y>0</y>
      <width>620</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -164,6 +158,14 @@
      <addaction name="actNewDir"/>
      <addaction name="actNewFile"/>
     </widget>
+    <widget class="QMenu" name="menuUsers">
+     <property name="title">
+      <string>&amp;Users</string>
+     </property>
+     <addaction name="actNewUser"/>
+     <addaction name="actUserInfo"/>
+    </widget>
+    <addaction name="menuUsers"/>
     <addaction name="menuNew"/>
     <addaction name="actDel"/>
     <addaction name="actCut"/>
@@ -171,6 +173,8 @@
     <addaction name="actPaste"/>
     <addaction name="actRefresh"/>
     <addaction name="actInfo"/>
+    <addaction name="actLent"/>
+    <addaction name="actTakeBack"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -554,6 +558,26 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actLent">
+   <property name="text">
+    <string>&amp;Lent</string>
+   </property>
+  </action>
+  <action name="actTakeBack">
+   <property name="text">
+    <string>&amp;Take Back</string>
+   </property>
+  </action>
+  <action name="actNewUser">
+   <property name="text">
+    <string>Ne&amp;w User</string>
+   </property>
+  </action>
+  <action name="actUserInfo">
+   <property name="text">
+    <string>U&amp;ser Info</string>
    </property>
   </action>
  </widget>

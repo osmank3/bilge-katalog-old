@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>userDialog</class>
+ <widget class="QDialog" name="userDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>445</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Users Info</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QLineEdit" name="idLine"/>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="fillInfosButton">
+     <property name="text">
+      <string>Fill Id' Infos</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QTabWidget" name="tabWidget">
+     <widget class="QWidget" name="infoTab">
+      <attribute name="title">
+       <string>&amp;Info</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelName">
+         <property name="text">
+          <string>&amp;Name</string>
+         </property>
+         <property name="buddy">
+          <cstring>nameLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="nameLine"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="labelSurname">
+         <property name="text">
+          <string>&amp;Surname</string>
+         </property>
+         <property name="buddy">
+          <cstring>surnameLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="surnameLine"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelEMail">
+         <property name="text">
+          <string>&amp;E-mail</string>
+         </property>
+         <property name="buddy">
+          <cstring>emailLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="emailLine"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="labelMobile">
+         <property name="text">
+          <string>&amp;Mobile</string>
+         </property>
+         <property name="buddy">
+          <cstring>mobileLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="mobileLine"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="labelHome">
+         <property name="text">
+          <string>&amp;Home</string>
+         </property>
+         <property name="buddy">
+          <cstring>homeLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="homeLine"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="labelWork">
+         <property name="text">
+          <string>&amp;Work</string>
+         </property>
+         <property name="buddy">
+          <cstring>workLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="workLine"/>
+       </item>
+       <item row="7" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>57</width>
+           <height>53</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="labelAddress">
+         <property name="text">
+          <string>&amp;Address</string>
+         </property>
+         <property name="buddy">
+          <cstring>addressLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1" rowspan="2">
+        <widget class="QTextEdit" name="addressLine"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="borrowTab">
+      <attribute name="title">
+       <string>&amp;Borrow</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelBorrow">
+         <property name="text">
+          <string>B&amp;orrow Status</string>
+         </property>
+         <property name="buddy">
+          <cstring>borrowLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>98</width>
+           <height>76</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelReserve">
+         <property name="text">
+          <string>&amp;Reserve Status</string>
+         </property>
+         <property name="buddy">
+          <cstring>reserveLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>108</width>
+           <height>77</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QLabel" name="labelTotalBorrow">
+         <property name="text">
+          <string>Total number of borrowing</string>
+         </property>
+         <property name="buddy">
+          <cstring>totalBorrowLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <widget class="QLineEdit" name="totalBorrowLine">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QLabel" name="labelTotalReserve">
+         <property name="text">
+          <string>Total number of reserving</string>
+         </property>
+         <property name="buddy">
+          <cstring>totalReserveLine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="2">
+        <widget class="QLineEdit" name="totalReserveLine">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" rowspan="2" colspan="2">
+        <widget class="QTextEdit" name="borrowLine">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" rowspan="2" colspan="2">
+        <widget class="QTextEdit" name="reserveLine">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="prevButton">
+     <property name="text">
+      <string>Previous user</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="nextButton">
+     <property name="text">
+      <string>Next user</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QPushButton" name="resetButton">
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="applyButton">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="closeButton">
+     <property name="text">
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
