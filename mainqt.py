@@ -15,6 +15,7 @@ from uiQt_mainwindow import Ui_MainWindow
 import wizardCat
 import infoDialog
 import aboutDialog
+import userDialog
 
 EXP = libilge.explore()
 
@@ -63,6 +64,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.contextFilesMenu.addAction(self.actCopy)
         self.contextFilesMenu.addAction(self.actPaste)
         self.contextFilesMenu.addAction(self.actInfo)
+        self.contextFilesMenu.addAction(self.actLent)
+        self.contextFilesMenu.addAction(self.actTakeBack)
         
         # Catalogs context menu
         self.contextCatsMenu = QtGui.QMenu(self.viewCat)
@@ -70,6 +73,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.contextCatsMenu.addAction(self.actDel)
         self.contextCatsMenu.addAction(self.actPaste)
         self.contextCatsMenu.addAction(self.actInfo)
+        self.contextCatsMenu.addAction(self.actLent)
+        self.contextCatsMenu.addAction(self.actTakeBack)
         
         # signals
         self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
@@ -94,6 +99,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actPaste.triggered.connect(self.paste)
         self.actRefresh.triggered.connect(self.refresh)
         self.actAbout.triggered.connect(self.about)
+        self.actLent.triggered.connect(self.lend)
+        self.actTakeBack.triggered.connect(self.takeBack)
+        self.actUserInfo.triggered.connect(self.users)
+        self.actNewUser.triggered.connect(self.newUser)
 
     def contextFiles(self, point):
         self.item = None
@@ -334,3 +343,16 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         about = aboutDialog.aboutDialog()
         about.exec_()
 
+    def lend(self):
+        pass
+        
+    def takeBack(self):
+        pass
+        
+    def users(self):
+        users = userDialog.userDialog()
+        users.exec_()
+        
+    def newUser(self):
+        users = userDialog.userDialog(new=True)
+        users.exec_()

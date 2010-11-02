@@ -17,9 +17,6 @@
    <locale language="English" country="UnitedKingdom"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="2">
-    <widget class="QLineEdit" name="idLine"/>
-   </item>
    <item row="0" column="2">
     <widget class="QPushButton" name="fillInfosButton">
      <property name="text">
@@ -208,23 +205,6 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QLabel" name="labelTotalReserve">
-         <property name="text">
-          <string>Total number of reserving</string>
-         </property>
-         <property name="buddy">
-          <cstring>totalReserveLine</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="2">
-        <widget class="QLineEdit" name="totalReserveLine">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1" rowspan="2" colspan="2">
         <widget class="QTextEdit" name="borrowLine">
          <property name="readOnly">
@@ -245,6 +225,9 @@
    </item>
    <item row="2" column="0">
     <widget class="QPushButton" name="prevButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Previous user</string>
      </property>
@@ -252,6 +235,9 @@
    </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="nextButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Next user</string>
      </property>
@@ -278,8 +264,64 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="1">
+    <widget class="QSpinBox" name="spinId">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>999999</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="newButton">
+     <property name="text">
+      <string>New User</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>userDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>339</x>
+     <y>421</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>419</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinId</sender>
+   <signal>editingFinished()</signal>
+   <receiver>fillInfosButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
