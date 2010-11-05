@@ -16,6 +16,7 @@ import wizardCat
 import infoDialog
 import aboutDialog
 import userDialog
+import lendDialog
 
 EXP = libilge.explore()
 
@@ -49,7 +50,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searchLine = QtGui.QLineEdit()
         self.searchButton = QtGui.QPushButton()
         self.searchButton.setObjectName("searchButton")
-        #self.searchButton.setText("Search")
+        self.searchButton.setEnabled(False)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/image/images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.searchButton.setIcon(icon)
@@ -84,7 +85,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.viewFiles, QtCore.SIGNAL("customContextMenuRequested(const QPoint &)"), self.contextFiles)
         self.connect(self.viewCat, QtCore.SIGNAL("customContextMenuRequested(const QPoint &)"), self.contextCats)
         self.connect(self.searchButton, QtCore.SIGNAL("clicked()"), self.search)
-        self.connect(self.searchLine, QtCore.SIGNAL("returnPressed()"), self.search)
+        self.connect(self.searchLine, QtCore.SIGNAL("returnPressed()"), self.searchButton, QtCore.SLOT("click()"))
+        self.connect(self.searchLine, QtCore.SIGNAL("textChanged(QString)"), self.searchButtonStatus)
         # signals of actions
         self.actBack.triggered.connect(self.Back)
         self.actNext.triggered.connect(self.Next)
@@ -319,6 +321,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             # ekrana hata mesajı bastırmalı
             print _("This selection is not a directory.")
             
+    def searchButtonStatus(self, string):
+        if string == "":
+            self.searchButton.setEnabled(False)
+        else:
+            self.searchButton.setEnabled(True)
+            
     def search(self):
         self.searching = True
         wanted = str(self.searchLine.text())
@@ -344,7 +352,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         about.exec_()
 
     def lend(self):
-        pass
+        type, id = str(self.item.whatsThis()).split()
+        lending = lendDialog.lendDialog(type, id)
+        lending.exec_()
         
     def takeBack(self):
         pass

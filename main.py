@@ -415,10 +415,10 @@ def mainloop():
                 if status[0] == False:
                     question = None
                     if status[1] == _("That object is borrowed."):
-                        question = raw_input(_("Are you want to reserve it. ") +
+                        question = raw_input(_("Are you want to reserve it? ") +
                                       "(" + _("yes") + "/" + _("no") +"): ")
                     elif status[1] == _("Wait for the order!"):
-                        question = raw_input(_("Are you want to reserve it. ") +
+                        question = raw_input(_("Are you want to reserve it? ") +
                                       "(" + _("yes") + "/" + _("no") +"): ")
                         
                     if question == _("yes"):
