@@ -64,18 +64,16 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.contextFilesMenu.addAction(self.actCut)
         self.contextFilesMenu.addAction(self.actCopy)
         self.contextFilesMenu.addAction(self.actPaste)
+        self.contextFilesMenu.addAction(self.actLending)
         self.contextFilesMenu.addAction(self.actInfo)
-        self.contextFilesMenu.addAction(self.actLent)
-        self.contextFilesMenu.addAction(self.actTakeBack)
         
         # Catalogs context menu
         self.contextCatsMenu = QtGui.QMenu(self.viewCat)
         self.contextCatsMenu.addAction(self.actCreateCatalog)
         self.contextCatsMenu.addAction(self.actDel)
         self.contextCatsMenu.addAction(self.actPaste)
+        self.contextCatsMenu.addAction(self.actLending)
         self.contextCatsMenu.addAction(self.actInfo)
-        self.contextCatsMenu.addAction(self.actLent)
-        self.contextCatsMenu.addAction(self.actTakeBack)
         
         # signals
         self.connect(self.listCat, QtCore.SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.doubleClickAction)
@@ -101,8 +99,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actPaste.triggered.connect(self.paste)
         self.actRefresh.triggered.connect(self.refresh)
         self.actAbout.triggered.connect(self.about)
-        self.actLent.triggered.connect(self.lend)
-        self.actTakeBack.triggered.connect(self.takeBack)
+        self.actLending.triggered.connect(self.lend)
         self.actUserInfo.triggered.connect(self.users)
         self.actNewUser.triggered.connect(self.newUser)
 
@@ -355,9 +352,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         type, id = str(self.item.whatsThis()).split()
         lending = lendDialog.lendDialog(type, id)
         lending.exec_()
-        
-    def takeBack(self):
-        pass
         
     def users(self):
         users = userDialog.userDialog()

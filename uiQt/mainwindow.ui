@@ -172,9 +172,8 @@
     <addaction name="actCopy"/>
     <addaction name="actPaste"/>
     <addaction name="actRefresh"/>
+    <addaction name="actLending"/>
     <addaction name="actInfo"/>
-    <addaction name="actLent"/>
-    <addaction name="actTakeBack"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -560,9 +559,9 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="actLent">
+  <action name="actLending">
    <property name="text">
-    <string>&amp;Lent</string>
+    <string>&amp;Lending</string>
    </property>
   </action>
   <action name="actTakeBack">

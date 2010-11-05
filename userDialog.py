@@ -118,7 +118,7 @@ class userDialog(QtGui.QDialog, Ui_userDialog):
         request = database.dataBase().execute(Query.returnQuery())
         for i in request:
             Query.setStatTrue("select")
-            Query.setSelect("name")
+            Query.setSelect(["name"])
             Query.setTables([i[0]])
             Query.setWhere([{"id":i[1]}])
             borrowed = database.dataBase().execute(Query.returnQuery())[0][0]
@@ -131,7 +131,7 @@ class userDialog(QtGui.QDialog, Ui_userDialog):
         request = database.dataBase().execute(Query.returnQuery())
         for i in request:
             Query.setStatTrue("select")
-            Query.setSelect("name")
+            Query.setSelect(["name"])
             Query.setTables([i[0]])
             Query.setWhere([{"id":i[1]}])
             reserved = database.dataBase().execute(Query.returnQuery())[0][0]

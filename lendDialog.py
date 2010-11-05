@@ -30,20 +30,61 @@ class lendDialog(QtGui.QDialog, Ui_lendDialog):
         elif type == "file":
             self.kind = "files"
             
-        self.mbox = QtGui.QMessageBox(self)
-        self.mbox.setWindowTitle(QtGui.QApplication.translate("lendDialog", "Lending", None, QtGui.QApplication.UnicodeUTF8))
+        self.getObjectStatus()
         
         #signals
         self.connect(self.lendButton, QtCore.SIGNAL("clicked()"), self.lending)
-        self.connect(self.reserveButton, QtCore.SIGNAL("clicked()"), self.lendToReserved)
-        self.connect(self.idLine, QtCore.SIGNAL("textChanged(QString)"), self.setLendButtonStatus)
+        self.connect(self.reserveButton, QtCore.SIGNAL("clicked()"), self.reserve)
+        self.connect(self.lendToReserveButton, QtCore.SIGNAL("clicked()"), self.lendToReserved)
+        self.connect(self.takeBackButton, QtCore.SIGNAL("clicked()"), self.takeBack)
+        self.connect(self.idLine, QtCore.SIGNAL("textChanged(QString)"), self.setButtonsStatus)
         
-    def setLendButtonStatus(self, string):
+    def getObjectStatus(self):
+        self.statusLend = False
+        self.statusReserve = False
+        
+        Query.setStatTrue("select")
+        Query.setTables(["lend"])
+        Query.setSelect(["*"])
+        Query.setWhere([{"kind":"'%s'"% self.kind}, "AND",
+                        {"k_id":self.kId}, "AND", {"status":"'lended'"}])
+        request = database.dataBase().execute(Query.returnQuery())
+        if len(request)>0:
+            self.statusLend = True
+        
+        self.reserveList = []
+        
+        Query.setStatTrue("select")
+        Query.setSelect(["u_id"])
+        Query.setTables(["lend"])
+        Query.setWhere([{"kind":"'%s'"% self.kind}, "AND", {"k_id":self.kId},
+                         "AND", {"status":"'waiting'"}])
+        Query.setAppendix("ORDER BY id")
+        request = database.dataBase().execute(Query.returnQuery())        
+        for i in request:
+            self.reserveList.append(i[0])
+            
+        if len(self.reserveList)>0:
+            self.statusReserve = True
+        
+        if self.statusLend:
+            self.takeBackButton.setEnabled(True)
+            
+        elif self.statusReserve:
+            self.lendToReserveButton.setEnabled(True)
+        
+        
+    def setButtonsStatus(self, string):
         if string == "":
             self.lendButton.setEnabled(False)
+            self.reserveButton.setEnabled(False)
             self.uid = None
         else:
-            self.lendButton.setEnabled(True)
+            if not self.statusLend and not self.statusReserve:
+                self.lendButton.setEnabled(True)
+            else:
+                self.reserveButton.setEnabled(True)
+                
             try:
                 self.uid = int(self.idLine.text())
                 Query.setStatTrue("select")
@@ -58,62 +99,14 @@ class lendDialog(QtGui.QDialog, Ui_lendDialog):
                 self.idLine.clear()
         
     def lending(self):
-        if self.uid != None:
-            Query.setStatTrue("select")
-            Query.setTables(["lend"])
-            Query.setSelect(["*"])
-            Query.setWhere([{"kind":"'%s'"% self.kind}, "AND",
-                            {"k_id":self.kId}, "AND", {"status":"'lended'"}])
-            request = database.dataBase().execute(Query.returnQuery())
-            if len(request)>0:
-                box = QtGui.QMessageBox.question(self,
-                        QtGui.QApplication.translate("lendDialog", "Lending",
-                                None, QtGui.QApplication.UnicodeUTF8),
-                        QtGui.QApplication.translate("lendDialog",
-                                "That object is borrowed.\n" + \
-                                "Are you want to reserve it?", None,
-                                QtGui.QApplication.UnicodeUTF8),
-                        QtGui.QApplication.translate("lendDialog", "Yes",
-                                None, QtGui.QApplication.UnicodeUTF8),
-                        QtGui.QApplication.translate("lendDialog", "No",
-                                None, QtGui.QApplication.UnicodeUTF8))
-                if box == 0:
-                    self.reserve()
-                else:
-                    pass
-            else:
-                self.getReserveList()
-                if len(self.reserveList)>0:
-                    if self.uid != self.reserveList[0]:
-                        box = QtGui.QMessageBox.question(self,
-                                QtGui.QApplication.translate("lendDialog",
-                                        "Lending", None,
-                                        QtGui.QApplication.UnicodeUTF8),
-                                QtGui.QApplication.translate("lendDialog",
-                                        "Wait for the order!\n" + \
-                                        "Are you want to reserve it?",
-                                        None, QtGui.QApplication.UnicodeUTF8),
-                                QtGui.QApplication.translate("lendDialog",
-                                        "Yes", None,
-                                        QtGui.QApplication.UnicodeUTF8),
-                                QtGui.QApplication.translate("lendDialog",
-                                        "No", None,
-                                        QtGui.QApplication.UnicodeUTF8))
-                        if box == 0:
-                            self.reserve()
-                        else:
-                            pass
-                    else:
-                        self.lendToReserved()
-                else:
-                    Query.setStatTrue("insert")
-                    Query.setTables(["lend"])
-                    Query.setKeys(["kind", "k_id", "u_id", "lenddate",
-                                   "extension", "status"])
-                    Query.setValues([self.kind, self.kId, self.uid,
-                                     datetime.datetime.now(), 0, "lended"])
-                    database.dataBase().execute(Query.returnQuery())
-                    self.close()
+        Query.setStatTrue("insert")
+        Query.setTables(["lend"])
+        Query.setKeys(["kind", "k_id", "u_id", "lenddate",
+                       "extension", "status"])
+        Query.setValues([self.kind, self.kId, self.uid,
+                         datetime.datetime.now(), 0, "lended"])
+        database.dataBase().execute(Query.returnQuery())
+        self.close()
                     
     def reserve(self):
         Query.setStatTrue("insert")
@@ -122,57 +115,27 @@ class lendDialog(QtGui.QDialog, Ui_lendDialog):
         Query.setValues([self.kind, self.kId, self.uid, "waiting"])
         database.dataBase().execute(Query.returnQuery())
         self.close()
-        
-    def getReserveList(self):
-        self.reserveList = []
-        
-        Query.setStatTrue("select")
-        Query.setSelect(["u_id"])
-        Query.setTables(["lend"])
-        Query.setWhere([{"kind":"'%s'"% self.kind}, "AND", {"k_id":self.kId},
-                         "AND", {"status":"'waiting'"}])
-        Query.setAppendix("ORDER BY id")
-        request = database.dataBase().execute(Query.returnQuery())        
-        for i in request:
-            self.reserveList.append(i[0])
             
     def lendToReserved(self):
-        Query.setStatTrue("select")
+        self.uid = self.reserveList[0]
+        Query.setStatTrue("update")
         Query.setTables(["lend"])
-        Query.setSelect(["*"])
-        Query.setWhere([{"kind":"'%s'"% self.kind}, "AND", {"k_id":self.kId},
-                         "AND", {"status":"'lended'"}])
-        request = database.dataBase().execute(Query.returnQuery())
-        if len(request)>0:
-            box = QtGui.QMessageBox.information(self,
-                    QtGui.QApplication.translate("lendDialog", "Lending",
-                            None, QtGui.QApplication.UnicodeUTF8),
-                    QtGui.QApplication.translate("lendDialog",
-                            "That object is borrowed.", None,
-                            QtGui.QApplication.UnicodeUTF8),
-                    QtGui.QApplication.translate("lendDialog", "Ok", None,
-                            QtGui.QApplication.UnicodeUTF8))
-        else:
-            self.getReserveList()
-            if len(self.reserveList) == 0:
-                box = QtGui.QMessageBox.information(self,
-                        QtGui.QApplication.translate("lendDialog", "Lending",
-                                None, QtGui.QApplication.UnicodeUTF8),
-                        QtGui.QApplication.translate("lendDialog",
-                                "Object does not reserved to anybody", None,
-                                QtGui.QApplication.UnicodeUTF8),
-                        QtGui.QApplication.translate("lendDialog", "Ok", None,
-                                QtGui.QApplication.UnicodeUTF8))
-            else:
-                self.uid = self.reserveList[0]
-                Query.setStatTrue("update")
-                Query.setTables(["lend"])
-                Query.setSet({"lenddate":datetime.datetime.now(),
-                              "extension":0,
-                              "status":"lended"})
-                Query.setWhere([{"kind":"'%s'"% self.kind}, "AND",
-                                {"k_id":self.kId}, "AND",
-                                {"status":"'waiting'"}, "AND",
-                                {"u_id":self.uid}])
-                database.dataBase().execute(Query.returnQuery())
-                self.close()
+        Query.setSet({"lenddate":datetime.datetime.now(),
+                      "extension":0,
+                      "status":"lended"})
+        Query.setWhere([{"kind":"'%s'"% self.kind}, "AND",
+                        {"k_id":self.kId}, "AND",
+                        {"status":"'waiting'"}, "AND",
+                        {"u_id":self.uid}])
+        database.dataBase().execute(Query.returnQuery())
+        self.close()
+                
+    def takeBack(self):
+        Query.setStatTrue("update")
+        Query.setTables(["lend"])
+        Query.setSet({"status":"returned"})
+        Query.setWhere([{"kind":"'%s'"% self.kind}, "AND",
+                        {"k_id":self.kId}, "AND",
+                        {"status":"'lended'"}])
+        database.dataBase().execute(Query.returnQuery())
+        self.close()
