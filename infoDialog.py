@@ -80,6 +80,14 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.dirInfoDateModify.setDateTime(self.infos["datemodify"])
         self.dirInfoDateAccess.setDateTime(self.infos["dateaccess"])
         self.dirInfoDateInsert.setDateTime(self.infos["dateinsert"])
+        self.totalLendingLine.setText(str(self.infos["totallend"]))
+        self.totalReserveTailLine.setText(str(self.infos["totalreserve"]))
+        if self.infos["lendstatus"] == "lended":
+            self.statusCombo.setCurrentIndex(1)
+        elif self.infos["lendstatus"] == "reserved":
+            self.statusCombo.setCurrentIndex(2)
+        else:
+            self.statusCombo.setCurrentIndex(0)
         
     def fileInfos(self):
         self.infoSW.setCurrentIndex(0)
@@ -108,6 +116,14 @@ class infoDialog(QtGui.QDialog, Ui_infoDialog):
         self.infoDateAccess.setDateTime(self.infos["dateaccess"])
         self.infoDateInsert.setDateTime(self.infos["dateinsert"])
         self.infoTagsEdit.setText(self.infos["tags"])
+        self.totalLendingLine.setText(str(self.infos["totallend"]))
+        self.totalReserveTailLine.setText(str(self.infos["totalreserve"]))
+        if self.infos["lendstatus"] == "lended":
+            self.statusCombo.setCurrentIndex(1)
+        elif self.infos["lendstatus"] == "reserved":
+            self.statusCombo.setCurrentIndex(2)
+        else:
+            self.statusCombo.setCurrentIndex(0)
         
         if self.infos["type"] == "book":
             self.infoTypeCombo.setCurrentIndex(0)

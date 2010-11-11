@@ -54,14 +54,18 @@ TransKeys = {   "id"            :   _("Identify"),
                 "page"          :   _("Page"),
                 "width"         :   _("Width"),
                 "height"        :   _("Height"),
-                "tags"          :   _("Tags")    }
+                "tags"          :   _("Tags"),
+                "lendstatus"    :   _("Lending status"),
+                "totallend"     :   _("Total lending"),
+                "totalreserve"  :   _("Total reserving")    }
 
 KeysQuene = [   "id", "name", "surname", "email", "mobile", "home", "work", 
                 "address", "size", "type", "description", "title",
                 "artist", "album", "date", "tracknumber", "genre", "bitrate",
                 "samplerate", "length", "author", "page", "year",
                 "callnumber", "imprintinfo", "width", "height", "datecreate",
-                "datemodify", "dateaccess", "dateinsert", "tags"]
+                "datemodify", "dateaccess", "dateinsert", "tags", "lendstatus",
+                "totallend", "totalreserve"]
 
 DB = database.dataBase()
 
@@ -483,7 +487,28 @@ class explore:
                             if keys[n][1] != "f_id":
                                 infos[keys[n][1]] = values[0][n]
                             n += 1
-                        
+            
+            #lending infos
+            self.query.setStatTrue("select")
+            self.query.setSelect(["count(id)"])
+            self.query.setTables(["lend"])
+            self.query.setWhere([{"status":"'lended'"}])
+            if DB.execute(self.query.returnQuery())[0][0]>0:
+                infos["lendstatus"] = "lended"
+                infos["totallend"] = 1
+            else:
+                infos["totallend"] = 0
+                
+            self.query.setWhere([{"status":"'returned'"}])
+            infos["totallend"] += DB.execute(self.query.returnQuery())[0][0]
+            
+            self.query.setWhere([{"status":"'waiting'"}])
+            infos["totalreserve"] = DB.execute(self.query.returnQuery())[0][0]
+            if not infos.has_key("lendstatus") and infos["totalreserve"] > 0:
+                infos["lendstatus"] = "reserved"
+            elif not infos.has_key("lendstatus"):
+                infos["lendstatus"] = ""
+                            
             text = ""
             if len(infos.keys())>0:
                 if redict:

@@ -43,7 +43,7 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="3">
-    <widget class="QTabWidget" name="lentTab">
+    <widget class="QTabWidget" name="tabs">
      <widget class="QWidget" name="infoTab">
       <attribute name="title">
        <string>&amp;Info</string>
@@ -988,21 +988,14 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QLabel" name="labelTotalReserve">
-         <property name="text">
-          <string>Total number of reserving</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
+       <item row="3" column="0" colspan="2">
         <widget class="QLabel" name="labelTotalReserveTail">
          <property name="text">
           <string>Total number of reserved tail</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="2">
+       <item row="3" column="2">
         <widget class="QLineEdit" name="totalReserveTailLine">
          <property name="readOnly">
           <bool>true</bool>
@@ -1016,7 +1009,7 @@
          </property>
          <item>
           <property name="text">
-           <string>Item can be borrowed</string>
+           <string>Item can be borrow</string>
           </property>
          </item>
          <item>
@@ -1029,13 +1022,6 @@
            <string>Waiting for tail of reserve</string>
           </property>
          </item>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLineEdit" name="totalReserveLine">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
       </layout>
