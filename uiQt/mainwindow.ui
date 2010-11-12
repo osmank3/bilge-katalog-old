@@ -560,23 +560,39 @@
    </property>
   </action>
   <action name="actLending">
+   <property name="icon">
+    <iconset resource="QtRc.qrc">
+     <normaloff>:/image/images/lend.png</normaloff>:/image/images/lend.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Lending</string>
    </property>
-  </action>
-  <action name="actTakeBack">
-   <property name="text">
-    <string>&amp;Take Back</string>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actNewUser">
+   <property name="icon">
+    <iconset resource="QtRc.qrc">
+     <normaloff>:/image/images/user_new.png</normaloff>:/image/images/user_new.png</iconset>
+   </property>
    <property name="text">
     <string>Ne&amp;w User</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actUserInfo">
+   <property name="icon">
+    <iconset resource="QtRc.qrc">
+     <normaloff>:/image/images/user.png</normaloff>:/image/images/user.png</iconset>
+   </property>
    <property name="text">
     <string>U&amp;ser Info</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

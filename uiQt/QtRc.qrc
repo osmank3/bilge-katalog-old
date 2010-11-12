@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="image">
+    <file>../images/lend_to_reserved.png</file>
+    <file>../images/reserve.png</file>
+    <file>../images/lend.png</file>
+    <file>../images/takeback.png</file>
+    <file>../images/user_new.png</file>
+    <file>../images/user.png</file>
     <file>../images/image.png</file>
     <file>../images/video.png</file>
     <file>../images/copy.png</file>

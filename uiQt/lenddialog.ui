@@ -13,17 +13,41 @@
   <property name="windowTitle">
    <string>Lending</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="QtRc.qrc">
+    <normaloff>:/image/images/lend.png</normaloff>:/image/images/lend.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLineEdit" name="idLine"/>
+    <widget class="QLineEdit" name="idLine">
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
+    </widget>
    </item>
    <item row="0" column="1">
     <widget class="QPushButton" name="lendButton">
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
      <property name="text">
       <string>Lend</string>
+     </property>
+     <property name="icon">
+      <iconset resource="QtRc.qrc">
+       <normaloff>:/image/images/lend.png</normaloff>:/image/images/lend.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </item>
@@ -32,8 +56,21 @@
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
      <property name="text">
       <string>Lend to reserved user</string>
+     </property>
+     <property name="icon">
+      <iconset resource="QtRc.qrc">
+       <normaloff>:/image/images/lend_to_reserved.png</normaloff>:/image/images/lend_to_reserved.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </item>
@@ -42,13 +79,29 @@
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
      <property name="text">
       <string>Reserve</string>
+     </property>
+     <property name="icon">
+      <iconset resource="QtRc.qrc">
+       <normaloff>:/image/images/reserve.png</normaloff>:/image/images/reserve.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
     <widget class="Line" name="line">
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -59,14 +112,29 @@
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
      <property name="text">
       <string>Take Back</string>
+     </property>
+     <property name="icon">
+      <iconset resource="QtRc.qrc">
+       <normaloff>:/image/images/takeback.png</normaloff>:/image/images/takeback.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="QtRc.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>idLine</sender>

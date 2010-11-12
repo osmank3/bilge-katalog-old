@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Users Info</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="QtRc.qrc">
+    <normaloff>:/image/images/user.png</normaloff>:/image/images/user.png</iconset>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedKingdom"/>
   </property>
@@ -285,11 +289,17 @@
      <property name="text">
       <string>New User</string>
      </property>
+     <property name="icon">
+      <iconset resource="QtRc.qrc">
+       <normaloff>:/image/images/user_new.png</normaloff>:/image/images/user_new.png</iconset>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="QtRc.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>closeButton</sender>
