@@ -6,7 +6,7 @@ import sys
 import gettext
 import datetime
 import database
-import detailer
+#import detailer inserting.py'nin içine alındığı için artık yok
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -16,6 +16,50 @@ gettext.install("bilge-katalog", unicode=1)
 
 DB = database.dataBase()
 Query = database.EditQuery()
+
+TransKeysQuene = ["id", "name", "surname", "email", "mobile", "home", "work", 
+                  "address", "size", "type", "description", "title",
+                  "artist", "album", "date", "tracknumber", "genre", "bitrate",
+                  "samplerate", "length", "author", "page", "year",
+                  "callnumber", "imprintinfo", "width", "height", "datecreate",
+                  "datemodify", "dateaccess", "dateinsert", "tags",
+                  "lendstatus", "totallend", "totalreserve"]
+
+TransKeys = {   "id"            :   _("Identify"),
+                "name"          :   _("Name"),
+                "surname"       :   _("Surname"),
+                "email"         :   _("E-mail"),
+                "mobile"        :   _("Mobile Number"),
+                "home"          :   _("Home Number"),
+                "work"          :   _("Work Number"),
+                "address"       :   _("Address"),
+                "datecreate"    :   _("Create Date"),
+                "datemodify"    :   _("Modify Date"),
+                "dateaccess"    :   _("Access Date"),
+                "dateinsert"    :   _("Cataloging Date"),
+                "description"   :   _("Description"),
+                "size"          :   _("Size"),
+                "type"          :   _("Type"),
+                "title"         :   _("Title"),
+                "artist"        :   _("Artist"),
+                "album"         :   _("Album"),
+                "date"          :   _("Year"),
+                "tracknumber"   :   _("Track"),
+                "genre"         :   _("Genre"),
+                "bitrate"       :   _("Bitrate"),
+                "samplerate"    :   _("Sample Rate"),
+                "length"        :   _("Length"),
+                "author"        :   _("Author"),
+                "imprintinfo"   :   _("Imprint Info"),
+                "callnumber"    :   _("Call Number"),
+                "year"          :   _("Year"),
+                "page"          :   _("Page"),
+                "width"         :   _("Width"),
+                "height"        :   _("Height"),
+                "tags"          :   _("Tags"),
+                "lendstatus"    :   _("Lending status"),
+                "totallend"     :   _("Total lending"),
+                "totalreserve"  :   _("Total reserving")    }
 
 class Item(object):
     """Bilge-katalog'da dosya ve dizinlerin bilgilerini tutmak için nesne.
@@ -77,6 +121,66 @@ class Item(object):
             self.address += i
             if i != self.name or self.form == "directory":
                 self.address += "/"
+                
+    def setDetail(self):
+        self.info = {}
+        files = ["id","up_id","name","size","datecreate","datemodify",
+                 "dateaccess","dateinsert","type"]
+        directories = ["id","up_id","name","datecreate","datemodify",
+                       "dateaccess","dateinsert","description"]
+        if self.no and self.form:
+            Query.setStatTrue("select")
+            Query.setSelect(["*"])
+            if self.form == "directory":
+                Query.setTables(["dirs"])
+            elif self.form == "file":
+                Query.setTables(["files"])
+            Query.setWhere([{"id":self.no}])
+            for i in DB.execute(Query.returnQuery()):
+                k=0
+                while len(i) > k:
+                    if self.form == "directory":
+                        self.info[directories[k]] = i[k]
+                    elif self.form == "files":
+                        self.info[files[k]] = i[k]
+                    k += 1
+                    
+            if self.form == "file" and self.info["type"] != "other":
+                self.detail = {}
+                
+                kind = self.info["type"][0] + "info"
+                keys = []
+                Query.setStatTrue("pragma")
+                Query.setTables([kind])
+                for i in DB.execute(Query.returnQuery()):
+                    keys.append(i[1])
+                    
+                values = []
+                Query.setStatTrue("select")
+                Query.setSelect(["*"])
+                Query.setTables([kind])
+                Query.setWhere([{"f_id":self.no}])
+                for i in DB.execute(Query.returnQuery())[0]:
+                    values.append(i)
+                    
+                k=1
+                while len(keys) > k:
+                    self.detail[keys[k]] = values[k]
+                    
+    def textTypeInfo(self):
+        if "info" not in dir(self):
+            self.setDetail()
+            
+        allinfos = self.info.copy()
+        if "detail" in dir(self):
+            for i in self.detail.keys():
+                allinfos[i] = detail[i]
+                
+        text = ""
+        for i in TransKeysQuene:
+            if allinfos.has_key(i):
+                text += "%20s : %s\n"% (TransKeys[i], allinfos[i])
+        return text
     
 class RootItem(Item):
     """Kök dizini belirtmek için oluşturulmuş özel nesne"""
@@ -169,9 +273,47 @@ class Explore(object):
             self.curItem = RootItem()
             self.curItemList = self.fillList()
         
-class UseItem(object):
+class ItemWorks(object):
     """Dosya/Dizin işlemleri için oluşturulan sınıftır."""
-    pass
+    def delItem(item):
+        """Dosya/dizin silmek için fonksiyon"""
+        no = item.no
+        form = item.form
+        
+        item.setDetail()
+        
+        if no and form:
+            Query.setStatTrue("delete")
+            if form == "directory":
+                Query.setTables(["dirs"])
+            elif form == "file":
+                Query.setTables(["files"])
+            Query.setWhere([{"id":no}])
+            DB.execute(Query.returnQuery())
+            
+            if form == "directory":
+                #etiketleri silmek için bir şeyler yapılacak
+                explore = Explore()
+                list2del = explore.fillList(item)
+                for i in list2del:
+                    delItem(i)
+                del explore
+                
+            elif form == "file":
+                #etiketleri silmek için bir şeyler yapılacak
+                if item.info["type"] != "other":
+                    kind = item.info["type"][0] + "info"
+                    
+                    Query.setStatTrue("delete")
+                    Query.setTables([kind])
+                    Query.setWhere([{"f_id":item.no}])
+                    DB.execute(Query.returnQuery())
+    
+    def search(text):
+        pass#return item - arama meselesi
+        
+    def updateItem(item):
+        pass#güncelleme meselesi
     
 class User(object):
     """Bilge-Katalog için kullanıcı nesnesi
@@ -212,7 +354,7 @@ class User(object):
         text = ""
         for i in self.attributes:
             if getattr(self, i):
-                text += "%20s : %s\n"% (i, getattr(self, i))
+                text += "%20s : %s\n"% (TransKeys[i], getattr(self, i))
         return text
         
 class Users(object):
@@ -279,4 +421,4 @@ class Tags(object):
     pass
     
 class LendItem(object):
-    pass
+    pass                
