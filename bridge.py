@@ -123,6 +123,7 @@ class Item(object):
                 self.address += "/"
                 
     def setDetail(self):
+        """Dosyanın/dizinin özelliklerini veritabanından aldıran fonksiyon"""
         self.info = {}
         files = ["id","up_id","name","size","datecreate","datemodify",
                  "dateaccess","dateinsert","type"]
@@ -168,6 +169,11 @@ class Item(object):
                     self.detail[keys[k]] = values[k]
                     
     def textTypeInfo(self):
+        """Dosya/dizin bilgilerini yazı olarak döner.
+        
+        textTypeInfo() -> "    Name : NAME
+                            Address : /foo/bar   "
+        """
         if "info" not in dir(self):
             self.setDetail()
             
@@ -310,10 +316,111 @@ class ItemWorks(object):
                     DB.execute(Query.returnQuery())
     
     def search(text):
-        pass#return item - arama meselesi
+        """Veritabanında arama yapmak için fonksiyon
+        
+        search(text) -> list [item1, item2,...]
+        """
+        foundedList = []
+        
+        Query.setStatTrue("select")
+        Query.setSelect(["id", "name"])
+        Query.setTables(["dirs"])
+        Query.setWhereLike([{"name":text}, "OR", {"description":text}])
+        for i in DB.execute(Query.returnQuery()):
+            tempItem = Item()
+            tempItem.setItem(no=i[0], name=i[1], form="directory")
+            foundedList.append(tempItem)
+            
+        Query.setStatTrue("select")
+        Query.setSelect(["id", "name"])
+        Query.setTables(["files"])
+        Query.setWhereLike([{"name":text}])
+        for i in DB.execute(Query.returnQuery()):
+            tempItem = Item()
+            tempItem.setItem(no=i[0], name=i[1], form="file")
+            foundedList.append(tempItem)
+            
+        return foundedList
         
     def updateItem(item):
-        pass#güncelleme meselesi
+        """dosya/dizin bilgilerini güncellemek için fonksiyon.
+        
+        updateItem(item)
+        özellikleri değiştirilmiş nesnenin değişen özelliklerini alıp günceller
+        """
+        if "info" in dir(item):
+            lastInfo = item.info
+            if "detail" in dir(item):
+                lastDetail = item.detail
+            else:
+                lastDetail = None
+        else:
+            lastInfo = None
+            
+        item.setDetail()
+        
+        if "info" in dir(item):
+            originalInfo = item.info
+            if "detail" in dir(item):
+                originalDetail = item.detail
+            else:
+                originalDetail = None
+        else:
+            originalInfo = None
+            
+        changedInfo = {}
+        changedDetail = {}
+        isKindChanged = False
+        
+        if originalInfo and lastInfo:
+            for i in originalInfo.keys():
+                if originalInfo[i] != lastInfo[i]:
+                    changedInfo[i] = lastInfo[i]
+                    
+        if originalDetail and lastDetail and "type" not in changedInfo.keys():
+            for i in originalDetail.keys():
+                if originalDetail[i] != lastDetail[i]:
+                    changedDetail[i] = lastDetail[i]
+                    
+        elif "type" in changedInfo.keys() and lastDetail:
+            for i in lastDetail.keys():
+                changedDetail[i] = lastDetail[i]
+            isKindChanged = True
+            
+        if len(changedInfo.keys()) > 0:
+            Query.setStatTrue("update")
+            if item.form == "file":
+                Query.setTables(["files"])
+            elif item.form == "directory":
+                Query.setTables(["dirs"])
+            Query.setSet(changedInfo)
+            Query.setWhere([{"id":item.no}])
+            DB.execute(Query.returnQuery())
+            
+        if len(changedDetail.keys()) > 0 and not isKindChanged:
+            kind = item.info["type"][0] + "info"
+            
+            Query.setStatTrue("update")
+            Query.setTables([kind])
+            Query.setSet(changedDetail)
+            Query.setWhere([{"f_id":item.no}])
+            DB.execute(Query.returnQuery())
+            
+        elif len(changedDetail.keys()) > 0 and isKindChanged:
+            kind = changedInfo["type"][0] + "info"
+            
+            keys, values = [], []
+            for i in changedDetail.keys():
+                keys.append(i)
+                values.append(changedDetail[i])
+            
+            Query.setStatTrue("insert")
+            Query.setTables([kind])
+            Query.setKeys(keys)
+            Query.setValues(values)
+            DB.execute(Query.returnQuery())
+            
+        item.setDetail()
     
 class User(object):
     """Bilge-Katalog için kullanıcı nesnesi
