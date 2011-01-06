@@ -69,53 +69,56 @@ class Item(object):
     name -- str
     form -- "file" or "directory"
     address -- str "/foo/bar"
-    updirs -- list [firstUp(Item), secondUp(Item),...]
+    updir -- Item
     """
     no = None
     name = None
     form = None
     address = None
-    updirs = None
+    updir = None
     
-    def setItem(self, no, name, form):
+    def setItem(self, no, form):
         """nesne(item) için no, name ve form değişkenlerini ayarlama
         
-        setItem(no, name, form)
+        setItem(no, form)
         
         Keyword arguments:
         no -- int
-        name -- str
         form -- "file" or "directory"
         """
         self.no = no
-        self.name = name
         self.form = form
         self.setAddress()
         
     def setAddress(self):
         """\
-        Nesne(item) için adres bilgisini ve üst dizinler listesini doldurur.\
+        Nesne(item) için adres bilgisini ve üst dizin nesnesini doldurur.\
         """
         self.address = "/"
-        self.updirs = []
+        self.updir = None
         tempNames = []
         no = self.no
         form = self.form
-        while no != 0:
+        
+        if no != 0:
             Query.setStatTrue("select")
-            Query.setSelect(["id", "up_id", "name"])
+            Query.setSelect(["up_id", "name"])
             if form == "directory":
                 Query.setTables(["dirs"])
             elif form == "file":
                 Query.setTables(["files"])
             Query.setWhere([{"id":no}])
-            noid, no, name = DB.execute(Query.returnQuery())[0]
-            form = "directory"
-            if noid != self.no:
-                tempItem = Item()
-                tempItem.setItem(noid, name, "directory")
-                self.updirs.append(tempItem)
-            tempNames.append(name)
+            noid, self.name = DB.execute(Query.returnQuery())[0]
+            
+            if noid != 0:
+                self.updir = Item()
+                self.updir.setItem(noid, "directory")
+            
+        tempItem = self.updir
+        while tempItem != None:
+            tempNames.append(tempItem.name)
+            tempItem = tempItem.updir
+            
         tempNames.reverse()
         for i in tempNames:
             self.address += i
@@ -195,7 +198,7 @@ class RootItem(Item):
         self.name = "ROOT"
         self.form = "directory"
         self.address = "/"
-        self.updirs = []
+        self.updir = None
     
 class Explore(object):
     """Bilge-Katalog için dizinlerde gezinme sınıfı."""
@@ -219,21 +222,21 @@ class Explore(object):
             dirNo = self.curItem.no
         
         Query.setStatTrue("select")
-        Query.setSelect(["id", "name"])
+        Query.setSelect(["id"])
         Query.setTables(["dirs"])
         Query.setWhere([{"up_id":dirNo}])
         for i in DB.execute(Query.returnQuery()):
             tempItem = Item()
-            tempItem.setItem(no=i[0], name=i[1], form="directory")
+            tempItem.setItem(no=i[0], form="directory")
             itemList.append(tempItem)
            
         Query.setStatTrue("select")
-        Query.setSelect(["id", "name"]) 
+        Query.setSelect(["id"]) 
         Query.setTables(["files"])
         Query.setWhere([{"up_id":dirNo}])
         for i in DB.execute(Query.returnQuery()):
             tempItem = Item()
-            tempItem.setItem(no=i[0], name=i[1], form="file")
+            tempItem.setItem(no=i[0], form="file")
             itemList.append(tempItem)
             
         return itemList
@@ -260,22 +263,27 @@ class Explore(object):
         
         chdir(Item)
         """
-        dirName = item.name
-        tempName = ""
-        tempIndex = 0
-        while not dirName == tempName:
-            tempName = self.curItemList[tempIndex].name
-            if dirName == tempName:
-                self.curItem = self.curItemList[tempIndex]
-            tempIndex += 1
-        self.curItemList = self.fillList()
+        if item.name == "ROOT":
+            self.__init__()
+        elif item.form == "directory":
+            dirName = item.name
+            tempName = ""
+            tempIndex = 0
+            while not dirName == tempName:
+                tempName = self.curItemList[tempIndex].name
+                if dirName == tempName:
+                    self.curItem = self.curItemList[tempIndex]
+                tempIndex += 1
+            self.curItemList = self.fillList()
+        else:
+            return 1
         
     def turnUp(self):
         """Üst dizine çıkmak için kullanılır."""
-        if len(self.curItem.updirs) > 0:
-            self.curItem = self.curItem.updirs[0]
+        if self.curItem.updir != None:
+            self.curItem = self.curItem.updir
             self.curItemList = self.fillList()
-        elif len(self.curItem.updirs) == 0:
+        else:
             self.curItem = RootItem()
             self.curItemList = self.fillList()
         
@@ -323,21 +331,21 @@ class ItemWorks(object):
         foundedList = []
         
         Query.setStatTrue("select")
-        Query.setSelect(["id", "name"])
+        Query.setSelect(["id"])
         Query.setTables(["dirs"])
         Query.setWhereLike([{"name":text}, "OR", {"description":text}])
         for i in DB.execute(Query.returnQuery()):
             tempItem = Item()
-            tempItem.setItem(no=i[0], name=i[1], form="directory")
+            tempItem.setItem(no=i[0], form="directory")
             foundedList.append(tempItem)
             
         Query.setStatTrue("select")
-        Query.setSelect(["id", "name"])
+        Query.setSelect(["id"])
         Query.setTables(["files"])
         Query.setWhereLike([{"name":text}])
         for i in DB.execute(Query.returnQuery()):
             tempItem = Item()
-            tempItem.setItem(no=i[0], name=i[1], form="file")
+            tempItem.setItem(no=i[0], form="file")
             foundedList.append(tempItem)
             
         return foundedList
