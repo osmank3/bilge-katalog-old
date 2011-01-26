@@ -6,7 +6,6 @@ import sys
 import gettext
 import datetime
 import database
-#import detailer inserting.py'nin içine alındığı için artık yok
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -145,7 +144,7 @@ class Item(object):
                 while len(i) > k:
                     if self.form == "directory":
                         self.info[directories[k]] = i[k]
-                    elif self.form == "files":
+                    elif self.form == "file":
                         self.info[files[k]] = i[k]
                     k += 1
                     
@@ -170,6 +169,7 @@ class Item(object):
                 k=1
                 while len(keys) > k:
                     self.detail[keys[k]] = values[k]
+                    k += 1
                     
     def textTypeInfo(self):
         """Dosya/dizin bilgilerini yazı olarak döner.
@@ -289,32 +289,23 @@ class Explore(object):
         
 class ItemWorks(object):
     """Dosya/Dizin işlemleri için oluşturulan sınıftır."""
-    def delItem(item):
+    def delItem(self, item):
         """Dosya/dizin silmek için fonksiyon"""
         no = item.no
         form = item.form
         
-        item.setDetail()
-        
         if no and form:
-            Query.setStatTrue("delete")
-            if form == "directory":
-                Query.setTables(["dirs"])
-            elif form == "file":
-                Query.setTables(["files"])
-            Query.setWhere([{"id":no}])
-            DB.execute(Query.returnQuery())
-            
             if form == "directory":
                 #etiketleri silmek için bir şeyler yapılacak
                 explore = Explore()
                 list2del = explore.fillList(item)
                 for i in list2del:
-                    delItem(i)
+                    self.delItem(i)
                 del explore
                 
             elif form == "file":
                 #etiketleri silmek için bir şeyler yapılacak
+                item.setDetail()
                 if item.info["type"] != "other":
                     kind = item.info["type"][0] + "info"
                     
@@ -322,8 +313,16 @@ class ItemWorks(object):
                     Query.setTables([kind])
                     Query.setWhere([{"f_id":item.no}])
                     DB.execute(Query.returnQuery())
+                    
+            Query.setStatTrue("delete")
+            if form == "directory":
+                Query.setTables(["dirs"])
+            elif form == "file":
+                Query.setTables(["files"])
+            Query.setWhere([{"id":no}])
+            DB.execute(Query.returnQuery())
     
-    def search(text):
+    def search(self, text):
         """Veritabanında arama yapmak için fonksiyon
         
         search(text) -> list [item1, item2,...]
@@ -350,7 +349,7 @@ class ItemWorks(object):
             
         return foundedList
         
-    def updateItem(item):
+    def updateItem(self, item):
         """dosya/dizin bilgilerini güncellemek için fonksiyon.
         
         updateItem(item)

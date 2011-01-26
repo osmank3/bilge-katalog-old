@@ -104,6 +104,14 @@ def mainloop():
             else:
                 Exp.ls()
             
+        elif command == "rm":
+            if len(additions)>0:
+                name = " ".join(additions)
+                for j in Exp.curItemList:
+                    if j.name == name:
+                        bridge.ItemWorks().delItem(j)
+                        Exp.curItemList = Exp.fillList()
+            
         elif command == "mkcat":
             pass#katalog oluşturma
                 
@@ -113,9 +121,6 @@ def mainloop():
         elif command == "mkfile":
             pass#dosya oluşturma
         
-        elif command == "rm":
-            pass#dosya/dizin silme
-                    
         elif command == "info":
             pass#bilgi gösterme için
                 

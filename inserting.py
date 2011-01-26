@@ -10,11 +10,25 @@ import datetime
 from warnings import simplefilter # for ignoriny DeprecationWarning.
 simplefilter("ignore", DeprecationWarning)
 
-import kaa.metadata as Meta
-import pyPdf
-import mutagen
-from mutagen.mp3 import MP3
-from mutagen.easyid3 import EasyID3
+#eksik bağımlılıkların belirlenmesi ve modüllerin çağrılması
+try:
+    import kaa.metadata as Meta
+    EnableMetaData = True
+except:
+    EnableMetaData = False
+
+try:
+    import pyPdf
+    EnablePdf = True
+except:
+    EnablePdf = False
+
+try:
+    from mutagen.mp3 import MP3
+    from mutagen.easyid3 import EasyID3
+    EnableMp3 = True
+except:
+    EnableMp3 = False
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -135,7 +149,7 @@ class DetailItem(object):
             self.info = self.videoInfo()
         elif self.kind == "ebook":
             self.info = self.ebookInfo()
-        elif self.ext == ".mp3":
+        elif self.ext == ".mp3" and EnableMp3:
             self.info = self.mp3Tags()
         elif self.kind == "music":
             self.info = self.musicInfo()
