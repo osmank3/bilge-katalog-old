@@ -94,6 +94,13 @@ def mainloop():
                 name = " ".join(additions)
                 changeAddress(name)
             
+        elif command == "info":
+            if len(additions)>0:
+                name = " ".join(additions)
+                for j in Exp.curItemList:
+                    if j.name == name:
+                        print j.textTypeInfo()
+                
         elif command == "ls":
             if len(additions)>0:
                 name = " ".join(additions)
@@ -112,6 +119,26 @@ def mainloop():
                         bridge.ItemWorks().delItem(j)
                         Exp.curItemList = Exp.fillList()
             
+        elif command == "search":
+            if len(additions)>0:
+                text = " ".join(additions)
+                itemList = bridge.ItemWorks().search(text)
+                for i in itemList:
+                    print i.address + ":"
+                    print i.textTypeInfo()
+                    
+        elif command == "status":
+            print _("Dosyadan metadata eldesi: ") + str(inserting.EnableMetaData)
+            print _("Dosyadan detaylı Mp3 bilgisi: ") + str(inserting.EnableMp3)
+            print _("Dosyadan detaylı pdf bilgisi: ") + str(inserting.EnablePdf)
+            
+        elif command == "whereis":
+            if len(additions)>0:
+                text = " ".join(additions)
+                itemList = bridge.ItemWorks().search(text)
+                for i in itemList:
+                    print i.address + i.name
+                    
         elif command == "mkcat":
             pass#katalog oluşturma
                 
@@ -121,15 +148,6 @@ def mainloop():
         elif command == "mkfile":
             pass#dosya oluşturma
         
-        elif command == "info":
-            pass#bilgi gösterme için
-                
-        elif command == "whereis":
-            pass#adresleri göstermek için
-                    
-        elif command == "search":
-            pass#arama yapmak için
-                    
         elif command == "update":
             pass#bilgileri güncellemek için
                     

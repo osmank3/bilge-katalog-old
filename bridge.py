@@ -183,11 +183,11 @@ class Item(object):
         allinfos = self.info.copy()
         if "detail" in dir(self):
             for i in self.detail.keys():
-                allinfos[i] = detail[i]
+                allinfos[i] = self.detail[i]
                 
         text = ""
         for i in TransKeysQuene:
-            if allinfos.has_key(i):
+            if allinfos.has_key(i) and i != "id":
                 text += "%20s : %s\n"% (TransKeys[i], allinfos[i])
         return text
     
