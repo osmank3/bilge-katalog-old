@@ -3,7 +3,7 @@
 
 import sys
 import os
-from bilge_katalog.main import *
+from bilge_katalog.cli import *
 
 if "qt" in sys.argv:
     from PyQt4 import QtGui

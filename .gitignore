@@ -1,4 +1,7 @@
 *.pyc
 uiQt_*
 *_rc.py
+*~
 database.db
+bilge_katalog
+.directory
