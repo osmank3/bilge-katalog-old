@@ -206,6 +206,9 @@ class Explore(object):
         """Gezinme sınıfı için kök dizini ve içeriğinin listesinin
         hazırlanması."""
         self.curItem = RootItem()
+        self.refresh()
+        
+    def refresh(self):
         self.curItemList = self.fillList()
         
     def fillList(self, item=None):
@@ -266,15 +269,8 @@ class Explore(object):
         if item.name == "ROOT":
             self.__init__()
         elif item.form == "directory":
-            dirName = item.name
-            tempName = ""
-            tempIndex = 0
-            while not dirName == tempName:
-                tempName = self.curItemList[tempIndex].name
-                if dirName == tempName:
-                    self.curItem = self.curItemList[tempIndex]
-                tempIndex += 1
-            self.curItemList = self.fillList()
+            self.curItem = item
+            self.refresh()
         else:
             return 1
         
@@ -282,10 +278,10 @@ class Explore(object):
         """Üst dizine çıkmak için kullanılır."""
         if self.curItem.updir != None:
             self.curItem = self.curItem.updir
-            self.curItemList = self.fillList()
+            self.refresh()
         else:
             self.curItem = RootItem()
-            self.curItemList = self.fillList()
+            self.refresh()
         
 class ItemWorks(object):
     """Dosya/Dizin işlemleri için oluşturulan sınıftır."""
@@ -490,6 +486,13 @@ class Users(object):
         Query.setValues(values)
         
         DB.execute(Query.returnQuery())
+        
+        Query.setStatTrue("select")
+        Query.setSelect(["max(id)"])
+        Query.setTables(["users"])
+        user.id = DB.execute(Query.returnQuery())[0][0]
+        
+        return user
         
     def info(self, no):
         """Kullanıcı id'sinden kullanıcı bilgileri ile kullanıcı nesnesi

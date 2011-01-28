@@ -3,7 +3,7 @@
 
 import os
 import sys
-import libilge
+import bridge_qt
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -12,13 +12,13 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from uiQt_mainwindow import Ui_MainWindow
 
-import wizardCat
-import infoDialog
-import aboutDialog
-import userDialog
-import lendDialog
+#import wizardCat
+#import infoDialog
+#import aboutDialog
+#import userDialog
+#import lendDialog
 
-EXP = libilge.explore()
+EXP = bridge_qt.ExploreQt()
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -31,8 +31,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.viewFiles.setCurrentIndex(0)
         self.fillCatList()
         
-        self.history = [0]
-        self.indexNow = 0
+        self.history = []
+        self.indexNow = -1
         self.searching = False
         self.willPaste = None
         self.pasteType = None
@@ -132,79 +132,63 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.contextCatsMenu.exec_(coordinate)
         
     def fillCatList(self):
-        dirs, files = EXP.dirList(id=0, partite=True)
         self.listCat.clear()
-        for i in dirs.keys():
-            item = QtGui.QListWidgetItem()
-            item.setText(i)
-            item.setWhatsThis("directory %s"% dirs[i])
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(":/image/images/bilge-katalog.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            item.setIcon(icon)
-            self.listCat.addItem(item)
-        for i in files.keys():
-            item = QtGui.QListWidgetItem()
-            item.setText(i)
-            item.setWhatsThis("file %s"% files[i])
-            self.listCat.addItem(item)
+        for i in EXP.fillListQt(bridge_qt.RootItemQt()):
+            if i.form == "directory":
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(":/image/images/bilge-katalog.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                i.setIcon(icon)
+                i.setText(i.name)
+                self.listCat.addItem(i)
     
-    def fillFilesList(self, id):
-        dirs, files = EXP.dirList(id=id, partite=True)
+    def fillFilesList(self, item):
+        EXP.chdir(item)
         self.listFiles.clear()
-        for i in dirs.keys():
-            item = QtGui.QListWidgetItem()
-            item.setText(i)
-            item.setWhatsThis("directory %s"% dirs[i])
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(":/image/images/directory.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            item.setIcon(icon)
-            self.listFiles.addItem(item)
-        for i in files.keys():
-            item = QtGui.QListWidgetItem()
-            item.setText(i)
-            item.setWhatsThis("file %s"% files[i])
-            icon = self.setFileIcon(files[i])
-            item.setIcon(icon)
-            self.listFiles.addItem(item)
-        
-    def setFileIcon(self, fid):
-        infos = EXP.info(id=fid, type="files", redict=True)
-        icon = QtGui.QIcon()
-        type = infos["type"]
-        if type == "book":
-            icon.addPixmap(QtGui.QPixmap(":/image/images/book.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        elif type == "ebook":
-            icon.addPixmap(QtGui.QPixmap(":/image/images/ebook.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        elif type == "image":
-            icon.addPixmap(QtGui.QPixmap(":/image/images/image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        elif type == "music":
-            icon.addPixmap(QtGui.QPixmap(":/image/images/music.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        elif type == "video":
-            icon.addPixmap(QtGui.QPixmap(":/image/images/video.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        else:
-            icon.addPixmap(QtGui.QPixmap(":/image/images/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        
-        return icon
+        for i in EXP.curItemList:
+            if i.form == "directory":
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(":/image/images/directory.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                i.setIcon(icon)
+                i.setText(i.name)
+                self.listFiles.addItem(i)
+            elif i.form == "file":
+                i.setDetail()
+                icon = QtGui.QIcon()
+                
+                if i.info["type"] == "book":
+                    icon.addPixmap(QtGui.QPixmap(":/image/images/book.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                elif i.info["type"] == "ebook":
+                    icon.addPixmap(QtGui.QPixmap(":/image/images/ebook.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                elif i.info["type"] == "image":
+                    icon.addPixmap(QtGui.QPixmap(":/image/images/image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                elif i.info["type"] == "music":
+                    icon.addPixmap(QtGui.QPixmap(":/image/images/music.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                elif i.info["type"] == "video":
+                    icon.addPixmap(QtGui.QPixmap(":/image/images/video.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                else:
+                    icon.addPixmap(QtGui.QPixmap(":/image/images/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                i.setIcon(icon)
+                i.setText(i.name)
+                self.listFiles.addItem(i)
         
     def refresh(self):
         self.fillCatList()
-        if self.indexNow != 0 and not self.searching:
-            self.fillFilesList(id=self.history[self.indexNow])
+        if not self.indexNow in [-1,0] and not self.searching:
+            self.fillFilesList(self.history[self.indexNow])
             self.searchLine.clear()
         
     def doubleClickAction(self, itemSelected):
-        type, id = str(itemSelected.whatsThis()).split()
-        if type == "directory":
-            self.fillFilesList(id=id)
+        if itemSelected.form == "directory":
+            self.fillFilesList(itemSelected)
             self.history = self.history[:self.indexNow+1]
-            if self.history[-1] != id:
-                self.history.append(id)
+            if len(self.history) == 0 or self.history[-1].no != itemSelected.no:
+                self.history.append(itemSelected)
                 self.indexNow += 1
             if self.searching:
                 self.searching = False
                 self.searchLine.clear()
-        if type == "file":
-            self.openInfo(type=type, id=id)
+        elif itemSelected.form == "file":
+            pass#self.openInfo(type=type, id=id) #dosya bilgilerini gösteren pencere açılacak
             
     def clickAction(self, itemSelected):
         self.item = itemSelected
@@ -229,9 +213,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.searching = False
             self.searchLine.clear()
             self.refresh()
-        elif self.history[self.indexNow - 1] != 0:
-            id = self.history[self.indexNow - 1]
-            self.fillFilesList(id=id)
+        elif not self.indexNow in [-1,0]:
+            item = self.history[self.indexNow - 1]
+            self.fillFilesList(item)
             self.indexNow -= 1
         
     def Next(self):
@@ -240,8 +224,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.searchLine.clear()
             self.refresh()
         elif self.indexNow + 1 < len(self.history):
-            id = self.history[self.indexNow + 1]
-            self.fillFilesList(id=id)
+            item = self.history[self.indexNow + 1]
+            self.fillFilesList(item)
             self.indexNow += 1
         
     def Up(self):
@@ -249,17 +233,17 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.searching = False
             self.searchLine.clear()
             self.refresh()
-        elif self.indexNow != 0 and self.history[self.indexNow] != 0:
-            EXP.chDir(id=self.history[self.indexNow])
-            EXP.chDir(dirname="..")
-            id = EXP.dirNow
-            if int(id) == int(self.history[self.indexNow - 1]):
+        elif self.indexNow != 0:
+            if len(self.history) == 0 or self.history[self.indexNow].updir == None:
+                pass
+            elif self.history[self.indexNow].updir.no == self.history[self.indexNow-1].no:
                 self.Back()
-            elif id != 0:
-                self.fillFilesList(id=id)
+            elif self.history[self.indexNow].updir.no != 0:
+                EXP.curItem = self.history[self.indexNow].updir
                 self.history = self.history[:self.indexNow+1]
-                self.history.append(id)
+                self.history.append(EXP.curItem)
                 self.indexNow += 1
+                self.refresh()
             
     def createCat(self):
         crCat = wizardCat.CreateCat()
@@ -360,3 +344,17 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def newUser(self):
         users = userDialog.userDialog(new=True)
         users.exec_()
+        
+        
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    #language = QtCore.QLocale.system().name()
+    #locale = "/usr/share/locale/%s/LC_MESSAGES"% language
+    #if not os.path.isdir(locale):
+    #    locale = "/usr/share/locale/%s/LC_MESSAGES"% language[:2]
+    #translator = QtCore.QTranslator()
+    #translator.load("bilge-katalog.qm", locale)
+    #app.installTranslator(translator)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())

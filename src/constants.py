@@ -21,4 +21,4 @@ URL = "http://github.com/osmank3/bilge-katalog"
 TRANSLATORS = """\
 tr : Osman Karagöz, osmank3 [at] gmail.com
 """
-DBDIR = ""
+DBDIR = "../"
