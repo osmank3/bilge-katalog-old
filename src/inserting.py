@@ -143,18 +143,18 @@ class DetailItem(object):
         getInfos() -> True or False
         """
         self.info = {}
-        if self.kind == "image":
+        if self.kind == "book":
+            self.info = self.bookInfo()
+        elif self.kind == "image" and EnableMetaData:
             self.info = imageInfo(self.address)
-        elif self.kind == "video":
+        elif self.kind == "video" and EnableMetaData:
             self.info = self.videoInfo()
-        elif self.kind == "ebook":
+        elif self.kind == "ebook" and EnablePdf:
             self.info = self.ebookInfo()
         elif self.ext == ".mp3" and EnableMp3:
             self.info = self.mp3Tags()
-        elif self.kind == "music":
+        elif self.kind == "music" and EnableMetaData:
             self.info = self.musicInfo()
-        elif self.kind == "book":
-            self.info = self.bookInfo()
         else:
             return False
         return True
