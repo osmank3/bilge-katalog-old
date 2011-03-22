@@ -146,7 +146,7 @@ class DetailItem(object):
         if self.kind == "book":
             self.info = self.bookInfo()
         elif self.kind == "image" and EnableMetaData:
-            self.info = imageInfo(self.address)
+            self.info = self.imageInfo()
         elif self.kind == "video" and EnableMetaData:
             self.info = self.videoInfo()
         elif self.kind == "ebook" and EnablePdf:
@@ -255,7 +255,7 @@ class DetailItem(object):
                     info[i] = realinfo[i]
         return info
         
-def createDir(item):
+def createDir(item, progressItem):
     """Veritabanına dizin eklemek için oluşturulan fonksiyon.
     
     createDir(Item)
@@ -274,6 +274,8 @@ def createDir(item):
             Query.setValues(values)
             DB.execute(Query.returnQuery())
             
+            progressItem.increase()
+            
             Query.setStatTrue("select")
             Query.setSelect(["max(id)"])
             Query.setTables(["dirs"])
@@ -287,7 +289,7 @@ def createDir(item):
                         tempItem = Item(form="directory", info={"up_id":up})
                         tempItem.setAddress(address)
                         
-                        createDir(tempItem)
+                        createDir(tempItem, progressItem)
                         
                     elif os.path.isfile(address):
                         tempItem = Item(form="file", info={"up_id":up})
@@ -295,11 +297,11 @@ def createDir(item):
                         
                         detItem = DetailItem(name=i, address=address)
                         if detItem.getInfos():
-                            createFile(tempItem, detItem)
+                            createFile(tempItem, progressItem, detItem)
                         else:
-                            createFile(tempItem)
+                            createFile(tempItem, progressItem)
     
-def createFile(item, detailItem=None):
+def createFile(item, progressItem, detailItem=None):
     """Veritabanına dosya eklemek için oluşturulan fonksiyon.
     
     createFile(Item, DetailItem=None)
@@ -340,3 +342,34 @@ def createFile(item, detailItem=None):
                 Query.setValues(values)
                 DB.execute(Query.returnQuery())
                 
+            progressItem.increase()
+                
+class progress(object):
+    numOfItems = 0
+    curNum = 0
+    
+    def __init__(self, address=None):
+        if address:
+            self.numOfItems = self.getNumOfItems(address)
+        else:
+            self.numOfItems = 1
+            
+    def getNumOfItems(self, address):
+        oldDir = os.getcwd()
+        os.chdir(address)
+        dirList = os.listdir("./")
+        numOfItems = len(dirList)
+        
+        for i in dirList:
+            if os.path.isdir(i):
+                numOfItems += self.getNumOfItems(i)
+                
+        os.chdir(oldDir)
+        return numOfItems
+        
+    def increase(self):
+        self.curNum += 1
+        
+    def getPercent(self):
+        percent = 100 * self.curNum / self.numOfItems
+        return percent

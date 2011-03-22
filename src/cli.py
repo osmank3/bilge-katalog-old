@@ -6,8 +6,10 @@ import sys
 import gettext
 import re
 import readline #this is for history and editing line
+import time
 import bridge
 import inserting
+from threading import Thread
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -98,6 +100,23 @@ def mainloop():
                     if j.name == i:
                         Exp.chdir(j)
                         break
+                        
+    class thread(Thread):
+        def __init__(self, Progress):
+            Thread.__init__(self)
+            self.progress = Progress
+            
+        def run(self):
+            while self.progress.getPercent() < 101:
+                time.sleep(0.1)
+                if self.progress.getPercent() == 100:
+                    sys.stdout.write("\r" + str(self.progress.getPercent()) + " % "
+                                     + _("Finished\n"))
+                    sys.stdout.flush()
+                    break
+                else:
+                    sys.stdout.write("\r" + str(self.progress.getPercent()) + " %")
+                    sys.stdout.flush()
     
     print _("Welcome to bilge-katalog!\n\
            \rFor helping only write 'help' and press Enter")
@@ -144,8 +163,17 @@ def mainloop():
                                                        "description":desc})
                 if "path" in parameters.keys():
                     catalog.setAddress(parameters["path"])
-                inserting.createDir(catalog)
+                    progressItem = inserting.progress(parameters["path"])
+                else:
+                    progressItem = inserting.progress()
+                    
+                process = thread(progressItem)
+                process.start()
+                
+                inserting.createDir(catalog, progressItem)
                 Exp.curItemList = Exp.fillList()
+                
+                process.join()
                 print _("%s kataloğu oluşturuldu."% name)
                 
         elif command == "mkdir":
@@ -160,8 +188,17 @@ def mainloop():
                                                          "description":desc})
                 if "path" in parameters.keys():
                     directory.setAddress(parameters["path"])
-                inserting.createDir(directory)
+                    progressItem = inserting.progress(parameters["path"])
+                else:
+                    progressItem = inserting.progress()
+                    
+                process = thread(progressItem)
+                process.start()
+                
+                inserting.createDir(directory, progressItem)
                 Exp.curItemList = Exp.fillList()
+                
+                process.join()
                 print _("%s dizini oluşturuldu."% name)
             
         elif command == "rm":
