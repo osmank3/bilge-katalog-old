@@ -162,8 +162,17 @@ def mainloop():
                                                        "name":name,
                                                        "description":desc})
                 if "path" in parameters.keys():
-                    catalog.setAddress(parameters["path"])
-                    progressItem = inserting.progress(parameters["path"])
+                    if True in status():
+                        catalog.setAddress(parameters["path"])
+                        progressItem = inserting.progress(parameters["path"])
+                    else:
+                        isContinue = raw_input(_("Eksik bağımlılıklar var. Bu durum dosyalarda bilgi eksikliğine yol açabilir.\nYinede devam edilsin mi? (e/h): "))
+                        if isContinue.lower() in [_("e"), _("evet")]:
+                            catalog.setAddress(parameters["path"])
+                            progressItem = inserting.progress(parameters["path"])
+                        else:
+                            print _("İşlem iptal edildi.")
+                            continue
                 else:
                     progressItem = inserting.progress()
                     
@@ -177,30 +186,77 @@ def mainloop():
                 print _("%s kataloğu oluşturuldu."% name)
                 
         elif command == "mkdir":
-            if len(additions)>0:
-                name = " ".join(additions)
-                if "desc" in parameters.keys():
-                    desc = parameters["desc"]
-                else:
-                    desc = ""
-                directory = inserting.Item("directory", {"up_id":Exp.curItem.no,
-                                                         "name":name,
-                                                         "description":desc})
-                if "path" in parameters.keys():
+            name = " ".join(additions)
+            if "desc" in parameters.keys():
+                desc = parameters["desc"]
+            else:
+                desc = ""
+            directory = inserting.Item("directory", {"up_id":Exp.curItem.no,
+                                                     "name":name,
+                                                     "description":desc})
+            if "path" in parameters.keys():
+                if True in status():
                     directory.setAddress(parameters["path"])
                     progressItem = inserting.progress(parameters["path"])
                 else:
-                    progressItem = inserting.progress()
-                    
-                process = thread(progressItem)
-                process.start()
+                    isContinue = raw_input(_("Eksik bağımlılıklar var. Bu durum dosyalarda bilgi eksikliğine yol açabilir.\nYinede devam edilsin mi? (e/h): "))
+                    if isContinue.lower() in [_("e"), _("evet")]:
+                        directory.setAddress(parameters["path"])
+                        progressItem = inserting.progress(parameters["path"])
+                    else:
+                        print _("İşlem iptal edildi.")
+                        continue
+            else:
+                progressItem = inserting.progress()
                 
-                inserting.createDir(directory, progressItem)
-                Exp.curItemList = Exp.fillList()
-                
-                process.join()
-                print _("%s dizini oluşturuldu."% name)
+            process = thread(progressItem)
+            process.start()
             
+            inserting.createDir(directory, progressItem)
+            Exp.curItemList = Exp.fillList()
+            
+            process.join()
+            print _("%s dizini oluşturuldu."% name)
+            
+        elif command == "mkfile":
+            name = " ".join(additions)
+            
+            fileItem = inserting.Item("file", {"up_id":Exp.curItem.no,
+                                               "name":name})
+            
+            if "path" in parameters.keys():
+                if True in status():
+                    fileItem.setAddress(parameters["path"])
+                    fileDetail = inserting.DetailItem(name=name, address=parameters["path"])
+                else:
+                    isContinue = raw_input(_("Eksik bağımlılıklar var. Bu durum dosyada bilgi eksikliğine yol açabilir.\nYinede devam edilsin mi? (e/h): "))
+                    if isContinue.lower() in [_("e"), _("evet")]:
+                        fileItem.setAddress(parameters["path"])
+                        fileDetail = inserting.DetailItem(name=name, address=parameters["path"])
+                    else:
+                        print _("İşlem iptal edildi.")
+                        continue
+            else:
+                if parameters["type"] == "book":
+                    fileDetail = inserting.DetailItem(name=name, info=parameters, book=True)
+                else:
+                    fileDetail = inserting.DetailItem(name=name, info=parameters)
+                    
+            progressItem = inserting.progress()
+                
+            process = thread(progressItem)
+            process.start()
+            
+            if fileDetail.getInfos():
+                inserting.createFile(fileItem, progressItem, fileDetail)
+            else:
+                inserting.createFile(fileItem, progressItem)
+                
+            Exp.curItemList = Exp.fillList()
+            
+            process.join()
+            print _("%s dosyası oluşturuldu."% name)
+                
         elif command == "rm":
             if len(additions)>0:
                 name = " ".join(additions)

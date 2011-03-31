@@ -122,6 +122,8 @@ class DetailItem(object):
         """
         for i in self.fileType.keys():
             self.ext = os.path.splitext(name)[-1]
+            if address:
+                self.ext = os.path.splitext(address)[-1]
             if self.ext in self.fileType[i]:
                 self.kind = i
                 break
@@ -164,7 +166,7 @@ class DetailItem(object):
         info = {"author":"","imprintinfo":"","callnumber":"","page":0,"year":0}
         for i in info.keys():
             if i in self.realinfo.keys():
-                info[i] = realinfo[i]
+                info[i] = self.realinfo[i]
         return info
                 
     def imageInfo(self):
@@ -308,6 +310,8 @@ def createFile(item, progressItem, detailItem=None):
     """
     if item.form == "file":
         info = item.getinfo()
+        if detailItem and detailItem.kind:
+            info["type"] = detailItem.kind
         if info:
             keys = info.keys()
             values = []
@@ -345,16 +349,23 @@ def createFile(item, progressItem, detailItem=None):
             progressItem.increase()
                 
 class progress(object):
+    """İlerleme yüzdesini göstermek için yazılan nesne."""
     numOfItems = 0
     curNum = 0
     
     def __init__(self, address=None):
+        """İlerleme yüzdesi oluşturma sınıfı
+        
+        progress(address=None)"""
         if address:
             self.numOfItems = self.getNumOfItems(address)
         else:
             self.numOfItems = 1
             
     def getNumOfItems(self, address):
+        """Verilen adresteki dosya ve dizinlerin sayısını dönen fonksiyon.
+        
+        getNumOfItems(address)"""
         oldDir = os.getcwd()
         os.chdir(address)
         dirList = os.listdir("./")
@@ -368,8 +379,10 @@ class progress(object):
         return numOfItems
         
     def increase(self):
+        """İşlenenlerin sayısını bir artıran fonksiyon."""
         self.curNum += 1
         
     def getPercent(self):
+        """İşlenenlerin yüzdesini dönen fonksiyon."""
         percent = 100 * self.curNum / self.numOfItems
         return percent
