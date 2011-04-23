@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>createCatalogWizard</class>
  <widget class="QWizard" name="createCatalogWizard">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>500</width>
-    <height>360</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Create Catalog Wizard</string>
   </property>
@@ -24,27 +16,6 @@
    <set>QWizard::DisabledBackButtonOnLastPage|QWizard::NoBackButtonOnStartPage</set>
   </property>
   <widget class="QWizardPage" name="wizardPage1">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QRadioButton" name="newRadio">
-      <property name="text">
-       <string>New &amp;free catalog</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="fillRadio">
-      <property name="text">
-       <string>&amp;Create catalog from a directory</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWizardPage" name="wizardPage2">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0" colspan="2">
      <widget class="QLabel" name="labelName">
@@ -59,7 +30,7 @@
     <item row="0" column="2">
      <widget class="QLineEdit" name="lineName"/>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="1" column="0">
      <widget class="QLabel" name="labelTags">
       <property name="text">
        <string>Ta&amp;gs</string>
@@ -72,7 +43,7 @@
     <item row="1" column="2">
      <widget class="QLineEdit" name="lineTags"/>
     </item>
-    <item row="2" column="0" colspan="2">
+    <item row="2" column="0">
      <widget class="QLabel" name="labelDate">
       <property name="text">
        <string>&amp;Date</string>
@@ -98,36 +69,7 @@
     <item row="3" column="2" rowspan="2">
      <widget class="QTextEdit" name="lineDesc"/>
     </item>
-    <item row="5" column="0" colspan="3">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="labelChoseDir">
-         <property name="text">
-          <string>&amp;Please choose a directory for cataloging</string>
-         </property>
-         <property name="buddy">
-          <cstring>lineDirPath</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineDirPath"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="buttonChoseDir">
-         <property name="text">
-          <string notr="true">...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="4" column="0" colspan="2">
+    <item row="4" column="1">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -140,33 +82,66 @@
       </property>
      </spacer>
     </item>
-   </layout>
-  </widget>
-  <widget class="QWizardPage" name="wizardPage3">
-   <layout class="QGridLayout" name="gridLayout_3">
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelConf">
-      <property name="text">
-       <string>Your configuration:</string>
-      </property>
+    <item row="5" column="0" colspan="3">
+     <widget class="QGroupBox" name="groupBox">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="lineDirPath">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="directoryCheck">
+         <property name="text">
+          <string>&amp;Fill catalog from directory</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="buttonChoseDir">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string notr="true">...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QTextEdit" name="lineConf"/>
-    </item>
-    <item row="2" column="0">
+    <item row="6" column="0" colspan="3">
      <widget class="QLabel" name="labelReady">
       <property name="text">
-       <string>If configuration is OK, so press the Next button.</string>
+       <string>If configuration is OK, so press the Next button and start cataloging.</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wizardPage4">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+  <widget class="QWizardPage" name="wizardPage2">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="labelprogress">
+      <property name="text">
+       <string>Cataloging is started</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QLabel" name="labelStat">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="text">
        <string>Operation finished.
 
@@ -178,33 +153,47 @@ Press Finish button.</string>
   </widget>
  </widget>
  <tabstops>
-  <tabstop>newRadio</tabstop>
-  <tabstop>fillRadio</tabstop>
   <tabstop>lineName</tabstop>
   <tabstop>lineTags</tabstop>
   <tabstop>dateTimeEdit</tabstop>
   <tabstop>lineDesc</tabstop>
-  <tabstop>lineDirPath</tabstop>
+  <tabstop>directoryCheck</tabstop>
   <tabstop>buttonChoseDir</tabstop>
-  <tabstop>lineConf</tabstop>
+  <tabstop>lineDirPath</tabstop>
  </tabstops>
  <resources>
   <include location="QtRc.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>fillRadio</sender>
+   <sender>directoryCheck</sender>
    <signal>toggled(bool)</signal>
-   <receiver>groupBox</receiver>
+   <receiver>lineDirPath</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>244</x>
-     <y>57</y>
+     <x>228</x>
+     <y>174</y>
     </hint>
     <hint type="destinationlabel">
-     <x>244</x>
-     <y>263</y>
+     <x>228</x>
+     <y>200</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>directoryCheck</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>buttonChoseDir</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>465</x>
+     <y>200</y>
     </hint>
    </hints>
   </connection>

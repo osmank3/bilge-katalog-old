@@ -6,10 +6,8 @@ import sys
 import gettext
 import re
 import readline #this is for history and editing line
-import time
 import bridge
 import inserting
-from threading import Thread
 
 #For using unicode utf-8
 reload(sys).setdefaultencoding("utf-8")
@@ -101,23 +99,55 @@ def mainloop():
                         Exp.chdir(j)
                         break
                         
-    class thread(Thread):
-        def __init__(self, Progress):
-            Thread.__init__(self)
-            self.progress = Progress
+    class progress(object):
+        """İlerleme yüzdesini göstermek için yazılan nesne."""
+        numOfItems = 0
+        curNum = 0
+        
+        def __init__(self, address=None):
+            """İlerleme yüzdesi oluşturma sınıfı
             
-        def run(self):
-            while self.progress.getPercent() < 101:
-                time.sleep(0.1)
-                if self.progress.getPercent() == 100:
-                    sys.stdout.write("\r" + str(self.progress.getPercent()) + " % "
-                                     + _("Finished\n"))
-                    sys.stdout.flush()
-                    break
-                else:
-                    sys.stdout.write("\r" + str(self.progress.getPercent()) + " %")
-                    sys.stdout.flush()
-    
+            progress(address=None)"""
+            if address:
+                self.numOfItems = self.getNumOfItems(address) + 1
+            else:
+                self.numOfItems = 1
+                
+        def getNumOfItems(self, address):
+            """Verilen adresteki dosya ve dizinlerin sayısını dönen fonksiyon.
+            
+            getNumOfItems(address)"""
+            oldDir = os.getcwd()
+            os.chdir(address)
+            dirList = os.listdir("./")
+            numOfItems = len(dirList)
+            
+            for i in dirList:
+                if os.path.isdir(i):
+                    numOfItems += self.getNumOfItems(i)
+                    
+            os.chdir(oldDir)
+            return numOfItems
+            
+        def increase(self):
+            """İşlenenlerin sayısını bir artıran fonksiyon."""
+            self.curNum += 1
+            self.printPercent()
+            
+        def getPercent(self):
+            """İşlenenlerin yüzdesini dönen fonksiyon."""
+            percent = 100 * self.curNum / self.numOfItems
+            return percent
+            
+        def printPercent(self):
+            if self.getPercent() == 100:
+                sys.stdout.write("\r" + str(self.getPercent()) + " % "
+                                    + _("Finished\n"))
+                sys.stdout.flush()
+            else:
+                sys.stdout.write("\r" + str(self.getPercent()) + " %")
+                sys.stdout.flush()
+            
     print _("Welcome to bilge-katalog!\n\
            \rFor helping only write 'help' and press Enter")
     QUIT = False
@@ -164,25 +194,21 @@ def mainloop():
                 if "path" in parameters.keys():
                     if True in status():
                         catalog.setAddress(parameters["path"])
-                        progressItem = inserting.progress(parameters["path"])
+                        progressItem = progress(parameters["path"])
                     else:
                         isContinue = raw_input(_("Eksik bağımlılıklar var. Bu durum dosyalarda bilgi eksikliğine yol açabilir.\nYinede devam edilsin mi? (e/h): "))
                         if isContinue.lower() in [_("e"), _("evet")]:
                             catalog.setAddress(parameters["path"])
-                            progressItem = inserting.progress(parameters["path"])
+                            progressItem = progress(parameters["path"])
                         else:
                             print _("İşlem iptal edildi.")
                             continue
                 else:
-                    progressItem = inserting.progress()
-                    
-                process = thread(progressItem)
-                process.start()
+                    progressItem = progress()
                 
                 inserting.createDir(catalog, progressItem)
                 Exp.curItemList = Exp.fillList()
                 
-                process.join()
                 print _("%s kataloğu oluşturuldu."% name)
                 
         elif command == "mkdir":
@@ -197,25 +223,21 @@ def mainloop():
             if "path" in parameters.keys():
                 if True in status():
                     directory.setAddress(parameters["path"])
-                    progressItem = inserting.progress(parameters["path"])
+                    progressItem = progress(parameters["path"])
                 else:
                     isContinue = raw_input(_("Eksik bağımlılıklar var. Bu durum dosyalarda bilgi eksikliğine yol açabilir.\nYinede devam edilsin mi? (e/h): "))
                     if isContinue.lower() in [_("e"), _("evet")]:
                         directory.setAddress(parameters["path"])
-                        progressItem = inserting.progress(parameters["path"])
+                        progressItem = progress(parameters["path"])
                     else:
                         print _("İşlem iptal edildi.")
                         continue
             else:
-                progressItem = inserting.progress()
-                
-            process = thread(progressItem)
-            process.start()
+                progressItem = progress()
             
             inserting.createDir(directory, progressItem)
             Exp.curItemList = Exp.fillList()
             
-            process.join()
             print _("%s dizini oluşturuldu."% name)
             
         elif command == "mkfile":
@@ -242,10 +264,7 @@ def mainloop():
                 else:
                     fileDetail = inserting.DetailItem(name=name, info=parameters)
                     
-            progressItem = inserting.progress()
-                
-            process = thread(progressItem)
-            process.start()
+            progressItem = progress()
             
             if fileDetail.getInfos():
                 inserting.createFile(fileItem, progressItem, fileDetail)
@@ -254,7 +273,6 @@ def mainloop():
                 
             Exp.curItemList = Exp.fillList()
             
-            process.join()
             print _("%s dosyası oluşturuldu."% name)
                 
         elif command == "rm":
@@ -280,24 +298,35 @@ def mainloop():
                 else:
                     print i
             
+        elif command == "update":
+            if len(additions)>0:
+                name = " ".join(additions)
+                for j in Exp.curItemList:
+                    if j.name == name:
+                        j.setDetail()
+                        infoKeys = ["name","size","datecreate","datemodify",
+                                    "dateaccess","dateinsert","type","description"]
+                        for i in parameters.keys():
+                            if i in infoKeys:
+                                j.info[i] = parameters[i]
+                            else:
+                                j.detail[i] = parameters[i]
+                                
+                        bridge.ItemWorks().updateItem(j)
+                        Exp.curItemList = Exp.fillList()
+                    
         elif command == "whereis":
             if len(additions)>0:
                 text = " ".join(additions)
                 itemList = bridge.ItemWorks().search(text)
                 for i in itemList:
                     print i.address + i.name
-            
-        elif command == "mkfile":
-            pass#dosya oluşturma
         
-        elif command == "update":
-            pass#bilgileri güncellemek için
-                    
         elif command == "mv":
             pass#taşımak için
                     
         elif command == "cp":
-            pass#copyalamak için
+            pass#kopyalamak için
                 
         elif command == "lend":
             pass#ödünç vermek için

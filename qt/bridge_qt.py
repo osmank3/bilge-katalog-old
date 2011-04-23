@@ -32,7 +32,7 @@ class RootItemQt(RootItem, QtGui.QListWidgetItem):
     pass
 
 def List2QtItem(itemList=None):
-    """Item listesini QtItem'e çevirir."""
+    """Item listesini ItemQt listesine çevirir."""
     newItemList = []
     
     for i in itemList:

@@ -12,7 +12,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from uiQt_mainwindow import Ui_MainWindow
 
-#import wizardCat
+import wizardCat
 #import infoDialog
 #import aboutDialog
 #import userDialog
